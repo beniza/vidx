@@ -13,7 +13,7 @@ readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
     "pyyaml>=5.4.1",
-    "usfm-converter>=0.1.1a0"
+    "usfm-converter @ git+https://github.com/nlci-lab/EditNovaFX-SRT-Generator.git@v0.1.1-alpha"
 ]
 
 [project.scripts]
