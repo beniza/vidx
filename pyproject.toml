@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vidx"
+version = "0.1.0"
+description = "Scripture video rendering companion engine to AUDX (combines USFM files, timing maps, audio, and FFmpeg)."
+authors = [
+    {name = "Bridgeconn"}
+]
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "pyyaml>=5.4.1",
+    "usfm-converter>=0.1.1a0"
+]
+
+[project.scripts]
+vidx = "vidx.cli:main"
