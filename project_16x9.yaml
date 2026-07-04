@@ -1,0 +1,52 @@
+# ==============================================================================
+# VIDX 16:9 Widescreen Project Configuration
+# ==============================================================================
+
+project:
+  name: "Sindhi 16:9 Widescreen Release"
+  output_dir: "output"
+
+video:
+  resolution: "1920x1080"       # 16:9 Widescreen Aspect Ratio
+  fps: 24
+  codec: "libx264"
+  preset: "fast"
+  crf: 23
+  background_media: "src/bg.mp4"
+  loop_background: true
+  scaling_mode: "pad"
+
+style:
+  verse:
+    font: "Nirmala UI"
+    size: 48
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 2                # Bottom-Center
+    margin_bottom: 60
+    margin_lr: 60
+    background_box: true
+    background_color: "#00000080"
+
+  heading:
+    font: "Nirmala UI"
+    size: 56
+    color: "#FFD400"
+    alignment: 8                # Top-Center
+    margin_vertical: 80
+    bold: true
+
+  verse_number:
+    show: true
+    color: "#FFC080"
+    size: 36
+    on_every_segment: false
+
+jobs:
+  - usfm: "src/42MRKsnd.SFM"
+    timing: "src/C01-01-MRK-05-timing.txt"
+    audio: "src/42MRKSND.mpeg"
+    output: "output/Mark_Chapter_05_16x9.mp4"
+    background: "src/bg.mp4"

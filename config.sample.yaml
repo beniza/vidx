@@ -1,0 +1,68 @@
+# ==============================================================================
+# VIDX Configuration File (Companion to AUDX)
+# Combines USFM Bible scripture files, audio maps, and background media into video.
+# ==============================================================================
+
+project:
+  name: "Sindhi Mark Video Project"
+  output_dir: "output"
+
+video:
+  resolution: "1920x1080"       # Video resolution: 1920x1080 (16:9), 1080x1920 (vertical), 1080x1080 (square)
+  fps: 24                       # Frame rate
+  codec: "libx264"              # Video encoder
+  preset: "fast"                # FFmpeg encoding preset (ultrafast, fast, medium, slow)
+  crf: 23                       # Constant Rate Factor (lower = higher quality, 18-28 is standard)
+  background_media: "src/bg.mp4" # Default background media (video or image)
+  loop_background: true         # Loop background video if it is shorter than the audio
+  scaling_mode: "pad"           # Background scaling mode: 'pad' (black bars if aspect differs), 'crop', 'stretch'
+
+audio:
+  codec: "aac"                  # Audio encoder
+  bitrate: "192k"               # Audio bitrate
+  sample_rate: 48000            # Sample rate in Hz
+
+style:
+  verse:
+    font: "Nirmala UI"          # Font family (must be installed on rendering machine)
+    size: 48                    # Font size in points
+    color: "#FFFFFF"            # Text primary color (hex CSS format #RRGGBB)
+    outline_color: "#000000"    # Outline color around text
+    outline_width: 3            # Outline thickness
+    shadow: 1                   # Drop shadow depth
+    alignment: 2                # Alignment: 1=bottom-left, 2=bottom-center, 3=bottom-right, 8=top-center
+    margin_bottom: 60           # Bottom margin from screen edge
+    margin_lr: 60               # Left and right side margins
+    background_box: true        # Draw semi-transparent box behind text for readability
+    background_color: "#00000080" # Hex color + alpha for background box (80 = 50% opacity)
+
+  heading:
+    font: "Nirmala UI"          # Font family for section headings (\s1, \s2)
+    size: 56                    # Font size for headings
+    color: "#FFD400"            # Gold color for section titles
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 8                # 8 = top-center
+    margin_vertical: 80         # Top margin from screen edge
+    bold: true
+    background_box: true
+    background_color: "#00000080"
+
+  verse_number:
+    show: true                  # Prepend verse reference (e.g. "Mark 5:1") to dialogue
+    color: "#FFC080"            # Distinct color for verse number (light orange/gold)
+    size: 36                    # Font size for verse number
+    on_every_segment: false     # If false, displays reference only on first fragment (2a) of a split verse
+
+# ==============================================================================
+# Batch Jobs Queue
+# Define specific chapter conversions to run sequentially or in parallel.
+# ==============================================================================
+jobs:
+  - usfm: "src/42MRKsnd.SFM"
+    timing: "src/C01-01-MRK-05-timing.txt"
+    audio: "src/42MRKSND.mpeg"
+    output: "output/mark_chapter_5.mp4"
+    background: "src/bg.mp4"
+    keep_ass: true
