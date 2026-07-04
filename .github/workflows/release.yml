@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*' # Trigger workflow on version tags like v0.1.0, v1.0.0, etc.
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions tab
 
 # Explicitly grant write permissions required for creating GitHub Releases and uploading assets
 permissions:
@@ -43,10 +44,10 @@ jobs:
           echo "Official video rendering companion to **AUDX** (Audio Scripture Conversion Tool suite)." >> release_notes.md
           echo "" >> release_notes.md
           echo "### 📦 Installation from Wheel" >> release_notes.md
-          echo "You can download the `.whl` file attached below and install it directly via pip:" >> release_notes.md
-          echo "\`\`\`bash" >> release_notes.md
+          echo "You can download the \`.whl\` file attached below and install it directly via pip:" >> release_notes.md
+          echo '```bash' >> release_notes.md
           echo "pip install vidx-*.whl" >> release_notes.md
-          echo "\`\`\`" >> release_notes.md
+          echo '```' >> release_notes.md
 
       - name: Create GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v2
