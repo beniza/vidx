@@ -367,6 +367,6 @@ Based on the Advisory Council review, the build is approved under three non-nego
 
 4. **Background for v1:** Support still images only (simpler FFmpeg command), video loops only, or both?
 
-5. **Relationship to usfm-converter:** *[RESOLVED by Council: Import over fork. We will import `usfm-converter` as a Python package to share improvements and bug fixes]*
+5. **Relationship to usfm-converter:** *[RESOLVED by Council & v0.2 Evolution: Originally imported as an external Git library, `usfm-converter` has now been fully internalized directly into `vidx` as `vidx.usfm_parser` (`usfm_parser.py`). This eliminates external network Git dependency issues during standalone PyInstaller (.exe) builds and enables VIDX to serve as a high-speed dual-purpose subtitle generator (`--generate-only --format srt|ass|both`).]*
 
 6. **Project language confirmed as Python?** The converter is Python. Building on top in Python is the natural choice. Just confirming.
