@@ -178,5 +178,6 @@ jobs:
 ---
 
 ## 📚 Further Documentation
-- **[User Guide & Tutorials](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/docs/user_guide.md):** In-depth walkthroughs for field coordinators.
+- **[Configuration & Bulk Processing Guide](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/docs/configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
+- **[User Guide & Tutorials](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/docs/user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
 - **[Project Brief & Advisory Council Decisions](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/docs/project_brief.md):** Historical background and engineering decisions.
