@@ -57,11 +57,29 @@ The `video` block defines the visual canvas, background media behaviors, and FFm
 | `background_media`| String | `""` | Default path to background loop (`.mp4`, `.mov`) or static image (`.jpg`, `.png`). |
 | `loop_background` | Boolean | `true` | If `true`, loops video backgrounds that are shorter than the audio duration. |
 | `scaling_mode` | String | `"pad"` | How background media scales to fit canvas: `"pad"` (letterbox/pillarbox), `"crop"` (fill screen without distortion), or `"stretch"`. |
+| `gpu` | Boolean | `false` | When set to `true` (or via CLI `--gpu`), enables hardware-accelerated GPU encoding (NVIDIA NVENC / Intel QSV) for 3x–10x faster speeds. |
+| `loop_crossfade_sec`| Float | `0.0` | Duration in seconds for dissolving loop seams during background preprocessing (e.g. `1.0`). Eliminates visual jumps when loops repeat! |
+| `watermark` | Dictionary | `{}` | Optional corner logo branding overlay (see Watermark Configuration below). |
 
 ### Standard Aspect Ratio Guide
 *   **16:9 Widescreen Landscape (YouTube, Broadcast, TV):** `resolution: "1920x1080"` or 4K `resolution: "3840x2160"`. Use `scaling_mode: "pad"` or `"crop"`.
 *   **9:16 Portrait Vertical (YouTube Shorts, Instagram Reels, TikTok):** `resolution: "1080x1920"`. Always use `scaling_mode: "crop"` when using standard landscape background loops so they fill the vertical screen cleanly.
 *   **1:1 Square (Instagram / Facebook Feed):** `resolution: "1080x1080"`.
+
+### 🖼️ Custom Watermark & Channel Corner Logo Configuration
+You can overlay a station logo or watermark PNG (with transparency) onto the video canvas using the `watermark` block inside `video`:
+```yaml
+video:
+  watermark:
+    image: "assets/logo.png"   # Path to watermark image (.png with transparency)
+    position: "top-right"      # Options: top-left, top-right, bottom-left, bottom-right, or custom x:y
+    margin: 30                 # Distance from video edge in pixels (default: 30)
+    scale: 0.15                # Relative width percentage of video canvas (e.g. 0.15 = 15% width) or pixel width
+    opacity: 0.8               # Transparency alpha from 0.0 (transparent) to 1.0 (opaque)
+```
+
+### ⚡ Automatic Background Preprocessing & Loop Caching
+When processing bulk chapter queues, if your background video is high-resolution 4K (> 1080p), VIDX automatically downscales and caches a 1080p version (`*_1080p.mp4`) in the background before rendering begins. If `loop_crossfade_sec` is enabled, VIDX pre-calculates and bakes the crossfade transition into the cached loop (`*_xf1.0s.mp4`). This eliminates multi-worker CPU decoding bottlenecks and ensures zero visual jump cuts when looping indefinitely across chapters!
 
 ---
 
@@ -78,6 +96,8 @@ The `audio` block specifies encoding parameters as well as introductory/concludi
 | `outro_clip` | String | `""` | Optional path to an audio outro bumper (e.g., closing credits or copyright disclaimer). |
 | `background_music` | String | `""` | Optional path to background music (BGM) loop played continuously during scripture reading. |
 | `background_music_volume` | Float | `0.15` | Volume level for background music (`0.0` to `1.0`). Recommended range: `0.10 - 0.20`. |
+| `fade_in_sec` | Float | `0.0` | Duration in seconds for smooth audio fade-in at the start of the video (e.g., `1.5`). |
+| `fade_out_sec`| Float | `0.0` | Duration in seconds for smooth audio fade-out at the end of the video (e.g., `2.0`). |
 
 ### Automatic Subtitle Timestamp Shifting & Audio Mixing
 *   **Timestamp Shifting:** When an `intro_clip` is configured, VIDX automatically measures its exact duration and **offsets all subtitle timestamps in generated `.ass` and `.srt` files** by that duration. Scripture synchronization remains 100% frame-accurate!

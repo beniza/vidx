@@ -147,18 +147,21 @@ Open `output/Mark_Chapter_05_16x9.mp4` in your media player (VLC, Windows Media 
 
 When you are ready to produce an entire Scripture book (e.g., Gospel of Mark, Chapters 1 through 16), list all chapter jobs under the `jobs` block in your configuration file. Because VIDX's internal USFM parser automatically matches chapters, you only need **one shared `.SFM` book file** for the entire job queue! (See [examples/whole_book_batch.yaml](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/examples/whole_book_batch.yaml) for a complete working template).
 
-### 1. Parallel Multi-Worker Rendering (`-w`)
-Rendering dozens of chapters sequentially can take hours. To accelerate production, use the `-w` (workers) flag to spawn multiple concurrent CPU rendering processes:
+### 1. Parallel Multi-Worker Rendering & GPU Acceleration (`-w`, `--gpu`)
+Rendering dozens of chapters sequentially can take hours. To accelerate production, use the `-w` (workers) flag to spawn multiple concurrent CPU rendering processes, and pass `--gpu` (or set `video.gpu: true` in your YAML) to enable NVIDIA NVENC or Intel QSV hardware encoding:
 
 ```bash
-# Render 4 chapters simultaneously (ideal for 8-core CPUs)
-vidx -c examples/whole_book_batch.yaml -w 4
+# Render 4 chapters simultaneously with hardware GPU acceleration!
+vidx -c examples/whole_book_batch.yaml -w 4 --gpu
 ```
 
 During a multi-worker batch run, VIDX displays an interactive, real-time terminal UI showing:
 *   **Worker Mapping:** A dedicated live progress bar for each active worker (`[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).
-*   **Live Metrics:** Real-time encoding speed (`2.3x`), frames per second (`fps`), elapsed time, and ETA.
+*   **Live Metrics:** Real-time encoding speed (`2.3x`), frames per second (`fps`), elapsed time, ETA, and **GPU usage/time tracking**.
 *   **Global Batch Summary:** A master progress bar tracking completed chapters versus total remaining jobs in the queue.
+
+> [!TIP]
+> **Automatic 1080p Preprocessing & Loop Caching:** If your background media is high-resolution 4K (> 1080p), VIDX automatically downscales and caches a 1080p version (`*_1080p.mp4`) in the background before batch rendering begins. If `loop_crossfade_sec` is enabled, VIDX pre-calculates and bakes seamless crossfades into the cached loop (`*_xf1.0s.mp4`), completely eliminating CPU decoding bottlenecks and preventing jump cuts when loops repeat!
 
 ### 2. Adding Title Cards & Thumbnails
 You can attach a still title image that displays for a set number of seconds before scripture reading begins:
@@ -176,6 +179,26 @@ audio:
   outro_clip: "assets/outro.mp3"       # Plays after scripture concludes
   background_music: "assets/bgm.mp3"   # Automatically looped to match reading duration
   background_music_volume: 0.15        # Blended cleanly without reducing narrator voice volume
+```
+
+### 4. Custom Watermarks & Channel Corner Logos
+Add your station or ministry logo to any corner of the screen with alpha transparency:
+```yaml
+video:
+  watermark:
+    image: "assets/logo.png"
+    position: "top-right"    # top-left, top-right, bottom-left, bottom-right, or custom coordinates
+    margin: 30               # Distance from screen edge in pixels
+    scale: 0.15              # Width relative to video width (15%)
+    opacity: 0.85            # Alpha transparency
+```
+
+### 5. Smooth Audio Fade-In & Fade-Out Transitions
+Apply clean audio transitions at the start and end of chapter videos:
+```yaml
+audio:
+  fade_in_sec: 1.5           # Smooth fade-in over first 1.5 seconds
+  fade_out_sec: 2.0          # Smooth fade-out over last 2.0 seconds
 ```
 
 ---

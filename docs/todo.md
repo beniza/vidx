@@ -77,12 +77,12 @@
 - [x] **GPU Hardware-Accelerated Video Encoding:**
   - Add optional YAML configuration (`video.codec: "h264_nvenc"`, `video.hwaccel: "auto"`) to replace software encoding (`libx264`) with GPU hardware encoders (NVIDIA NVENC, Intel QuickSync, AMD AMF, Apple VideoToolbox).
   - Implement automatic startup detection via `ffmpeg -encoders` to dynamically select the best available GPU encoder on the user's machine, achieving 3x to 10x faster rendering speeds while falling back seamlessly to CPU encoding if no GPU is present.
-- [ ] **Audio Fade-in / Fade-out:**
+- [x] **Audio Fade-in / Fade-out:**
   - Add optional YAML configuration (`audio.fade_in_sec`, `audio.fade_out_sec`) to apply smooth audio transitions at chapter boundaries using FFmpeg `afade` filter.
-- [ ] **Video Loop Crossfading:**
-  - Implement smooth video crossfade transitions when looping short background video clips to eliminate visual jumps at loop seam points.
-- [ ] **Custom Watermarks & Channel Logos:**
-  - Enable placing station or organization logos (PNG with alpha) in any corner of the video via YAML config (`video.watermark: "assets/logo.png"`).
+- [x] **Video Loop Crossfading:**
+  - Implement smooth video crossfade transitions when looping short background video clips to eliminate visual jumps at loop seam points (`video.loop_crossfade_sec`).
+- [x] **Custom Watermarks & Channel Logos:**
+  - Enable placing station or organization logos (PNG with alpha) in any corner of the video via YAML config (`video.watermark` / `video.logo`).
 
 ### 3. Typography & Internationalization
 - [ ] **Font Fallback Validation:**
@@ -98,10 +98,15 @@
   - [x] **Dedicated Worker Mapping:** Display a live interactive progress bar for *each* parallel rendering worker (`-w WORKERS`), showing the exact scripture book, chapter, and file currently being processed (e.g., `[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).
   - [x] **Live Rendering Metrics:** Report real-time FFmpeg encoding stats on the progress bar: current processing speed (e.g., `2.3x` real-time), encoded frames per second (`fps`), elapsed time, and estimated time of arrival (`ETA`).
   - [x] **Global Batch Queue Summary:** Display a master progress bar tracking total completed chapters vs. remaining jobs across the entire New Testament conversion queue (`24 / 260 Chapters Completed [9%]`).
+- [x] **Automatic Background Preprocessing & 1080p Caching:**
+  - [x] Automatically downscale 4K/high-res background video clips to 1080p (`*_1080p.mp4`) and apply loop crossfades (`*_xf1.0s.mp4`) in a pre-rendering cache pass to eliminate CPU decoding bottlenecks during parallel batch runs.
 
 ---
 
 ## ✅ Recently Completed Milestones (v0.2.0 Evolution)
+- [x] **GPU Hardware Acceleration & Monitoring:** Autodetect NVIDIA NVENC and Intel QSV encoding with `--gpu` CLI flag and `video.gpu: true`, featuring real-time GPU time and usage tracking in live batch progress tables.
+- [x] **Automatic Background Media Preprocessing & Loop Caching:** Automatically pre-scales 4K media down to 1080p and bakes seamless loop crossfades (`xfade`) before batch execution, avoiding multi-worker CPU decoding bottlenecks.
+- [x] **Audio Transitions & Branding Overlays:** Implemented smooth audio fade-in/fade-out (`afade`) and custom corner watermarks/channel logos (`overlay` + RGBA alpha blending).
 - [x] **Title Cards & Video Thumbnail Support:** Enabled still title image display at the beginning of videos (`video.title_card`, `video.title_duration`), serving double-duty as social media video thumbnails.
 - [x] **Broadcast Audio Bumpers & Looped Background Music (BGM):** Added audio intro/outro jingle concatenation (`audio.intro_clip`, `audio.outro_clip`), automatic subtitle timestamp shifting, and continuous looped background music blending (`audio.background_music`, `audio.background_music_volume`) via FFmpeg `amix`.
 - [x] **Robust USFM Marker Stripping Fix:** Solved cross-reference and footnote text bleeding into subtitles by upgrading regex rules in `usfm_parser` and `ass_generator` to handle word boundaries and extended formatting tags without trailing spaces (`\x-`, `\f+`, `\ex`, `\rq`).

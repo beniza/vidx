@@ -18,13 +18,23 @@ video:
   background_media: "src/bg.mp4" # Default background media (video or image)
   loop_background: true         # Loop background video if it is shorter than the audio
   scaling_mode: "pad"           # Background scaling mode: 'pad' (black bars if aspect differs), 'crop', 'stretch'
+  # gpu: true                   # Enable hardware GPU acceleration (NVIDIA NVENC / Intel QSV)
+  # loop_crossfade_sec: 1.0     # Smoothly crossfade background loops during caching to eliminate jump cuts
   # title_card: "assets/title.jpg" # Optional still title image displayed before scripture reading starts
   # title_duration: 4.0            # Duration in seconds to display title card
+  # watermark:                  # Optional station logo or branding watermark overlay
+  #   image: "assets/logo.png"
+  #   position: "top-right"     # top-left, top-right, bottom-left, bottom-right, or custom coordinates
+  #   margin: 30                # Offset from edge in pixels
+  #   scale: 0.15               # Width relative to video width (15%)
+  #   opacity: 0.85             # Alpha transparency (0.0 to 1.0)
 
 audio:
   codec: "aac"                  # Audio encoder
   bitrate: "192k"               # Audio bitrate
   sample_rate: 48000            # Sample rate in Hz
+  # fade_in_sec: 1.5            # Smooth audio fade-in duration at start of video
+  # fade_out_sec: 2.0           # Smooth audio fade-out duration at end of video
   # intro_clip: "assets/intro.mp3" # Optional audio intro bumper played at start (subtitles shift automatically!)
   # outro_clip: "assets/outro.mp3" # Optional audio outro bumper played at end
   # background_music: "assets/bgm.mp3" # Optional background music looped seamlessly during reading
