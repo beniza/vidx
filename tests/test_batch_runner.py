@@ -93,3 +93,47 @@ def test_batch_runner_progress_callback(sample_workspace):
     assert isinstance(first_event, ProgressEvent)
     assert first_event.status in ["STARTING", "EXTRACTING_SUBTITLES", "COMPLETED"]
 
+
+def test_preprocess_background_media_loop_crossfade(monkeypatch, tmp_path):
+    from unittest.mock import MagicMock
+    bg_file = tmp_path / "test_loop.mp4"
+    bg_file.write_text("dummy video content")
+    
+    config = Config(config_dict={
+        "video": {"resolution": "1920x1080", "loop_crossfade_sec": 1.5},
+        "project": {"output_dir": str(tmp_path / "out")}
+    })
+    runner = BatchRunner(config)
+    runner.add_job("a.sfm", "t.txt", "audio.mp3", "out.mp4", background_media=str(bg_file))
+    
+    mock_run = MagicMock()
+    def side_effect(cmd, **kwargs):
+        res = MagicMock()
+        res.returncode = 0
+        if "ffprobe" in cmd:
+            if any("width,height" in arg for arg in cmd):
+                res.stdout = "1920x1080\n"
+            elif any("format=duration" in arg for arg in cmd):
+                res.stdout = "10.0\n"
+        elif "ffmpeg" in cmd:
+            # Create output file to simulate successful encoding
+            out_p = Path(cmd[-1])
+            out_p.parent.mkdir(parents=True, exist_ok=True)
+            out_p.write_text("cached content")
+        return res
+    mock_run.side_effect = side_effect
+    monkeypatch.setattr("subprocess.run", mock_run)
+    
+    runner._preprocess_background_media()
+    
+    # Check that ffmpeg was called with xfade filter
+    ffmpeg_calls = [c for c in mock_run.call_args_list if "ffmpeg" in c[0][0]]
+    assert len(ffmpeg_calls) == 1
+    ff_cmd = ffmpeg_calls[0][0][0]
+    assert "-filter_complex" in ff_cmd
+    fc_idx = ff_cmd.index("-filter_complex")
+    fc_val = ff_cmd[fc_idx + 1]
+    assert "xfade=transition=fade:duration=1.5:offset=7.000" in fc_val
+    assert "xf1.5s" in runner.jobs[0].background_media
+
+

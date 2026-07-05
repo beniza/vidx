@@ -372,12 +372,15 @@ class BatchRunner:
                         except (EOFError, KeyboardInterrupt):
                             pass
 
-                # If resolution already matches target resolution, no need to downscale
-                if w <= target_x and h <= target_y:
+                loop_xfade = float(video_cfg.get("loop_crossfade_sec", 0.0) or video_cfg.get("crossfade_sec", 0.0) or 0.0)
+
+                # If resolution already matches target resolution and no loop crossfade requested, no need to downscale
+                if w <= target_x and h <= target_y and loop_xfade <= 0:
                     continue
 
                 cache_dir.mkdir(parents=True, exist_ok=True)
-                cached_filename = f"{bg_path.stem}_scaled_{target_x}x{target_y}_{fps}fps{bg_path.suffix}"
+                xf_suffix = f"_xf{loop_xfade}s" if loop_xfade > 0 else ""
+                cached_filename = f"{bg_path.stem}_scaled_{target_x}x{target_y}_{fps}fps{xf_suffix}{bg_path.suffix}"
                 cached_path = cache_dir / cached_filename
 
                 # Check if cached file already exists and is up to date
@@ -391,7 +394,7 @@ class BatchRunner:
                         continue
 
                 # 3. Prompt user if they want to downscale high-res background to target resolution
-                if not self.auto_yes and sys.stdin.isatty():
+                if not self.auto_yes and sys.stdin.isatty() and (w > target_x or h > target_y):
                     print(f"\n[?] Notice: Background video '{bg_path.name}' resolution ({w}x{h}) is higher than target project resolution ({target_x}x{target_y}).")
                     try:
                         ans = input(f"    Would you like to downscale and cache it to {target_x}x{target_y} for significantly faster batch rendering? [Y/n]: ").strip().lower()
@@ -401,18 +404,41 @@ class BatchRunner:
                     except (EOFError, KeyboardInterrupt):
                         continue
 
-                print(f"[*] Preprocessing background video: downscaling {bg_path.name} ({w}x{h}) -> {cached_filename} ({target_x}x{target_y}) for fast batch rendering...")
+                if loop_xfade > 0:
+                    print(f"[*] Preprocessing background video: downscaling {bg_path.name} ({w}x{h}) and applying {loop_xfade}s seamless loop crossfade -> {cached_filename}...")
+                else:
+                    print(f"[*] Preprocessing background video: downscaling {bg_path.name} ({w}x{h}) -> {cached_filename} ({target_x}x{target_y}) for fast batch rendering...")
                 
                 # Determine fast GPU/CPU encoder for caching
                 codec_req = video_cfg.get("codec", "libx264")
                 cache_codec = self.builder.detect_best_video_codec(codec_req)
                 
-                ff_cmd = [
-                    "ffmpeg", "-y", "-i", str(bg_path),
-                    "-vf", scale_filter,
-                    "-c:v", cache_codec,
-                    "-preset", "fast"
-                ]
+                bg_dur = 0.0
+                if loop_xfade > 0:
+                    try:
+                        dur_res = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(bg_path)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                        if dur_res.returncode == 0 and dur_res.stdout.strip():
+                            bg_dur = float(dur_res.stdout.strip())
+                    except Exception:
+                        pass
+
+                if loop_xfade > 0 and bg_dur > 2 * loop_xfade:
+                    offset = bg_dur - 2 * loop_xfade
+                    fc_xfade = f"[0:v]{scale_filter},split=2[vmain][vstart];[vmain]trim=start={loop_xfade},setpts=PTS-STARTPTS[main];[vstart]trim=start=0:end={loop_xfade},setpts=PTS-STARTPTS[start];[main][start]xfade=transition=fade:duration={loop_xfade}:offset={offset:.3f}[outv]"
+                    ff_cmd = [
+                        "ffmpeg", "-y", "-i", str(bg_path),
+                        "-filter_complex", fc_xfade,
+                        "-map", "[outv]",
+                        "-c:v", cache_codec,
+                        "-preset", "fast"
+                    ]
+                else:
+                    ff_cmd = [
+                        "ffmpeg", "-y", "-i", str(bg_path),
+                        "-vf", scale_filter,
+                        "-c:v", cache_codec,
+                        "-preset", "fast"
+                    ]
                 if "nvenc" in cache_codec:
                     ff_cmd.extend(["-cq", "18"])
                 elif "qsv" in cache_codec or "amf" in cache_codec:
