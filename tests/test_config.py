@@ -21,7 +21,7 @@ def test_config_defaults():
 def test_config_from_dict():
     custom = {
         "project": {"name": "Test Project"},
-        "video": {"fps": 30, "resolution": "1080x1920"}
+        "video": {"fps": 30, "resolution": "1080x1920"},
     }
     cfg = Config(config_dict=custom)
     assert cfg.project["name"] == "Test Project"
@@ -50,7 +50,7 @@ def test_config_save(tmp_path):
     cfg = Config(config_dict={"project": {"name": "Saved Project"}})
     cfg.save(out_file)
     assert out_file.exists()
-    
+
     # Reload and verify
     reloaded = Config(config_path=out_file)
     assert reloaded.project["name"] == "Saved Project"

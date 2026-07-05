@@ -1,7 +1,6 @@
 import pytest
 from vidx.usfm_parser import USFMParser, TimingParser, TextSegmenter, SRTGenerator
 
-
 SAMPLE_USFM = """\\id MRK
 \\c 1
 \\s1 The Proclamation of John the Baptist
@@ -74,7 +73,7 @@ def test_srt_generator():
     up = USFMParser(SAMPLE_USFM, target_chapter="1")
     tp = TimingParser(SAMPLE_TIMING)
     gen = SRTGenerator(up, tp)
-    
+
     srt_output = gen.generate()
     assert "1" in srt_output
     assert "00:00:00,000 --> 00:00:03,500" in srt_output

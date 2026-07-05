@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 import wave
@@ -34,7 +33,12 @@ def get_media_duration(file_path: str) -> float:
     if mutagen is not None:
         try:
             audio = mutagen.File(str(path))
-            if audio is not None and hasattr(audio, "info") and hasattr(audio.info, "length") and audio.info.length > 0:
+            if (
+                audio is not None
+                and hasattr(audio, "info")
+                and hasattr(audio.info, "length")
+                and audio.info.length > 0
+            ):
                 return float(audio.info.length)
         except Exception:
             pass
@@ -43,15 +47,19 @@ def get_media_duration(file_path: str) -> float:
     try:
         res = subprocess.run(
             [
-                "ffprobe", "-v", "error",
-                "-show_entries", "format=duration",
-                "-of", "default=noprint_wrappers=1:nokey=1",
-                str(path)
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                str(path),
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            check=True
+            check=True,
         )
         val = res.stdout.strip()
         if val:
@@ -79,7 +87,7 @@ def prepare_bumper_audio(
     intro_audio: Optional[str] = None,
     outro_audio: Optional[str] = None,
     background_music: Optional[str] = None,
-    bg_music_volume: float = 0.15
+    bg_music_volume: float = 0.15,
 ) -> Tuple[bool, float, float]:
     """
     Concatenate intro_audio + main_audio + outro_audio into output_audio,
@@ -88,7 +96,7 @@ def prepare_bumper_audio(
     """
     main_path = Path(main_audio)
     out_path = Path(output_audio)
-    
+
     if not main_path.exists():
         return False, 0.0, 0.0
 
@@ -110,7 +118,7 @@ def prepare_bumper_audio(
         return True, 0.0, get_media_duration(str(out_path))
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Build FFmpeg filter complex command
     inputs = []
     filter_parts = []
@@ -131,7 +139,9 @@ def prepare_bumper_audio(
         bgm_label = f"[{idx}:0]"
         idx += 1
         mix_label = "[main_mixed]"
-        filter_parts.append(f"{bgm_label}volume={bg_music_volume}[bgm_vol];{main_label}[bgm_vol]amix=inputs=2:duration=first:normalize=0{mix_label};")
+        filter_parts.append(
+            f"{bgm_label}volume={bg_music_volume}[bgm_vol];{main_label}[bgm_vol]amix=inputs=2:duration=first:normalize=0{mix_label};"
+        )
         current_main = mix_label
     else:
         current_main = main_label
@@ -150,18 +160,23 @@ def prepare_bumper_audio(
         if has_outro:
             concat_inputs.append(outro_label)
         n_concat = len(concat_inputs)
-        filter_parts.append("".join(concat_inputs) + f"concat=n={n_concat}:v=0:a=1[outa]")
+        filter_parts.append(
+            "".join(concat_inputs) + f"concat=n={n_concat}:v=0:a=1[outa]"
+        )
         map_target = "[outa]"
     else:
         map_target = current_main
 
     filter_str = "".join(filter_parts).rstrip(";")
     cmd = [
-        "ffmpeg", "-y",
+        "ffmpeg",
+        "-y",
         *inputs,
-        "-filter_complex", filter_str,
-        "-map", map_target,
-        str(out_path)
+        "-filter_complex",
+        filter_str,
+        "-map",
+        map_target,
+        str(out_path),
     ]
 
     try:
