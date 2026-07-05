@@ -107,6 +107,15 @@ class TerminalProgressObserver:
         self.completed_jobs = 0
         
         if self.use_rich:
+            try:
+                import sys
+                if hasattr(sys.stdout, 'reconfigure'):
+                    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+                if hasattr(sys.stderr, 'reconfigure'):
+                    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+            except Exception:
+                pass
+
             self.progress = Progress(
                 SpinnerColumn(),
                 TextColumn("[bold blue]{task.fields[worker]}"),
@@ -119,13 +128,26 @@ class TerminalProgressObserver:
             self.master_task = self.progress.add_task(
                 "[bold magenta]Overall Batch Queue",
                 total=self.total_jobs,
-                worker="[Master]",
-                status="Running...",
-                metrics=""
+                worker="[bold magenta][Master][/bold magenta]",
+                status=f"[bold magenta]Completed 0/{self.total_jobs} Chapters[/bold magenta]",
+                metrics="[bold white]0% Total[/bold white]"
             )
 
     def start(self) -> None:
         if self.progress:
+            try:
+                from rich.console import Console
+                from rich.panel import Panel
+                Console().print(Panel(
+                    f"[bold cyan]VIDX Scripture Video Batch Processing Engine[/bold cyan]\n"
+                    f"[white]Total Chapters in Queue: [bold yellow]{self.total_jobs}[/bold yellow] | "
+                    f"Columns: [bold blue]Worker[/bold blue] • [bold green]Book/Ch [Status][/bold green] • "
+                    f"[bold magenta]Progress[/bold magenta] • [bold yellow]Speed/FPS[/bold yellow] • [bold cyan]ETA[/bold cyan][/white]",
+                    title="[bold green]⚡ LIVE BATCH MONITOR ⚡[/bold green]",
+                    border_style="cyan"
+                ))
+            except Exception:
+                pass
             self.progress.start()
 
     def stop(self) -> None:
@@ -142,14 +164,14 @@ class TerminalProgressObserver:
             self.worker_tasks[event.worker_id] = self.progress.add_task(
                 f"Worker {event.worker_id}",
                 total=100.0,
-                worker=f"[Worker {event.worker_id}]",
+                worker=f"[bold blue][Worker {event.worker_id}][/bold blue]",
                 status="Starting...",
                 metrics=""
             )
             
         task_id = self.worker_tasks[event.worker_id]
         book_str = f"{event.book} " if event.book else ""
-        ch_str = f"Ch {event.chapter}" if event.chapter is not None else ""
+        ch_str = f"Ch {event.chapter:02d}" if event.chapter is not None and isinstance(event.chapter, int) else (f"Ch {event.chapter}" if event.chapter is not None else "")
         status_text = f"{book_str}{ch_str} [{event.status}]".strip()
         
         speed_str = event.speed or ""
@@ -163,7 +185,13 @@ class TerminalProgressObserver:
             metrics=metrics_text
         )
         
-        if event.status == "COMPLETED" and event.percent >= 100.0:
+        if (event.status == "COMPLETED" and event.percent >= 100.0) or event.status == "ERROR":
             self.completed_jobs += 1
-            self.progress.update(self.master_task, completed=self.completed_jobs)
+            pct = int((self.completed_jobs / self.total_jobs) * 100) if self.total_jobs > 0 else 100
+            self.progress.update(
+                self.master_task, 
+                completed=self.completed_jobs,
+                status=f"[bold magenta]Completed {self.completed_jobs}/{self.total_jobs} Chapters[/bold magenta]",
+                metrics=f"[bold white]{pct}% Total[/bold white]"
+            )
 

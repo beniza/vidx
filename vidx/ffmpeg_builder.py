@@ -9,6 +9,36 @@ from pathlib import Path
 
 class FFmpegBuilder:
     """Builds and executes FFmpeg commands for Scripture video rendering."""
+    _cached_gpu_codec = None
+    
+    @classmethod
+    def detect_best_video_codec(cls, requested_codec="auto") -> str:
+        """
+        Detect and return the best available video encoder.
+        If requested_codec is not 'auto', returns requested_codec directly.
+        Otherwise, tests GPU encoders in priority order: NVIDIA -> Intel -> AMD -> Apple -> CPU fallback.
+        """
+        if requested_codec and str(requested_codec).lower() != "auto":
+            return requested_codec
+            
+        if cls._cached_gpu_codec is not None:
+            return cls._cached_gpu_codec
+            
+        candidates = ["h264_nvenc", "h264_qsv", "h264_amf", "h264_videotoolbox"]
+        for enc in candidates:
+            try:
+                res = subprocess.run(
+                    ["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "nullsrc=s=256x256:d=0.1", "-c:v", enc, "-f", "null", "-"],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
+                )
+                if res.returncode == 0:
+                    cls._cached_gpu_codec = enc
+                    return enc
+            except Exception:
+                pass
+                
+        cls._cached_gpu_codec = "libx264"
+        return "libx264"
     
     def __init__(self, config=None):
         self.config = config or {}
@@ -97,7 +127,8 @@ class FFmpegBuilder:
             cmd.extend(["-vf", vf_chain])
         
         # Video encoding settings
-        codec = video_cfg.get("codec", "libx264")
+        codec_req = video_cfg.get("codec", "libx264")
+        codec = self.detect_best_video_codec(codec_req)
         preset = video_cfg.get("preset", "fast")
         crf = str(video_cfg.get("crf", 23))
         

@@ -93,3 +93,46 @@ def test_render_with_progress_callback():
     assert final_event.status == "COMPLETED"
     assert final_event.percent == 100.0
 
+
+def test_detect_best_video_codec_explicit():
+    assert FFmpegBuilder.detect_best_video_codec("h264_nvenc") == "h264_nvenc"
+    assert FFmpegBuilder.detect_best_video_codec("libx265") == "libx265"
+
+
+def test_detect_best_video_codec_auto(monkeypatch):
+    from unittest.mock import MagicMock
+    FFmpegBuilder._cached_gpu_codec = None
+    
+    mock_run = MagicMock()
+    def side_effect(cmd, **kwargs):
+        res = MagicMock()
+        if "h264_qsv" in cmd:
+            res.returncode = 0
+        else:
+            res.returncode = 1
+        return res
+    mock_run.side_effect = side_effect
+    monkeypatch.setattr("subprocess.run", mock_run)
+    
+    res = FFmpegBuilder.detect_best_video_codec("auto")
+    assert res == "h264_qsv"
+    assert FFmpegBuilder._cached_gpu_codec == "h264_qsv"
+    
+    mock_run.reset_mock()
+    assert FFmpegBuilder.detect_best_video_codec("auto") == "h264_qsv"
+    assert mock_run.call_count == 0
+    FFmpegBuilder._cached_gpu_codec = None  # reset cleanup
+
+
+def test_build_command_auto_codec(monkeypatch):
+    monkeypatch.setattr(FFmpegBuilder, "detect_best_video_codec", lambda *args, **kwargs: "h264_nvenc")
+    
+    config = {"video": {"codec": "auto", "preset": "fast", "crf": 23}}
+    builder = FFmpegBuilder(config)
+    cmd = builder.build_command("audio.mp3", "sub.ass", "out.mp4")
+    
+    assert "-c:v" in cmd
+    idx = cmd.index("-c:v")
+    assert cmd[idx + 1] == "h264_nvenc"
+
+

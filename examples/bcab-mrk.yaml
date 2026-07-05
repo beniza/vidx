@@ -1,0 +1,114 @@
+# ==============================================================================
+# VIDX Whole-Book Batch Processing Template
+# ==============================================================================
+# This template demonstrates how to process an entire Scripture book (e.g., Mark,
+# Luke, John, or New Testament) in an unattended batch run using parallel workers.
+#
+# Usage:
+#   1. To render MP4 videos with 4 parallel CPU workers:
+#      vidx --config examples/whole_book_batch.yaml -w 4
+#
+#   2. To extract SubRip (.srt) and Aegisub (.ass) subtitles only (super fast!):
+#      vidx --config examples/whole_book_batch.yaml --generate-only --format both
+# ==============================================================================
+
+project:
+  name: "Gospel of Mark — Full Book Batch"
+  output_dir: "output/bcab_mrk"
+  generate_only: false          # Set to true for subtitle extraction without MP4 rendering
+  subtitle_format: "ass"        # Subtitle output format: 'ass', 'srt', or 'both'
+
+video:
+  resolution: "1920x1080"       # 16:9 Widescreen Aspect Ratio (use 1080x1920 for YouTube Shorts / Reels)
+  fps: 24
+  codec: "auto"
+  preset: "fast"                # 'fast' is ideal for batch; use 'medium' or 'slow' for final broadcast release
+  crf: 23                       # Quality (18 = visually lossless, 23 = standard high quality)
+  background_media: "src/mal/3840x2160.mp4" # Shared default background loop
+  loop_background: true         # Automatically loop background video if shorter than audio
+  scaling_mode: "crop"
+  
+  # Optional: Title card image displayed before scripture reading starts
+  title_card: "assets/bcab-mrk.png" # Displays at start; doubles as YouTube/social media video thumbnail!
+  title_duration: 4.0            # Duration in seconds for title card display
+
+audio:
+  codec: "aac"
+  bitrate: "192k"
+  sample_rate: 48000
+  
+  # Optional: Audio Intro & Outro Bumpers (automatically concatenated with scripture audio)
+  # intro_clip: "assets/intro.mp3"  # Plays before scripture (subtitles automatically shift!)
+  # outro_clip: "assets/outro.mp3"  # Plays after scripture concludes
+  
+  # Optional: Looped Background Music (BGM)
+  # background_music: "assets/soft_worship_bgm.mp3"
+  # background_music_volume: 0.15   # Volume level (0.10 to 0.20 is recommended for subtle blending)
+
+style:
+  verse:
+    font: "Bailey"          # Must be installed on your operating system
+    size: 48
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 2                # 2 = Bottom-Center
+    margin_bottom: 60
+    margin_lr: 60
+    background_box: true
+    background_color: "#000000" # Hex color + alpha (80 = 50% opacity). You can also use:
+    background_opacity: 0.50    # background_opacity: 0.50 OR background_transparency: 50
+
+  heading:
+    font: "Bailey"
+    size: 56
+    color: "#FFD400"            # Gold color for section headings (\s1, \s2)
+    alignment: 8                # 8 = Top-Center
+    margin_vertical: 80
+    bold: true
+    background_box: true
+    background_color: "#000000"
+    background_opacity: 0.50
+    
+  verse_number:
+    show: true                  # Prepend reference (e.g. "Mark 1:1") to subtitle dialogue
+    color: "#FFC080"            # Distinct color for verse reference
+    size: 36
+    on_every_segment: false     # If false, displays reference only on first fragment (1a) of split verses
+
+# ==============================================================================
+# Whole-Book Batch Jobs Queue
+# ==============================================================================
+# In VIDX, our USFM parser supports multi-chapter files. You only need ONE shared
+# scripture `.SFM` file for the entire book! Simply pair each chapter's audio
+# and timing map under the jobs queue below.
+#
+# When running with `-w 4`, VIDX will spawn 4 independent CPU worker processes.
+# Each worker will display a dedicated live progress bar with speed, FPS, and ETA!
+# ==============================================================================
+jobs:
+  - usfm: "src/mal/42MRKMAL10RO.SFM"
+    timing: "src/mal/mrk/timing/C01-41-MRK-02-timing.txt"
+    audio: "src/mal/mrk/audio/02.mp3"          
+    output: "output/bcab/mrk_gpu/Mark_Chapter_02.mp4"
+    keep_ass: true
+
+  - usfm: "src/mal/42MRKMAL10RO.SFM"
+    timing: "src/mal/mrk/timing/C01-41-MRK-04-timing.txt"
+    audio: "src/mal/mrk/audio/04.mp3"          
+    output: "output/bcab/mrk_gpu/Mark_Chapter_04.mp4"
+    keep_ass: true
+
+  - usfm: "src/mal/42MRKMAL10RO.SFM"
+    timing: "src/mal/mrk/timing/C01-41-MRK-05-timing.txt"
+    audio: "src/mal/mrk/audio/05.mp3"          
+    output: "output/bcab/mrk_gpu/Mark_Chapter_05.mp4"
+    keep_ass: true
+
+  - usfm: "src/mal/42MRKMAL10RO.SFM"
+    timing: "src/mal/mrk/timing/C01-41-MRK-06-timing.txt"
+    audio: "src/mal/mrk/audio/06.mp3"          
+    output: "output/bcab/mrk_gpu/Mark_Chapter_06.mp4"
+    keep_ass: true
+

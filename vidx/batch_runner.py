@@ -4,7 +4,10 @@ Orchestrates multi-chapter conversion and video rendering jobs with progress log
 and intermediate file management.
 """
 import time
+import sys
 import concurrent.futures
+import subprocess
+import re
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, List
@@ -24,18 +27,21 @@ class Job:
     background_media: Optional[str] = None
     duration: Optional[float] = None
     keep_ass: bool = True
-    status: str = "PENDING"
-    error_msg: str = ""
-    render_time: float = 0.0
     book: Optional[str] = None
     chapter: Optional[int] = None
+    status: str = "PENDING"
+    error_msg: Optional[str] = None
+    codec_used: Optional[str] = None
+    used_gpu: bool = False
+    render_time: float = 0.0
 
 
 class BatchRunner:
     """Manages execution of multiple video rendering jobs."""
     
-    def __init__(self, config: Optional[Config] = None):
+    def __init__(self, config: Optional[Config] = None, auto_yes: bool = False):
         self.config = config or Config()
+        self.auto_yes = auto_yes
         self.jobs: List[Job] = []
         self.builder = FFmpegBuilder(self.config.raw_config)
         self.progress_reporter = ProgressReporter()
@@ -96,9 +102,24 @@ class BatchRunner:
         
         if not job.book or job.chapter is None:
             try:
-                if usfm_path.exists():
+                # 1. Check timing file first for exact chapter number
+                if timing_path.exists():
+                    with open(timing_path, "r", encoding="utf-8", errors="ignore") as f:
+                        for line in f:
+                            line = line.strip()
+                            if line.startswith("\\id ") and not job.book:
+                                job.book = line.split()[1]
+                            elif line.startswith("\\c ") and job.chapter is None:
+                                try:
+                                    job.chapter = int(line.split()[1])
+                                except ValueError:
+                                    pass
+                                if job.book and job.chapter is not None:
+                                    break
+                # 2. Check USFM file for any remaining missing metadata (especially book name)
+                if usfm_path.exists() and (not job.book or job.chapter is None):
                     with open(usfm_path, "r", encoding="utf-8", errors="ignore") as f:
-                        for _ in range(20):
+                        for _ in range(50):
                             line = f.readline().strip()
                             if line.startswith("\\id ") and not job.book:
                                 job.book = line.split()[1]
@@ -107,6 +128,15 @@ class BatchRunner:
                                     job.chapter = int(line.split()[1])
                                 except ValueError:
                                     pass
+                # 3. Failsafe: check filename for chapter number
+                if job.chapter is None:
+                    import re
+                    m = re.search(r'(?:[_-]|^)(?:Ch|Chapter|C)[_-]?(\d+)', timing_path.name, re.IGNORECASE) or re.search(r'(?:[_-]|^)(?:Ch|Chapter|C)[_-]?(\d+)', out_path.name, re.IGNORECASE)
+                    if m:
+                        try:
+                            job.chapter = int(m.group(1))
+                        except ValueError:
+                            pass
             except Exception:
                 pass
                 
@@ -230,6 +260,10 @@ class BatchRunner:
         print(f"[*] Rendering video: {out_path.name}")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         
+        codec_req = self.config.video.get("codec", "libx264")
+        job.codec_used = self.builder.detect_best_video_codec(codec_req)
+        job.used_gpu = any(kw in job.codec_used.lower() for kw in ["nvenc", "qsv", "amf", "videotoolbox", "vaapi", "cuda", "omx"])
+        
         render_success, msg = self.builder.render(
             audio_file=actual_audio,
             subtitle_file=ass_path,
@@ -262,12 +296,150 @@ class BatchRunner:
             
         return job
 
+    def _preprocess_background_media(self):
+        """
+        Automatically preprocesses and caches background video files down to the target
+        project resolution before launching parallel rendering workers.
+        This eliminates CPU decoding and downscaling overhead during multi-worker execution.
+        """
+        try:
+            video_cfg = self.config.raw_config.get("video", {})
+            res_str = video_cfg.get("resolution", "1920x1080")
+            if "x" in res_str:
+                target_x, target_y = map(int, res_str.split("x"))
+            else:
+                target_x, target_y = 1920, 1080
+
+            fps = video_cfg.get("fps", 24)
+            scaling_mode = video_cfg.get("scaling_mode", "pad").lower()
+            if scaling_mode == "crop":
+                scale_filter = f"scale={target_x}:{target_y}:force_original_aspect_ratio=increase,crop={target_x}:{target_y}"
+            elif scaling_mode == "stretch":
+                scale_filter = f"scale={target_x}:{target_y}"
+            else:  # default 'pad'
+                scale_filter = f"scale={target_x}:{target_y}:force_original_aspect_ratio=decrease,pad={target_x}:{target_y}:(ow-iw)/2:(oh-ih)/2"
+
+            out_dir = Path(self.config.raw_config.get("project", {}).get("output_dir", "output"))
+            cache_dir = out_dir / ".cache"
+
+            # Check unique background videos across all jobs
+            unique_bgs = {}
+            for job in self.jobs:
+                bg = job.background_media or video_cfg.get("background_media")
+                if not bg:
+                    continue
+                bg_path = Path(bg)
+                if not bg_path.exists() or not bg_path.is_file():
+                    continue
+                ext = bg_path.suffix.lower()
+                if ext in [".mp4", ".mov", ".mkv", ".avi", ".webm", ".ts", ".m4v", ".wmv"]:
+                    unique_bgs[str(bg_path.resolve())] = bg_path
+
+            for abs_path_str, bg_path in unique_bgs.items():
+                # Probe resolution using ffprobe
+                probe_cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=s=x:p=0", str(bg_path)]
+                res = subprocess.run(probe_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                if res.returncode != 0 or not res.stdout.strip():
+                    continue
+                
+                parts = res.stdout.strip().split("x")
+                if len(parts) != 2:
+                    continue
+                w, h = int(parts[0]), int(parts[1])
+
+                # 1. Warn if background media is below target resolution (e.g. < 1080p)
+                if w < target_x or h < target_y:
+                    print(f"\n[!] WARNING: The background video '{bg_path.name}' resolution ({w}x{h}) is lower than your target output resolution ({target_x}x{target_y}).")
+                    print(f"[!] The background will be upscaled, which may result in lower visual quality or blurriness in the final video!\n")
+                    continue
+
+                # 2. Check if user wants to reduce high-res (e.g. > 1080p) to 1080p
+                if (w > 1920 or h > 1080) and (target_x > 1920 or target_y > 1080):
+                    if not self.auto_yes and sys.stdin.isatty():
+                        print(f"\n[?] Notice: Both background video '{bg_path.name}' ({w}x{h}) and target output ({target_x}x{target_y}) are high resolution.")
+                        print(f"    Processing 4K/high-res video across multiple parallel workers is CPU/GPU intensive.")
+                        try:
+                            ans = input(f"    Would you like to reduce output quality and background to 1080p (1920x1080) for faster batch rendering? [y/N]: ").strip().lower()
+                            if ans in ["y", "yes"]:
+                                target_x, target_y = 1920, 1080
+                                self.config.raw_config["video"]["resolution"] = "1920x1080"
+                                if scaling_mode == "crop":
+                                    scale_filter = f"scale={target_x}:{target_y}:force_original_aspect_ratio=increase,crop={target_x}:{target_y}"
+                                elif scaling_mode == "stretch":
+                                    scale_filter = f"scale={target_x}:{target_y}"
+                                else:
+                                    scale_filter = f"scale={target_x}:{target_y}:force_original_aspect_ratio=decrease,pad={target_x}:{target_y}:(ow-iw)/2:(oh-ih)/2"
+                        except (EOFError, KeyboardInterrupt):
+                            pass
+
+                # If resolution already matches target resolution, no need to downscale
+                if w <= target_x and h <= target_y:
+                    continue
+
+                cache_dir.mkdir(parents=True, exist_ok=True)
+                cached_filename = f"{bg_path.stem}_scaled_{target_x}x{target_y}_{fps}fps{bg_path.suffix}"
+                cached_path = cache_dir / cached_filename
+
+                # Check if cached file already exists and is up to date
+                if cached_path.exists() and cached_path.stat().st_size > 0:
+                    if cached_path.stat().st_mtime >= bg_path.stat().st_mtime:
+                        print(f"[*] Using preprocessed {target_x}x{target_y} cached background: {cached_filename}")
+                        for job in self.jobs:
+                            job_bg = job.background_media or video_cfg.get("background_media")
+                            if job_bg and Path(job_bg).resolve() == bg_path.resolve():
+                                job.background_media = str(cached_path)
+                        continue
+
+                # 3. Prompt user if they want to downscale high-res background to target resolution
+                if not self.auto_yes and sys.stdin.isatty():
+                    print(f"\n[?] Notice: Background video '{bg_path.name}' resolution ({w}x{h}) is higher than target project resolution ({target_x}x{target_y}).")
+                    try:
+                        ans = input(f"    Would you like to downscale and cache it to {target_x}x{target_y} for significantly faster batch rendering? [Y/n]: ").strip().lower()
+                        if ans in ["n", "no"]:
+                            print(f"[*] Keeping original high resolution ({w}x{h}) for rendering without caching.\n")
+                            continue
+                    except (EOFError, KeyboardInterrupt):
+                        continue
+
+                print(f"[*] Preprocessing background video: downscaling {bg_path.name} ({w}x{h}) -> {cached_filename} ({target_x}x{target_y}) for fast batch rendering...")
+                
+                # Determine fast GPU/CPU encoder for caching
+                codec_req = video_cfg.get("codec", "libx264")
+                cache_codec = self.builder.detect_best_video_codec(codec_req)
+                
+                ff_cmd = [
+                    "ffmpeg", "-y", "-i", str(bg_path),
+                    "-vf", scale_filter,
+                    "-c:v", cache_codec,
+                    "-preset", "fast"
+                ]
+                if "nvenc" in cache_codec:
+                    ff_cmd.extend(["-cq", "18"])
+                elif "qsv" in cache_codec or "amf" in cache_codec:
+                    pass
+                else:
+                    ff_cmd.extend(["-crf", "18"])
+                ff_cmd.extend(["-r", str(fps), "-an", str(cached_path)])
+
+                proc = subprocess.run(ff_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                if proc.returncode == 0 and cached_path.exists() and cached_path.stat().st_size > 0:
+                    # Update all jobs referencing this background media to use the cached file!
+                    for job in self.jobs:
+                        job_bg = job.background_media or video_cfg.get("background_media")
+                        if job_bg and Path(job_bg).resolve() == bg_path.resolve():
+                            job.background_media = str(cached_path)
+                else:
+                    print(f"[!] Warning: Failed to preprocess background video {bg_path.name}. Falling back to original file.")
+        except Exception as e:
+            print(f"[!] Warning: Automatic background preprocessing encountered an issue: {e}. Using original files.")
+
     def run_all(self, max_workers=1):
         """
         Execute all jobs in the queue sequentially or concurrently.
         Returns summary dictionary.
         """
         print(f"=== Starting Batch Run ({len(self.jobs)} jobs, {max_workers} workers) ===")
+        self._preprocess_background_media()
         start_total = time.time()
         
         if max_workers > 1 and len(self.jobs) > 1:
@@ -282,14 +454,105 @@ class BatchRunner:
         succeeded = sum(1 for j in self.jobs if j.status == "SUCCESS")
         failed = sum(1 for j in self.jobs if j.status == "FAILED")
         
-        print("\n=== Batch Run Complete ===")
-        print(f"Total time: {total_time:.2f}s | Succeeded: {succeeded} | Failed: {failed}")
-        
-        for idx, job in enumerate(self.jobs, 1):
-            status_symbol = "[OK]" if job.status == "SUCCESS" else "[FAIL]"
-            print(f"[{idx}] {status_symbol} {Path(job.output_file).name} ({job.render_time:.2f}s)")
-            if job.error_msg:
-                print(f"    Error: {job.error_msg}")
+        print("")
+        try:
+            from rich.console import Console
+            from rich.table import Table
+            from rich.panel import Panel
+            console = Console()
+            
+            table = Table(title="[bold cyan]📊 Scripture Conversion Batch Summary[/bold cyan]", border_style="blue", header_style="bold yellow", show_lines=True)
+            table.add_column("#", justify="center", style="dim", width=4)
+            table.add_column("Book", justify="center", style="bold white", width=6)
+            table.add_column("Ch", justify="center", style="cyan", width=5)
+            table.add_column("Output File", style="green")
+            table.add_column("Duration", justify="right", style="yellow", width=10)
+            table.add_column("Encoder", justify="center", style="bold cyan", width=14)
+            table.add_column("Status", justify="center", width=12)
+            table.add_column("Details", style="dim")
+            
+            book_stats = {}
+            for idx, job in enumerate(self.jobs, 1):
+                b = job.book or "UNKNOWN"
+                ch_str = f"{job.chapter:02d}" if isinstance(job.chapter, int) else str(job.chapter or "-")
+                if b not in book_stats:
+                    book_stats[b] = {"count": 0, "success": 0, "fail": 0, "cpu_time": 0.0, "gpu_time": 0.0, "total_time": 0.0}
+                book_stats[b]["count"] += 1
+                book_stats[b]["total_time"] += job.render_time
+                if getattr(job, "used_gpu", False):
+                    book_stats[b]["gpu_time"] += job.render_time
+                else:
+                    book_stats[b]["cpu_time"] += job.render_time
+                if job.status == "SUCCESS":
+                    book_stats[b]["success"] += 1
+                    status_badge = "[bold green]✔ SUCCESS[/bold green]"
+                    details = "-"
+                else:
+                    book_stats[b]["fail"] += 1
+                    status_badge = "[bold red]✖ FAILED[/bold red]"
+                    details = f"[red]{job.error_msg or 'Unknown error'}[/red]"
+                    
+                dur_str = f"{int(job.render_time // 60)}m {job.render_time % 60:.1f}s" if job.render_time >= 60 else f"{job.render_time:.2f}s"
+                enc_badge = f"[bold green]{getattr(job, 'codec_used', 'unknown')} (GPU)[/bold green]" if getattr(job, "used_gpu", False) else f"[cyan]{getattr(job, 'codec_used', 'libx264')} (CPU)[/cyan]"
+                table.add_row(str(idx), b, ch_str, Path(job.output_file).name, dur_str, enc_badge, status_badge, details)
+                
+            console.print(table)
+            
+            # Print Per-Book Summary Table
+            summary_table = Table(title="[bold magenta]📈 Per-Book Execution Summary[/bold magenta]", border_style="magenta", header_style="bold white")
+            summary_table.add_column("Book", style="bold yellow")
+            summary_table.add_column("Chapters", justify="center")
+            summary_table.add_column("Succeeded", justify="center", style="green")
+            summary_table.add_column("Failed", justify="center", style="red")
+            summary_table.add_column("Total GPU Time", justify="right", style="bold green")
+            summary_table.add_column("Total CPU Time", justify="right", style="cyan")
+            summary_table.add_column("Avg Time / Ch", justify="right", style="white")
+            
+            for b, stats in book_stats.items():
+                tot_c = stats["count"]
+                avg_t = stats["total_time"] / tot_c if tot_c > 0 else 0
+                gpu_str = f"{int(stats['gpu_time'] // 60)}m {stats['gpu_time'] % 60:.1f}s" if stats['gpu_time'] >= 60 else f"{stats['gpu_time']:.2f}s"
+                if stats["gpu_time"] == 0:
+                    gpu_str = "-"
+                cpu_str = f"{int(stats['cpu_time'] // 60)}m {stats['cpu_time'] % 60:.1f}s" if stats['cpu_time'] >= 60 else f"{stats['cpu_time']:.2f}s"
+                if stats["cpu_time"] == 0:
+                    cpu_str = "-"
+                avg_str = f"{avg_t:.2f}s"
+                summary_table.add_row(b, str(tot_c), str(stats["success"]), str(stats["fail"]), gpu_str, cpu_str, avg_str)
+                
+            console.print(summary_table)
+            
+            tot_str = f"{int(total_time // 60)}m {total_time % 60:.1f}s" if total_time >= 60 else f"{total_time:.2f}s"
+            total_gpu_time = sum(getattr(j, "render_time", 0.0) for j in self.jobs if getattr(j, "used_gpu", False))
+            total_cpu_time = sum(getattr(j, "render_time", 0.0) for j in self.jobs if not getattr(j, "used_gpu", False))
+            
+            time_parts = [f"[bold white]Total Elapsed:[/] [bold yellow]{tot_str}[/bold yellow]"]
+            if total_gpu_time > 0:
+                g_str = f"{int(total_gpu_time // 60)}m {total_gpu_time % 60:.1f}s" if total_gpu_time >= 60 else f"{total_gpu_time:.2f}s"
+                time_parts.append(f"[bold green]GPU Render Time:[/] [bold green]{g_str}[/bold green]")
+            if total_cpu_time > 0:
+                c_str = f"{int(total_cpu_time // 60)}m {total_cpu_time % 60:.1f}s" if total_cpu_time >= 60 else f"{total_cpu_time:.2f}s"
+                time_parts.append(f"[bold cyan]CPU Render Time:[/] [bold cyan]{c_str}[/bold cyan]")
+                
+            time_summary = "  |  ".join(time_parts)
+            console.print(Panel.fit(
+                f"{time_summary}\n"
+                f"[green]Succeeded:[/] [bold green]{succeeded}[/bold green]  |  "
+                f"[red]Failed:[/] [bold red]{failed}[/bold red]",
+                title="[bold green]🏁 FINAL RESULTS 🏁[/bold green]",
+                border_style="green"
+            ))
+        except Exception as e:
+            print("\n=== Batch Run Complete ===")
+            total_gpu_time = sum(getattr(j, "render_time", 0.0) for j in self.jobs if getattr(j, "used_gpu", False))
+            total_cpu_time = sum(getattr(j, "render_time", 0.0) for j in self.jobs if not getattr(j, "used_gpu", False))
+            print(f"Total time: {total_time:.2f}s | GPU Time: {total_gpu_time:.2f}s | CPU Time: {total_cpu_time:.2f}s | Succeeded: {succeeded} | Failed: {failed}")
+            for idx, job in enumerate(self.jobs, 1):
+                status_symbol = "[OK]" if job.status == "SUCCESS" else "[FAIL]"
+                enc_str = f"[{getattr(job, 'codec_used', 'unknown')}]"
+                print(f"[{idx}] {status_symbol} {Path(job.output_file).name} {enc_str} ({job.render_time:.2f}s)")
+                if job.error_msg:
+                    print(f"    Error: {job.error_msg}")
                 
         return {
             "total_time": total_time,

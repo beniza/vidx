@@ -30,6 +30,10 @@ def main():
     parser.add_argument("-w", "--workers", type=int, default=1, help="Number of parallel rendering workers.")
     parser.add_argument("--generate-only", action="store_true", help="Only generate subtitle files without rendering video.")
     parser.add_argument("--format", type=str, choices=["ass", "srt", "both"], help="Subtitle format to generate (ass, srt, both).")
+    parser.add_argument("--gpu", action="store_true", help="Enable automatic GPU hardware acceleration for video encoding.")
+    parser.add_argument("--codec", type=str, help="Specify video codec explicitly (e.g. 'auto', 'h264_nvenc', 'libx264').")
+    parser.add_argument("--res", "--resolution", dest="resolution", type=str, help="Override output resolution (e.g. 1920x1080, 3840x2160, 1080x1920).")
+    parser.add_argument("-y", "--yes", action="store_true", help="Automatically answer yes to prompts (e.g. downscale high-res background to 1080p).")
     
     args = parser.parse_args()
     
@@ -46,13 +50,21 @@ def main():
             config.raw_config["video"] = {}
         config.raw_config["video"]["background_media"] = args.bg
         
+    if args.gpu or args.codec or args.resolution:
+        if "video" not in config.raw_config:
+            config.raw_config["video"] = {}
+        if args.codec or args.gpu:
+            config.raw_config["video"]["codec"] = args.codec if args.codec else ("auto" if args.gpu else "libx264")
+        if args.resolution:
+            config.raw_config["video"]["resolution"] = args.resolution
+        
     keep_ass = not args.clean_ass if args.clean_ass else args.keep_ass
     
     # Mode 1: Single Job from CLI arguments
     if args.usfm and args.timing and (args.audio or args.generate_only):
         out_f = args.output or (str(Path(args.audio).with_suffix(".mp4")) if args.audio else str(Path(args.usfm).with_suffix(".mp4")))
         audio_f = args.audio or str(Path(args.usfm).with_suffix(".mp3"))
-        runner = BatchRunner(config=config)
+        runner = BatchRunner(config=config, auto_yes=args.yes)
         if args.generate_only:
             runner.generate_only = True
         if args.format:
@@ -77,7 +89,7 @@ def main():
             
     # Mode 2: Batch Job from YAML configuration
     elif args.config:
-        runner = BatchRunner(config=config)
+        runner = BatchRunner(config=config, auto_yes=args.yes)
         if args.generate_only:
             runner.generate_only = True
         if args.format:

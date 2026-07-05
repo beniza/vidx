@@ -28,6 +28,8 @@ def test_hex_to_ass_conversions():
 def test_clean_subtitle_text():
     raw = "Jesus\\f + \\ft note\\f* said,\\x - \\xo 1.1\\x* 'Peace.'"
     assert clean_subtitle_text(raw) == "Jesus said, 'Peace.'"
+    raw_variations = "Word\\x- \\xo 1:1 \\xt Gen 1:1\\x* and Spirit\\f+ \\ft note here\\f* with peace\\ex - \\xo 2:2\\ex*."
+    assert clean_subtitle_text(raw_variations) == "Word and Spirit with peace."
 
 
 def test_ass_generator():

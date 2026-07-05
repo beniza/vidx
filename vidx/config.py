@@ -3,6 +3,7 @@ Configuration Module for VIDX
 Loads, validates, and manages defaults for YAML configuration files.
 """
 import os
+import copy
 import yaml
 from pathlib import Path
 
@@ -65,7 +66,7 @@ DEFAULT_CONFIG = {
 
 def merge_dict(base, override):
     """Recursively merge override dict into base dict."""
-    result = base.copy()
+    result = copy.deepcopy(base)
     for k, v in override.items():
         if k in result and isinstance(result[k], dict) and isinstance(v, dict):
             result[k] = merge_dict(result[k], v)
@@ -78,7 +79,7 @@ class Config:
     """Config manager that loads YAML and provides validated settings."""
     
     def __init__(self, config_path=None, config_dict=None):
-        self.raw_config = DEFAULT_CONFIG.copy()
+        self.raw_config = copy.deepcopy(DEFAULT_CONFIG)
         
         if config_path:
             p = Path(config_path)

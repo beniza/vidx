@@ -30,6 +30,15 @@ def test_usfm_clean_text():
     assert "and God" in cleaned
     assert "done." in cleaned
 
+    # Test variations without space after \\x or \\f, extended tags, and inline references
+    raw_variations = "Word\\x- \\xo 1:1 \\xt Gen 1:1\\x* and Spirit\\f+ \\ft note here\\f* with peace\\ex - \\xo 2:2\\ex*."
+    cleaned_vars = parser._clean_text(raw_variations)
+    assert "Gen 1:1" not in cleaned_vars
+    assert "1:1" not in cleaned_vars
+    assert "note here" not in cleaned_vars
+    assert "2:2" not in cleaned_vars
+    assert "Word and Spirit with peace." == cleaned_vars
+
 
 def test_usfm_parsing():
     parser = USFMParser(SAMPLE_USFM, target_chapter="1")

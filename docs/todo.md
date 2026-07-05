@@ -74,6 +74,9 @@
   - Create a GitHub Actions workflow triggered by version tags (e.g., `v0.2.0`) to automatically compile PyInstaller executables across Windows and Linux, attaching them to the GitHub Release page.
 
 ### 2. Video & Audio Rendering Enhancements
+- [x] **GPU Hardware-Accelerated Video Encoding:**
+  - Add optional YAML configuration (`video.codec: "h264_nvenc"`, `video.hwaccel: "auto"`) to replace software encoding (`libx264`) with GPU hardware encoders (NVIDIA NVENC, Intel QuickSync, AMD AMF, Apple VideoToolbox).
+  - Implement automatic startup detection via `ffmpeg -encoders` to dynamically select the best available GPU encoder on the user's machine, achieving 3x to 10x faster rendering speeds while falling back seamlessly to CPU encoding if no GPU is present.
 - [ ] **Audio Fade-in / Fade-out:**
   - Add optional YAML configuration (`audio.fade_in_sec`, `audio.fade_out_sec`) to apply smooth audio transitions at chapter boundaries using FFmpeg `afade` filter.
 - [ ] **Video Loop Crossfading:**
@@ -99,6 +102,9 @@
 ---
 
 ## ✅ Recently Completed Milestones (v0.2.0 Evolution)
+- [x] **Title Cards & Video Thumbnail Support:** Enabled still title image display at the beginning of videos (`video.title_card`, `video.title_duration`), serving double-duty as social media video thumbnails.
+- [x] **Broadcast Audio Bumpers & Looped Background Music (BGM):** Added audio intro/outro jingle concatenation (`audio.intro_clip`, `audio.outro_clip`), automatic subtitle timestamp shifting, and continuous looped background music blending (`audio.background_music`, `audio.background_music_volume`) via FFmpeg `amix`.
+- [x] **Robust USFM Marker Stripping Fix:** Solved cross-reference and footnote text bleeding into subtitles by upgrading regex rules in `usfm_parser` and `ass_generator` to handle word boundaries and extended formatting tags without trailing spaces (`\x-`, `\f+`, `\ex`, `\rq`).
 - [x] **Decoupled GUI-Ready Progress Bar & Callback System:** Architected structured event reporting (`ProgressEvent`) across `FFmpegBuilder` and `BatchRunner` with real-time encoding stats (`speed`, `fps`, `ETA`), complete with a multi-worker terminal UI using `rich` and zero stdout scraping required for GUI applications.
 - [x] **Internalized USFM Parser:** Migrated `usfm-converter` into `vidx.usfm_parser` to resolve Git dependency issues and simplify PyInstaller EXE builds.
 - [x] **Dual-Purpose Subtitle Generator:** Enabled high-speed standalone subtitle extraction (`.srt` and `.ass`) without requiring video rendering or audio soundtrack files.

@@ -6,21 +6,29 @@
 project:
   name: "Sindhi Mark Video Project"
   output_dir: "output"
+  # generate_only: false          # Set true to extract subtitles without rendering MP4 video
+  # subtitle_format: "ass"        # Subtitle output format when generate_only is true: 'ass', 'srt', or 'both'
 
 video:
   resolution: "1920x1080"       # Video resolution: 1920x1080 (16:9), 1080x1920 (vertical), 1080x1080 (square)
   fps: 24                       # Frame rate
-  codec: "libx264"              # Video encoder
+  codec: "libx264"              # Video encoder ('libx264', 'auto' for GPU auto-detection, 'h264_nvenc', 'h264_qsv', 'h264_amf')
   preset: "fast"                # FFmpeg encoding preset (ultrafast, fast, medium, slow)
   crf: 23                       # Constant Rate Factor (lower = higher quality, 18-28 is standard)
   background_media: "src/bg.mp4" # Default background media (video or image)
   loop_background: true         # Loop background video if it is shorter than the audio
   scaling_mode: "pad"           # Background scaling mode: 'pad' (black bars if aspect differs), 'crop', 'stretch'
+  # title_card: "assets/title.jpg" # Optional still title image displayed before scripture reading starts
+  # title_duration: 4.0            # Duration in seconds to display title card
 
 audio:
   codec: "aac"                  # Audio encoder
   bitrate: "192k"               # Audio bitrate
   sample_rate: 48000            # Sample rate in Hz
+  # intro_clip: "assets/intro.mp3" # Optional audio intro bumper played at start (subtitles shift automatically!)
+  # outro_clip: "assets/outro.mp3" # Optional audio outro bumper played at end
+  # background_music: "assets/bgm.mp3" # Optional background music looped seamlessly during reading
+  # background_music_volume: 0.15      # Volume level for background music (0.0 to 1.0)
 
 style:
   verse:

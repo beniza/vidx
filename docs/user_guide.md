@@ -143,16 +143,39 @@ Open `output/Mark_Chapter_05_16x9.mp4` in your media player (VLC, Windows Media 
 
 ---
 
-## 🚀 Step 4: Full Batch Rendering
+## 🚀 Step 4: Whole-Book Batch Rendering & Multimedia Enhancements
 
-Once you are satisfied with the 10-second test preview, run the full batch job:
+When you are ready to produce an entire Scripture book (e.g., Gospel of Mark, Chapters 1 through 16), list all chapter jobs under the `jobs` block in your configuration file. Because VIDX's internal USFM parser automatically matches chapters, you only need **one shared `.SFM` book file** for the entire job queue! (See [examples/whole_book_batch.yaml](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/examples/whole_book_batch.yaml) for a complete working template).
+
+### 1. Parallel Multi-Worker Rendering (`-w`)
+Rendering dozens of chapters sequentially can take hours. To accelerate production, use the `-w` (workers) flag to spawn multiple concurrent CPU rendering processes:
 
 ```bash
-# Sequential rendering
-vidx -c examples/sindhi_mark_16x9.yaml
+# Render 4 chapters simultaneously (ideal for 8-core CPUs)
+vidx -c examples/whole_book_batch.yaml -w 4
+```
 
-# Multi-core concurrent rendering (e.g., render 4 chapters simultaneously)
-vidx -c examples/malayalam_philemon_16x9.yaml -w 4
+During a multi-worker batch run, VIDX displays an interactive, real-time terminal UI showing:
+*   **Worker Mapping:** A dedicated live progress bar for each active worker (`[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).
+*   **Live Metrics:** Real-time encoding speed (`2.3x`), frames per second (`fps`), elapsed time, and ETA.
+*   **Global Batch Summary:** A master progress bar tracking completed chapters versus total remaining jobs in the queue.
+
+### 2. Adding Title Cards & Thumbnails
+You can attach a still title image that displays for a set number of seconds before scripture reading begins:
+```yaml
+video:
+  title_card: "assets/title.jpg" # Doubles as your YouTube/social media video thumbnail!
+  title_duration: 4.0            # Duration in seconds
+```
+
+### 3. Audio Bumpers & Looped Background Music (BGM)
+Give your videos a broadcast-ready feel by adding introductory/concluding audio clips and seamless background instrumental music:
+```yaml
+audio:
+  intro_clip: "assets/intro.mp3"       # Plays before scripture starts (subtitles shift automatically!)
+  outro_clip: "assets/outro.mp3"       # Plays after scripture concludes
+  background_music: "assets/bgm.mp3"   # Automatically looped to match reading duration
+  background_music_volume: 0.15        # Blended cleanly without reducing narrator voice volume
 ```
 
 ---

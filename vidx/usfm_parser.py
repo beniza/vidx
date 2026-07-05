@@ -33,14 +33,14 @@ class USFMParser:
     
     def _clean_text(self, text):
         """Remove USFM markers and notes from text"""
-        # Remove footnotes \f ... \f* (everything between including nested markers)
-        text = re.sub(r'\\f\s+.*?\\f\*', '', text, flags=re.DOTALL)
+        # Remove footnotes \f, \fe, \ef, \fqa (everything between including nested markers and prefix symbols)
+        text = re.sub(r'\\(?:f|fe|ef|fqa)\b.*?\\(?:f|fe|ef|fqa)\*', '', text, flags=re.DOTALL)
         
-        # Remove cross-references \x ... \x* (everything between including nested markers)
-        text = re.sub(r'\\x\s+.*?\\x\*', '', text, flags=re.DOTALL)
+        # Remove cross-references \x, \ex, \rq, \esb, \cat (everything between including nested markers and prefix symbols)
+        text = re.sub(r'\\(?:x|ex|rq|esb|cat)\b.*?\\(?:x|ex|rq|esb|cat)\*', '', text, flags=re.DOTALL)
         
         # Remove figures \fig ... \fig*
-        text = re.sub(r'\\fig\s+.*?\\fig\*', '', text, flags=re.DOTALL)
+        text = re.sub(r'\\fig\b.*?\\fig\*', '', text, flags=re.DOTALL)
         
         # Remove character formatting markers like \bk ... \bk*, \wj ... \wj*, etc.
         text = re.sub(r'\\(?:bk|wj|nd|tl|qs)\s*([^\\]*?)\\(?:bk|wj|nd|tl|qs)\*', r'\1', text)
