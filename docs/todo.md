@@ -90,6 +90,7 @@
 - [ ] **Multi-Worker Memory Profiling:**
   - Optimize memory footprint during large concurrent batch runs (`-w 4` or `-w 8`) when processing entire New Testament (NT) audio libraries (260+ chapters).
 - [ ] **Multi-Worker Live Progress Bars (`rich` / `enlighten` / `tqdm`):**
+  - [ ] **Decoupled GUI-Ready Callback Architecture (Observer Pattern):** **MANDATORY ARCHITECTURAL RULE:** Progress reporting must NOT be hardcoded to console prints or terminal UI libraries. Instead, implement an event/callback interface (`progress_callback(event: ProgressEvent)`) emitted by `FFmpegBuilder` and `BatchRunner`. Structured events (`job_id`, `worker_id`, `book`, `chapter`, `status`, `percent`, `speed`, `fps`, `elapsed`, `eta`) will allow both the CLI terminal observer and the upcoming GUI application to display live progress bars from the exact same backend engine!
   - [ ] **Dedicated Worker Mapping:** Display a live interactive progress bar for *each* parallel rendering worker (`-w WORKERS`), showing the exact scripture book, chapter, and file currently being processed (e.g., `[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).
   - [ ] **Live Rendering Metrics:** Report real-time FFmpeg encoding stats on the progress bar: current processing speed (e.g., `2.3x` real-time), encoded frames per second (`fps`), elapsed time, and estimated time of arrival (`ETA`).
   - [ ] **Global Batch Queue Summary:** Display a master progress bar tracking total completed chapters vs. remaining jobs across the entire New Testament conversion queue (`24 / 260 Chapters Completed [9%]`).
