@@ -53,6 +53,24 @@ class FFmpegBuilder:
             p = p[0] + '\\:' + p[2:]
         return p
         
+    def _get_audio_duration(self, audio_file, duration=None):
+        if duration is not None:
+            return float(duration)
+        try:
+            import mutagen
+            audio_meta = mutagen.File(audio_file)
+            if audio_meta and audio_meta.info and getattr(audio_meta.info, 'length', None):
+                return float(audio_meta.info.length)
+        except Exception:
+            pass
+        try:
+            res = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(audio_file)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if res.returncode == 0 and res.stdout.strip():
+                return float(res.stdout.strip())
+        except Exception:
+            pass
+        return None
+        
     def build_command(self, audio_file, subtitle_file, output_file, background_media=None, duration=None):
         """
         Construct a list of command arguments for running subprocess.Popen / run.
@@ -104,6 +122,18 @@ class FFmpegBuilder:
         outro_image = video_cfg.get("outro_image") or self.config.get("bumpers", {}).get("outro_image")
         outro_start = float(video_cfg.get("outro_start") or self.config.get("bumpers", {}).get("outro_start") or 0.0)
         
+        # Audio fade transitions
+        fade_in = float(audio_cfg.get("fade_in_sec", 0.0) or 0.0)
+        fade_out = float(audio_cfg.get("fade_out_sec", 0.0) or 0.0)
+        af_list = []
+        if fade_in > 0:
+            af_list.append(f"afade=t=in:ss=0:d={fade_in}")
+        if fade_out > 0:
+            total_dur = self._get_audio_duration(audio_file, duration) or 300.0
+            if total_dur > fade_out:
+                st = max(0.0, float(total_dur) - fade_out)
+                af_list.append(f"afade=t=out:st={st:.3f}:d={fade_out}")
+        
         if title_image or outro_image:
             fc_parts = [f"[0:v]{scale_filter}[bg]"]
             curr_v = "[bg]"
@@ -121,10 +151,16 @@ class FFmpegBuilder:
                 curr_v = "[v_out]"
                 next_idx += 1
             fc_parts.append(f"{curr_v}ass='{sub_path_clean}'[v]")
-            cmd.extend(["-filter_complex", ";".join(fc_parts), "-map", "[v]", "-map", "1:a"])
+            if af_list:
+                fc_parts.append(f"[1:a]{','.join(af_list)}[a]")
+                cmd.extend(["-filter_complex", ";".join(fc_parts), "-map", "[v]", "-map", "[a]"])
+            else:
+                cmd.extend(["-filter_complex", ";".join(fc_parts), "-map", "[v]", "-map", "1:a"])
         else:
             vf_chain = f"{scale_filter},ass='{sub_path_clean}'"
             cmd.extend(["-vf", vf_chain])
+            if af_list:
+                cmd.extend(["-af", ",".join(af_list)])
         
         # Video encoding settings
         codec_req = video_cfg.get("codec", "libx264")
@@ -177,15 +213,7 @@ class FFmpegBuilder:
         from .progress import ProgressEvent, parse_ffmpeg_progress_line
         
         # Determine total duration for percentage calculation if not explicitly provided
-        total_dur = duration
-        if not total_dur:
-            try:
-                import mutagen
-                audio_meta = mutagen.File(audio_file)
-                if audio_meta and audio_meta.info:
-                    total_dur = getattr(audio_meta.info, 'length', None)
-            except Exception:
-                pass
+        total_dur = self._get_audio_duration(audio_file, duration)
                 
         try:
             progress_callback(ProgressEvent(

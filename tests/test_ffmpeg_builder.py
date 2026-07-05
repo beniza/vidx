@@ -136,3 +136,19 @@ def test_build_command_auto_codec(monkeypatch):
     assert cmd[idx + 1] == "h264_nvenc"
 
 
+def test_build_command_audio_fade():
+    config = {
+        "video": {"resolution": "1920x1080"},
+        "audio": {"fade_in_sec": 1.5, "fade_out_sec": 2.0}
+    }
+    builder = FFmpegBuilder(config)
+    cmd = builder.build_command("audio.mp3", "sub.ass", "out.mp4", duration=60.0)
+    
+    assert "-af" in cmd
+    af_idx = cmd.index("-af")
+    af_chain = cmd[af_idx + 1]
+    assert "afade=t=in:ss=0:d=1.5" in af_chain
+    assert "afade=t=out:st=58.000:d=2.0" in af_chain
+
+
+
