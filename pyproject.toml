@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vidx"
-version = "0.1.0"
+version = "0.2.0"
 description = "Scripture video rendering companion engine to AUDX (combines USFM files, timing maps, audio, and FFmpeg)."
 authors = [
     {name = "Bridgeconn"}
@@ -15,5 +15,14 @@ dependencies = [
     "pyyaml>=5.4.1"
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+]
+
 [project.scripts]
 vidx = "vidx.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

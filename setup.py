@@ -2,12 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="vidx",
-    version="0.1.0-alpha",
+    version="0.2.0",
     packages=find_packages(),
     install_requires=[
         "pyyaml>=5.4.1",
-        "usfm-converter>=0.1.1a0"
     ],
+    extras_require={
+        "test": ["pytest>=7.0.0"],
+    },
     entry_points={
         "console_scripts": [
             "vidx=vidx.cli:main",
