@@ -19,27 +19,47 @@ When producing multimedia scripture releases, translation teams typically follow
 
 ---
 
-## 🛠️ Step 1: Preparing Your Assets
+## 🛠️ Step 1: Setting Up Your Workspace Folder Structure
 
-For each book or chapter you wish to convert, gather your files into a clean workspace structure. Notice that because VIDX includes an intelligent internal USFM parser, **multiple chapters can share a single book-level USFM file**:
+To ensure repeatable, error-free batch conversions across single chapters, full books, or the entire New Testament, we strongly recommend adopting a standardized folder hierarchy in your workspace directory. 
 
+Because VIDX includes an intelligent internal USFM parser, **multiple chapters or even entire New Testaments can share a single USFM source file**, removing the need to split USFM files by chapter!
+
+### Recommended Directory Structure:
 ```
-my_project/
-├── audio/
-│   ├── SND-MRK-1.mp3
-│   └── SND-MRK-2.mp3
-├── timing/
-│   ├── MRK_01_timing.txt
-│   └── MRK_02_timing.txt
-├── usfm/
-│   └── 42MRKsnd.SFM          # Single book file shared across all chapters!
-└── backgrounds/
-    └── nature_loop.mp4
+my_scripture_project/
+├── project.yaml              # Main configuration file (copy from our examples/ folder)
+│
+├── usfm/                     # Scripture text source files
+│   └── 42MRKsnd.SFM          # Whole book USFM 3.0 file (or entire NT bundle)
+│
+├── audio/                    # Standardized studio recordings (produced via AUDX)
+│   ├── SND-MRK-01.mp3        # Chapter 1 audio (.mp3, .wav, or .mpeg)
+│   ├── SND-MRK-02.mp3        # Chapter 2 audio
+│   └── SND-MRK-03.mp3
+│
+├── timing/                   # Verse-level timing maps (from Aeneas or Scripture App)
+│   ├── MRK_01_timing.txt     # Tab-delimited timecodes for Chapter 1
+│   ├── MRK_02_timing.txt
+│   └── MRK_03_timing.txt
+│
+├── backgrounds/              # Visual background loops and static canvas images
+│   ├── nature_loop_16x9.mp4  # Widescreen video loop for landscape videos
+│   ├── vertical_sky_9x16.mp4 # Vertical loop for YouTube Shorts / TikTok Reels
+│   └── abstract_bg.png       # Static high-resolution background image
+│
+└── assets/                   # Branding, Bumpers & Thumbnails (Upcoming Features)
+    ├── title_card.jpg        # Still image displayed at start (also serves as YouTube thumbnail!)
+    ├── intro_bumper.mp3      # Short station/intro audio clip played before scripture starts
+    └── outro_credits.mp3     # Short closing music played after scripture finishes
 ```
 
-### Tips for Timing Files:
-- Ensure your timing files use tab-delimited or standard Aeneas format (`start_sec   end_sec   segment_id`).
-- Verse fragments (`2a`, `2b`) will automatically be matched and split across dialogue screens by `vidx`.
+### Asset Type Guidelines:
+1. **USFM Scripture (`usfm/`):** Place standard UTF-8 encoded `.SFM` or `.usfm` files here. VIDX automatically strips formatting noise (footnotes `\f`, cross-references `\x`, figures `\fig`) and targets the exact chapter requested by your timing file.
+2. **Audio Recordings (`audio/`):** Use standardized audio exported from your AUDX pipeline. Supported formats include `.mp3`, `.wav`, `.aac`, and `.mpeg`. Ensure filenames clearly identify the book and chapter.
+3. **Timing Maps (`timing/`):** Standard tab-delimited files (`start_sec \t end_sec \t segment_id`). Punctuation splits and verse fragments (`1a`, `1b`) are matched automatically.
+4. **Backgrounds (`backgrounds/`):** You can use short looping video clips (`.mp4`, `.mov`) or static images (`.jpg`, `.png`). If your video loop is shorter than the chapter audio, VIDX will automatically loop it (`loop_background: true`) to match the exact duration!
+5. **Title Cards & Bumpers (`assets/` - Upcoming v0.3 Features):** You can prepare still title images (`title_card.jpg`) to serve as video intros and YouTube thumbnails, along with introductory/closing audio bumpers (`intro.mp3` / `outro.mp3`). VIDX will automatically offset subtitle timestamps to account for intro audio delays!
 
 ---
 

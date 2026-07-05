@@ -21,6 +21,30 @@
 
 ---
 
+## 🖥️ User Experience & Graphical Interface (GUI)
+
+- [ ] **Graphical User Interface (GUI) Config Editor**
+  - [ ] Develop a user-friendly GUI application (e.g., desktop app using Tkinter/PyQt or a local web-based editor) for translation field teams who are unfamiliar with command-line tools or YAML syntax.
+  - [ ] **Interactive File Browsers:** Visual file pickers to select USFM scripture files, audio recordings (.mp3/.wav/.mpeg), verse timing maps (.txt), and background video loops/images.
+  - [ ] **Visual Color & Transparency Pickers:** Built-in color selection palettes with real-time sliders for background bounding box opacity (`0%` to `100% transparent`) and font outline width.
+  - [ ] **Live Subtitle Previewer:** Render an instant visual mockup showing how scripture dialogue, gold section headings (`\s1`), and verse prefixes (`5:1`) will look over the selected background video without running full FFmpeg rendering jobs.
+  - [ ] **One-Click Batch Execution:** Button to launch sequential or multi-worker (`-w 4`) rendering queues directly from the GUI with live progress reporting.
+
+---
+
+## 🎬 Multimedia Production Enhancements
+
+- [ ] **Title Cards & Video Thumbnail Support**
+  - [ ] Enable users to specify a still title image (`video.title_card: "assets/title.jpg"`, `video.title_duration: 4.0`) that displays at the beginning of the video before scripture dialogue starts.
+  - [ ] Ensure title cards are rendered at the exact target resolution (`1920x1080`, `1080x1920`, or `1080x1080`) so they can serve dual purpose as YouTube, Facebook, and Instagram video thumbnails.
+
+- [ ] **Audio Intro & Outro Bumper Clips**
+  - [ ] Add configuration options for introductory and concluding audio clips (`audio.intro_clip: "assets/intro.mp3"`, `audio.outro_clip: "assets/outro.mp3"`).
+  - [ ] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main AUDX scripture audio -> play outro credits bumper.
+  - [ ] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
+
+---
+
 ## 🧪 Engineering & Methodology Requirements
 
 - [x] **Comprehensive Automated Test Suite (`pytest`)**
