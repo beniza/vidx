@@ -1,5 +1,5 @@
 # VIDX — Scripture Video Generator
-> **The official video rendering companion to [AUDX](https://github.com/bridgeconn/audx) (Audio Scripture Conversion Tool suite).**
+> **The official video rendering companion to [AUDX](https://github.com/beniza/audx) (Audio Scripture Conversion Tool suite).**
 
 `vidx` is a powerful, CLI-first, configuration-driven automation engine designed for Bible translation teams. It combines three core Bible translation assets into broadcast-quality lyric videos and standalone subtitle files:
 1. **USFM Scripture Files** (e.g., `src/snd/42MRKsnd.SFM`)

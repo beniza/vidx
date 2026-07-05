@@ -34,7 +34,7 @@ Impact is **degraded, not broken**: both `rich` and `mutagen` are `try/except Im
 Fix: delete `setup.py` and rely solely on `pyproject.toml` (single source of truth), then regenerate the egg-info.
 
 ### 3. No LICENSE
-No `LICENSE` file and no `license` field in `pyproject.toml`/`setup.py`. For a Bridgeconn/SIL scripture tool intended for distribution, this blocks legitimate reuse. Add the intended license (e.g. MIT) as a file and a metadata field.
+No `LICENSE` file and no `license` field in `pyproject.toml`/`setup.py`. For a TFBF scripture tool intended for distribution, this blocks legitimate reuse. Add the intended license (e.g. MIT) as a file and a metadata field.
 
 ### 4. No CHANGELOG
 Release notes are hand-typed inline in `release.yml` (lines 45–71). A `CHANGELOG.md` would decouple history from the workflow and reduce drift.

@@ -74,7 +74,8 @@ publishing:
   description_template: |
     Listen to {book} Chapter {chapter} in {language}.
     
-    Text & Audio Copyright: © NLCI / Bible Society.
+    Text Copyright: {text_copyright}
+    Audio Copyright: {audio_copyright}
     Generated automatically by VIDX Scripture Video Engine.
   tags:
     - "AudioBible"
