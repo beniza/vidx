@@ -1,0 +1,56 @@
+site_name: VIDX — Scripture Video Generator
+site_description: The official video rendering companion to AUDX (Audio Scripture Conversion Tool suite).
+site_author: Bridgeconn & NLCI Lab
+site_url: https://beniza.github.io/vidx/
+
+repo_name: beniza/vidx
+repo_url: https://github.com/beniza/vidx
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Home: index.md
+  - User Guide & Tutorials: user_guide.md
+  - Configuration Reference: configuration_guide.md
+  - Roadmap & TODOs: todo.md
+  - Project Brief & History: project_brief.md

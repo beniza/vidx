@@ -1,0 +1,40 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install MkDocs Material
+        run: |
+          pip install mkdocs-material
+
+      - name: Synchronize Homepage
+        run: |
+          cp README.md docs/index.md
+
+      - name: Deploy to GitHub Pages
+        run: |
+          mkdocs gh-deploy --force

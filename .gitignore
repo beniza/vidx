@@ -55,3 +55,6 @@ mrk-timings/
 *.tmp
 *.log
 *.bak
+
+# MkDocs generated site
+site/
