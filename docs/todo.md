@@ -1,0 +1,71 @@
+# VIDX Project Roadmap & TODOs
+> Tracking active milestones, future feature enhancements, and engineering requirements for the VIDX Scripture Video Generator.
+
+---
+
+## 🚨 Immediate Priorities (Next Steps)
+
+- [ ] **GitHub Pages Documentation Site (`gh-pages` Deployment)**
+  - [ ] Set up static documentation deployment (e.g., using MkDocs Material or Jekyll / GitHub Actions) to publish `docs/` and `README.md` to GitHub Pages.
+  - [ ] Ensure user guides, configuration references, and tutorials are easily browsable by field coordinators and translation technicians online.
+  - [ ] Add site navigation and search functionality for rapid troubleshooting.
+
+- [ ] **Release `v0.2.0` (Self-Contained & Dual-Purpose Engine)**
+  - [ ] Build standalone Windows executable (`vidx.exe`) using PyInstaller bundling the newly internalized `vidx.usfm_parser` and zero external Git dependencies.
+  - [ ] Draft comprehensive GitHub Release notes highlighting:
+    - **Dual-Purpose Subtitle Mode:** `--generate-only --format srt|ass|both` (and YAML `generate_only: true`).
+    - **Self-Contained Architecture:** Internalized USFM 3.0 parser removing external Git requirements.
+    - **Configurable Transparency:** Exact opacity decimals and transparency percentages for background readability boxes.
+    - **Clean Workspace Hierarchy:** Introduction of `examples/` directory for multi-language templates.
+  - [ ] Publish pre-compiled Windows executable and Python wheel artifacts to GitHub Release.
+
+---
+
+## 🧪 Engineering & Methodology Requirements
+
+- [x] **Comprehensive Automated Test Suite (`pytest`)**
+  - [x] Built test suites covering `Config`, `USFMParser`, `TimingParser`, `TextSegmenter`, `SRTGenerator`, `ASSGenerator`, `FFmpegBuilder`, and `BatchRunner` (22 tests passing).
+- [ ] **Test-Driven Development (TDD) Enforcement**
+  - [ ] **Mandatory Rule:** All future feature developments, bug fixes, and refactoring **must** follow strict TDD workflow:
+    1. Write a failing test in `tests/` capturing the desired behavior or bug reproduction.
+    2. Implement minimal production code to pass the test.
+    3. Refactor while ensuring all 22+ tests remain green.
+
+---
+
+## 🚀 Future Enhancements & Roadmap
+
+### 1. CI/CD & Automation
+- [ ] **GitHub Actions CI Pipeline:**
+  - Automatically run `pytest` across Python 3.8, 3.10, and 3.12 on every push and pull request.
+  - Automate linting and formatting verification.
+- [ ] **Automated Release Builder:**
+  - Create a GitHub Actions workflow triggered by version tags (e.g., `v0.2.0`) to automatically compile PyInstaller executables across Windows and Linux, attaching them to the GitHub Release page.
+
+### 2. Video & Audio Rendering Enhancements
+- [ ] **Audio Fade-in / Fade-out:**
+  - Add optional YAML configuration (`audio.fade_in_sec`, `audio.fade_out_sec`) to apply smooth audio transitions at chapter boundaries using FFmpeg `afade` filter.
+- [ ] **Video Loop Crossfading:**
+  - Implement smooth video crossfade transitions when looping short background video clips to eliminate visual jumps at loop seam points.
+- [ ] **Custom Watermarks & Channel Logos:**
+  - Enable placing station or organization logos (PNG with alpha) in any corner of the video via YAML config (`video.watermark: "assets/logo.png"`).
+
+### 3. Typography & Internationalization
+- [ ] **Font Fallback Validation:**
+  - Create an automated CLI pre-flight check that verifies required fonts (e.g., `Bailey`, `Nirmala UI`, `Mangal`) are installed on the OS before launching long FFmpeg render queues.
+- [ ] **Right-to-Left (RTL) Script Optimization:**
+  - Add specific regression test cases and layout presets for Arabic, Urdu, and Hebrew scripture rendering.
+
+### 4. Bulk Processing & Performance
+- [ ] **Multi-Worker Memory Profiling:**
+  - Optimize memory footprint during large concurrent batch runs (`-w 4` or `-w 8`) when processing entire New Testament (NT) audio libraries (260+ chapters).
+- [ ] **Progress Bar Integration:**
+  - Integrate interactive terminal progress bars (via `tqdm` or `rich`) for CLI users during multi-chapter sequential and parallel rendering jobs.
+
+---
+
+## ✅ Recently Completed Milestones (v0.2.0 Evolution)
+- [x] **Internalized USFM Parser:** Migrated `usfm-converter` into `vidx.usfm_parser` to resolve Git dependency issues and simplify PyInstaller EXE builds.
+- [x] **Dual-Purpose Subtitle Generator:** Enabled high-speed standalone subtitle extraction (`.srt` and `.ass`) without requiring video rendering or audio soundtrack files.
+- [x] **Configurable Background Box Transparency:** Implemented fine-grained opacity and transparency controls (`background_opacity` / `background_transparency`).
+- [x] **Repository Reorganization:** Overhauled `.gitignore` to industry standards, removed scratch artifacts, and consolidated multi-language configurations into clean `examples/` templates.
