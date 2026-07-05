@@ -9,6 +9,7 @@ from pathlib import Path
 from .config import Config
 from .batch_runner import BatchRunner
 from .ass_generator import convert_to_ass
+from .progress import TerminalProgressObserver
 from . import __version__
 
 
@@ -65,7 +66,13 @@ def main():
             duration=args.duration,
             keep_ass=keep_ass
         )
-        res = runner.run_all(max_workers=1)
+        observer = TerminalProgressObserver(total_jobs=len(runner.jobs), use_rich=True)
+        runner.progress_reporter.subscribe(observer.on_progress)
+        observer.start()
+        try:
+            res = runner.run_all(max_workers=1)
+        finally:
+            observer.stop()
         sys.exit(0 if res["failed"] == 0 else 1)
             
     # Mode 2: Batch Job from YAML configuration
@@ -82,7 +89,13 @@ def main():
         if args.duration is not None:
             for job in runner.jobs:
                 job.duration = args.duration
-        res = runner.run_all(max_workers=args.workers)
+        observer = TerminalProgressObserver(total_jobs=len(runner.jobs), use_rich=True)
+        runner.progress_reporter.subscribe(observer.on_progress)
+        observer.start()
+        try:
+            res = runner.run_all(max_workers=args.workers)
+        finally:
+            observer.stop()
         sys.exit(0 if res["failed"] == 0 else 1)
         
     else:

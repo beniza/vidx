@@ -71,3 +71,25 @@ def test_batch_runner_missing_input(tmp_path):
     res_job = runner._execute_single_job(job)
     assert res_job.status == "FAILED"
     assert "USFM file not found" in res_job.error_msg
+
+
+def test_batch_runner_progress_callback(sample_workspace):
+    from unittest.mock import MagicMock
+    from vidx.progress import ProgressEvent
+    
+    usfm, timing, tmp_dir = sample_workspace
+    out_mp4 = tmp_dir / "output.mp4"
+    
+    runner = BatchRunner()
+    runner.generate_only = True
+    mock_callback = MagicMock()
+    runner.progress_reporter.subscribe(mock_callback)
+    
+    job = runner.add_job(str(usfm), str(timing), "dummy_audio.mp3", str(out_mp4))
+    runner._execute_single_job(job)
+    
+    assert mock_callback.called
+    first_event = mock_callback.call_args_list[0][0][0]
+    assert isinstance(first_event, ProgressEvent)
+    assert first_event.status in ["STARTING", "EXTRACTING_SUBTITLES", "COMPLETED"]
+

@@ -103,15 +103,82 @@ class FFmpegBuilder:
         cmd.append(str(Path(output_file)))
         return cmd
         
-    def render(self, audio_file, subtitle_file, output_file, background_media=None, duration=None):
+    def render(self, audio_file, subtitle_file, output_file, background_media=None, duration=None,
+               progress_callback=None, job_id="default", worker_id=0, book=None, chapter=None):
         """
         Execute the FFmpeg render synchronously. Returns (success, stdout/stderr message).
+        If progress_callback is provided, emits ProgressEvent objects during rendering.
         """
         cmd = self.build_command(audio_file, subtitle_file, output_file, background_media, duration)
+        if not progress_callback:
+            try:
+                res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+                return True, res.stderr or "Success"
+            except subprocess.CalledProcessError as e:
+                return False, f"FFmpeg error (code {e.returncode}):\n{e.stderr}"
+            except Exception as e:
+                return False, f"Execution error: {str(e)}"
+                
+        from .progress import ProgressEvent, parse_ffmpeg_progress_line
+        
+        # Determine total duration for percentage calculation if not explicitly provided
+        total_dur = duration
+        if not total_dur:
+            try:
+                import mutagen
+                audio_meta = mutagen.File(audio_file)
+                if audio_meta and audio_meta.info:
+                    total_dur = getattr(audio_meta.info, 'length', None)
+            except Exception:
+                pass
+                
         try:
-            res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-            return True, res.stderr or "Success"
-        except subprocess.CalledProcessError as e:
-            return False, f"FFmpeg error (code {e.returncode}):\n{e.stderr}"
+            progress_callback(ProgressEvent(
+                job_id=str(job_id), worker_id=int(worker_id), status="ENCODING_VIDEO",
+                percent=0.0, book=book, chapter=chapter, message="Starting FFmpeg encoding..."
+            ))
+            
+            process = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True
+            )
+            output_lines = []
+            while True:
+                line = process.stdout.readline() if process.stdout else ""
+                if not line and process.poll() is not None:
+                    break
+                if line:
+                    output_lines.append(line)
+                    metrics = parse_ffmpeg_progress_line(line, total_duration_sec=total_dur)
+                    if metrics:
+                        progress_callback(ProgressEvent(
+                            job_id=str(job_id),
+                            worker_id=int(worker_id),
+                            status="ENCODING_VIDEO",
+                            percent=metrics["percent"],
+                            book=book,
+                            chapter=chapter,
+                            speed=metrics["speed"],
+                            fps=metrics["fps"],
+                            elapsed_sec=metrics["elapsed_sec"],
+                            eta_sec=metrics["eta_sec"]
+                        ))
+            
+            returncode = process.poll()
+            if returncode == 0:
+                progress_callback(ProgressEvent(
+                    job_id=str(job_id), worker_id=int(worker_id), status="COMPLETED",
+                    percent=100.0, book=book, chapter=chapter, message="Render completed successfully."
+                ))
+                return True, "".join(output_lines)
+            else:
+                progress_callback(ProgressEvent(
+                    job_id=str(job_id), worker_id=int(worker_id), status="ERROR",
+                    percent=0.0, book=book, chapter=chapter, message=f"FFmpeg exited with code {returncode}"
+                ))
+                return False, f"FFmpeg error (code {returncode}):\n{''.join(output_lines)}"
         except Exception as e:
+            progress_callback(ProgressEvent(
+                job_id=str(job_id), worker_id=int(worker_id), status="ERROR",
+                percent=0.0, book=book, chapter=chapter, message=str(e)
+            ))
             return False, f"Execution error: {str(e)}"
