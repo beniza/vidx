@@ -52,7 +52,7 @@ The `video` block defines the visual canvas, background media behaviors, and FFm
 | `resolution` | String | `"1920x1080"` | Canvas width and height in pixels (e.g., `"1920x1080"`, `"1080x1920"`, `"3840x2160"`). |
 | `fps` | Integer / Float | `24` | Frames per second for the output video (typically `24`, `25`, or `30`). |
 | `codec` | String | `"libx264"` | FFmpeg video encoder codec. Recommended: `"libx264"` for maximum device compatibility. |
-| `preset` | String | `"medium"` | Encoding speed vs. compression efficiency. Options: `ultrafast`, `superfast`, `veryfast`, `fast`, `medium`, `slow`. |
+| `preset` | String | `"fast"` | Encoding speed vs. compression efficiency. Options: `ultrafast`, `superfast`, `veryfast`, `fast`, `medium`, `slow`. |
 | `crf` | Integer | `23` | Constant Rate Factor (quality). Range: `0-51` (lower is higher quality). Recommended: `18-24`. |
 | `background_media`| String | `""` | Default path to background loop (`.mp4`, `.mov`) or static image (`.jpg`, `.png`). |
 | `loop_background` | Boolean | `true` | If `true`, loops video backgrounds that are shorter than the audio duration. |

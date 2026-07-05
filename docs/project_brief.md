@@ -1,6 +1,6 @@
 # VIDX — Project Brief (Revised)
 
-> **Revision note:** Updated after discovering the existing [usfm-converter](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter) project. This changes the picture significantly.
+> **Revision note:** Updated after discovering the existing usfm-converter project (now internalized into `vidx.usfm_parser`). This changes the picture significantly.
 
 ---
 
@@ -8,20 +8,20 @@
 
 The biggest thing my earlier analysis got wrong: **the hardest part of this project is already built.**
 
-The [usfm_to_srt.py](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py) converter (v0.1.1-alpha, 778 lines) already handles:
+The [usfm_parser.py](../vidx/usfm_parser.py) module already handles:
 
 | Capability | Status | Implementation |
 |---|---|---|
-| USFM parsing with chapter targeting | ✅ Done | [USFMParser](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L23-L140) class |
-| Footnote/cross-ref stripping (`\f`, `\x`) | ✅ Done | [_clean_text()](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L34-L55) |
-| Timing file parsing (verse + phrase level) | ✅ Done | [TimingParser](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L143-L199) class |
-| Phrase-level text segmentation (2a, 2b, 7f) | ✅ Done | [TextSegmenter](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L202-L253) class |
+| USFM parsing with chapter targeting | ✅ Done | [USFMParser](../vidx/usfm_parser.py#L23-L140) class |
+| Footnote/cross-ref stripping (`\f`, `\x`) | ✅ Done | [_clean_text()](../vidx/usfm_parser.py#L34-L55) |
+| Timing file parsing (verse + phrase level) | ✅ Done | [TimingParser](../vidx/usfm_parser.py#L143-L199) class |
+| Phrase-level text segmentation (2a, 2b, 7f) | ✅ Done | [TextSegmenter](../vidx/usfm_parser.py#L202-L253) class |
 | Section heading extraction (`\s`, `\s1`) | ✅ Done | Lines 96–103 |
-| SRT generation with timestamps | ✅ Done | [SRTGenerator](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L256-L385) class |
-| Batch processing (full book) | ✅ Done | [convert_batch()](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L490-L600) |
+| SRT generation with timestamps | ✅ Done | [SRTGenerator](../vidx/usfm_parser.py#L256-L385) class |
+| Batch processing (full book) | ✅ Done | [convert_batch()](../vidx/usfm_parser.py#L490-L600) |
 | Combined output (all chapters → one file) | ✅ Done | `--combined` flag |
-| Input validation | ✅ Done | [validator.py](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/validator.py) (694 lines) |
-| Standalone EXE build | ✅ Done | [build.bat](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/build.bat) + PyInstaller |
+| Input validation | ✅ Done | [validator.py](../vidx/validator.py) |
+| Standalone EXE build | ✅ Done | PyInstaller (`vidx.spec`) |
 
 > [!IMPORTANT]
 > This means the **"core engineering challenge"** I flagged in the previous brief — USFM+timing→subtitle alignment — is already solved and tested with real Sindhi/Devanagari data. The VIDX project doesn't need to rewrite this. It needs to **extend** it.
@@ -133,8 +133,8 @@ With the existing converter as a foundation, the risk picture changes dramatical
 
 | Risk | Previous | Now | Reason |
 |---|---|---|---|
-| USFM ↔ timing alignment | 🔴 HIGH | 🟢 LOW | Already solved in [TextSegmenter](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L202-L253) |
-| USFM markup stripping | 🟡 MEDIUM | 🟢 LOW | Already handled (though `\fig` stripping [needs fixing](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/src/MRK_05_Segmented.srt#L259)) |
+| USFM ↔ timing alignment | 🔴 HIGH | 🟢 LOW | Already solved in [TextSegmenter](../vidx/usfm_parser.py#L202-L253) |
+| USFM markup stripping | 🟡 MEDIUM | 🟢 LOW | Already handled (though `\fig` stripping [needs fixing](../src/MRK_05_Segmented.srt#L259)) |
 | `.ass` styling/positioning | N/A | 🟡 MEDIUM | New — needs correct alignment math for 3 aspect ratios |
 | Complex script rendering (HarfBuzz) | 🟡 MEDIUM | 🟡 MEDIUM | Unchanged — depends on FFmpeg build |
 | FFmpeg command correctness | N/A | 🟡 MEDIUM | New — filter graph syntax is finicky |
@@ -142,7 +142,7 @@ With the existing converter as a foundation, the risk picture changes dramatical
 | Batch rendering time | N/A | 🟡 MEDIUM | Full NT = hours. Need progress reporting + parallelism option |
 
 ### Remaining Known Bug
-The existing converter doesn't strip `\fig ... \fig*` markers. Evidence: [MRK_05_Segmented.srt line 259](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/src/MRK_05_Segmented.srt#L259) contains `|src="lb00310.jpg" size="col" ref="5:29"` as visible subtitle text. This needs to be fixed in the converter's `_clean_text()` method before we build on top of it.
+The existing converter doesn't strip `\fig ... \fig*` markers. Evidence: [MRK_05_Segmented.srt line 259](../src/MRK_05_Segmented.srt#L259) contains `|src="lb00310.jpg" size="col" ref="5:29"` as visible subtitle text. This needs to be fixed in the converter's `_clean_text()` method before we build on top of it.
 
 ---
 
@@ -267,19 +267,16 @@ batch:
 
 ```bash
 # Render all chapters defined in config
-vidx render --config project.yaml
+vidx -c project.yaml
 
-# Render specific chapter for testing
-vidx render --config project.yaml --chapter 5
+# Render with multi-worker parallelism and GPU acceleration
+vidx -c project.yaml -w 4 --gpu
 
-# Generate .ass files only (no video rendering)
-vidx subtitle --config project.yaml
-
-# Validate inputs before rendering
-vidx validate --config project.yaml
+# Generate subtitle files only (no video rendering)
+vidx -c project.yaml --generate-only --format both
 
 # Preview: render first 15 seconds of one chapter
-vidx preview --config project.yaml --chapter 5
+vidx -c project.yaml -t 15
 ```
 
 This is the right choice because:

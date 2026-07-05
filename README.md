@@ -125,7 +125,7 @@ vidx --generate-only --format srt \
 
 ## 🎨 YAML Configuration Anatomy
 
-Below is an overview of standard project configuration options (see [examples/](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/examples) for ready-to-use templates):
+Below is an overview of standard project configuration options (see [examples/](examples/) for ready-to-use templates):
 
 ```yaml
 project:
@@ -184,7 +184,7 @@ jobs:
 ---
 
 ## 📚 Further Documentation
-- **[Configuration & Bulk Processing Guide](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/docs/configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
-- **[User Guide & Tutorials](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/docs/user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
-- **[Project Brief & Advisory Council Decisions](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/docs/project_brief.md):** Historical background and engineering decisions.
-- **[Project Roadmap & TODOs](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/docs/todo.md):** Active milestones, Test-Driven Development (TDD) rules, CI/CD pipelines, and future feature enhancements.
+- **[Configuration & Bulk Processing Guide](docs/configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
+- **[User Guide & Tutorials](docs/user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
+- **[Project Brief & Advisory Council Decisions](docs/project_brief.md):** Historical background and engineering decisions.
+- **[Project Roadmap & TODOs](docs/todo.md):** Active milestones, Test-Driven Development (TDD) rules, CI/CD pipelines, and future feature enhancements.
