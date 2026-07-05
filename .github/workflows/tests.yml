@@ -10,20 +10,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'  # matches the version release.yml builds against
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
-      - name: Install package with test extras
+      - name: Install package and linters
         run: |
           python -m pip install --upgrade pip
-          pip install -e .[test]
+          pip install -e .[test] flake8
+
+      - name: Run linting (flake8)
+        run: |
+          flake8 vidx/ --ignore=E501,E203,W503,W293,E226
 
       - name: Run tests
         run: pytest
