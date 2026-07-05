@@ -134,7 +134,10 @@ class FFmpegBuilder:
                 st = max(0.0, float(total_dur) - fade_out)
                 af_list.append(f"afade=t=out:st={st:.3f}:d={fade_out}")
         
-        if title_image or outro_image:
+        wm_cfg = video_cfg.get("watermark") or video_cfg.get("logo") or self.config.get("watermark") or self.config.get("logo") or {}
+        wm_img = wm_cfg.get("image") if isinstance(wm_cfg, dict) else (wm_cfg if isinstance(wm_cfg, str) else None)
+        
+        if title_image or outro_image or wm_img:
             fc_parts = [f"[0:v]{scale_filter}[bg]"]
             curr_v = "[bg]"
             next_idx = 2
@@ -150,6 +153,42 @@ class FFmpegBuilder:
                 fc_parts.append(f"{curr_v}[outro]overlay=0:0:enable='gte(t,{outro_start})'[v_out]")
                 curr_v = "[v_out]"
                 next_idx += 1
+            if wm_img:
+                cmd.extend(["-i", str(Path(wm_img))])
+                wm_pos = wm_cfg.get("position", "top-right") if isinstance(wm_cfg, dict) else "top-right"
+                wm_margin = wm_cfg.get("margin", 30) if isinstance(wm_cfg, dict) else 30
+                if wm_pos == "top-left":
+                    xy_str = f"{wm_margin}:{wm_margin}"
+                elif wm_pos == "top-right":
+                    xy_str = f"W-w-{wm_margin}:{wm_margin}"
+                elif wm_pos == "bottom-left":
+                    xy_str = f"{wm_margin}:H-h-{wm_margin}"
+                elif wm_pos == "bottom-right":
+                    xy_str = f"W-w-{wm_margin}:H-h-{wm_margin}"
+                else:
+                    xy_str = wm_pos
+
+                logo_vf_list = []
+                wm_scale = wm_cfg.get("scale") if isinstance(wm_cfg, dict) else None
+                if wm_scale is not None:
+                    if isinstance(wm_scale, float) and 0 < wm_scale <= 1.0:
+                        w_px = int(res_x * wm_scale)
+                        logo_vf_list.append(f"scale={w_px}:-1")
+                    elif isinstance(wm_scale, int) and wm_scale > 0:
+                        logo_vf_list.append(f"scale={wm_scale}:-1")
+                wm_opacity = wm_cfg.get("opacity", 1.0) if isinstance(wm_cfg, dict) else 1.0
+                if wm_opacity is not None and float(wm_opacity) < 1.0:
+                    logo_vf_list.append(f"format=rgba,colorchannelmixer=aa={float(wm_opacity)}")
+
+                wm_stream = f"[{next_idx}:v]"
+                if logo_vf_list:
+                    fc_parts.append(f"[{next_idx}:v]{','.join(logo_vf_list)}[logo]")
+                    wm_stream = "[logo]"
+                
+                fc_parts.append(f"{curr_v}{wm_stream}overlay={xy_str}[v_wm]")
+                curr_v = "[v_wm]"
+                next_idx += 1
+
             fc_parts.append(f"{curr_v}ass='{sub_path_clean}'[v]")
             if af_list:
                 fc_parts.append(f"[1:a]{','.join(af_list)}[a]")

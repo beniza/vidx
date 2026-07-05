@@ -151,4 +151,29 @@ def test_build_command_audio_fade():
     assert "afade=t=out:st=58.000:d=2.0" in af_chain
 
 
+def test_build_command_watermark():
+    config = {
+        "video": {
+            "resolution": "1920x1080",
+            "watermark": {
+                "image": "logo.png",
+                "position": "top-right",
+                "margin": 40,
+                "scale": 0.1,
+                "opacity": 0.8
+            }
+        }
+    }
+    builder = FFmpegBuilder(config)
+    cmd = builder.build_command("audio.mp3", "sub.ass", "out.mp4")
+    
+    assert "-filter_complex" in cmd
+    fc_idx = cmd.index("-filter_complex")
+    fc_val = cmd[fc_idx + 1]
+    assert "logo.png" in cmd
+    assert "scale=192:-1,format=rgba,colorchannelmixer=aa=0.8[logo]" in fc_val
+    assert "overlay=W-w-40:40" in fc_val
+
+
+
 
