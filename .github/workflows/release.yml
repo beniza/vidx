@@ -49,17 +49,10 @@ jobs:
           echo "" >> release_notes.md
           echo "Official video rendering companion to **AUDX** (Audio Scripture Conversion Tool suite)." >> release_notes.md
           echo "" >> release_notes.md
-          echo "### 📚 Live Documentation Site" >> release_notes.md
-          echo "Browse the interactive User Guides, Configuration Reference, and Roadmap online at **[https://beniza.github.io/vidx/](https://beniza.github.io/vidx/)**." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "### ✨ What's New in this Release:" >> release_notes.md
-          echo "- **Dual-Purpose Subtitle Extraction:** Generate standalone `.srt` and `.ass` subtitles at high speed without video rendering using `--generate-only --format srt|ass|both`." >> release_notes.md
-          echo "- **Self-Contained USFM 3.0 Parser:** Zero external Git dependencies! Fully internalized scripture parsing for seamless Windows executable bundling." >> release_notes.md
-          echo "- **Fine-Grained Transparency Control:** Set exact background box opacity decimals (`0.0` to `1.0`) or percentage transparency (`0%` to `100%`)." >> release_notes.md
-          echo "- **Standardized Folder Structure & Templates:** Clean project hierarchy and rich multi-language templates in the `examples/` directory." >> release_notes.md
+          echo "For full release history and feature details, see [CHANGELOG.md](https://github.com/beniza/vidx/blob/main/CHANGELOG.md) and our live documentation at **[https://beniza.github.io/vidx/](https://beniza.github.io/vidx/)**." >> release_notes.md
           echo "" >> release_notes.md
           echo "### 🖥️ Standalone Windows Executable (.exe)" >> release_notes.md
-          echo "For Windows users without Python installed, download **\`vidx.exe\`** attached below and place it in your project folder. Run it directly from Command Prompt or PowerShell:" >> release_notes.md
+          echo "For Windows users without Python installed, download **\`vidx.exe\`** attached below and run directly from Command Prompt or PowerShell:" >> release_notes.md
           echo '```powershell' >> release_notes.md
           echo ".\vidx.exe -c project.yaml" >> release_notes.md
           echo '```' >> release_notes.md
