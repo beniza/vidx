@@ -34,14 +34,14 @@
 
 ## 🎬 Multimedia Production Enhancements
 
-- [ ] **Title Cards & Video Thumbnail Support**
-  - [ ] Enable users to specify a still title image (`video.title_card: "assets/title.jpg"`, `video.title_duration: 4.0`) that displays at the beginning of the video before scripture dialogue starts.
-  - [ ] Ensure title cards are rendered at the exact target resolution (`1920x1080`, `1080x1920`, or `1080x1080`) so they can serve dual purpose as YouTube, Facebook, and Instagram video thumbnails.
+- [x] **Title Cards & Video Thumbnail Support**
+  - [x] Enable users to specify a still title image (`video.title_card: "assets/title.jpg"`, `video.title_duration: 4.0`) that displays at the beginning of the video before scripture dialogue starts.
+  - [x] Ensure title cards are rendered at the exact target resolution (`1920x1080`, `1080x1920`, or `1080x1080`) so they can serve dual purpose as YouTube, Facebook, and Instagram video thumbnails.
 
-- [ ] **Audio Intro & Outro Bumper Clips**
-  - [ ] Add configuration options for introductory and concluding audio clips (`audio.intro_clip: "assets/intro.mp3"`, `audio.outro_clip: "assets/outro.mp3"`).
-  - [ ] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main AUDX scripture audio -> play outro credits bumper.
-  - [ ] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
+- [x] **Audio Intro & Outro Bumper Clips**
+  - [x] Add configuration options for introductory and concluding audio clips (`audio.intro_clip: "assets/intro.mp3"`, `audio.outro_clip: "assets/outro.mp3"`).
+  - [x] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main AUDX scripture audio -> play outro credits bumper.
+  - [x] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
 
 - [ ] **Cloud & Streaming Platform Integration (YouTube / Vimeo One-Touch Publishing)**
   - [ ] **API Authentication & YAML Config:** Add optional publishing block (`publishing.platform: "youtube"`, OAuth client secrets, channel ID) for direct integration with YouTube Data API v3 and Vimeo API.

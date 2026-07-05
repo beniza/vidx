@@ -322,6 +322,22 @@ def convert_to_ass(usfm_file, timing_file, output_file=None, config=None):
     timing_content = timing_path.read_text(encoding='utf-8')
     
     timing_parser = TimingParser(timing_content)
+    
+    offset_seconds = 0.0
+    if config:
+        bumpers_cfg = config.get("bumpers", {})
+        video_cfg = config.get("video", {})
+        if "_calc_intro_duration" in bumpers_cfg:
+            offset_seconds = float(bumpers_cfg["_calc_intro_duration"])
+        elif bumpers_cfg.get("intro_audio") and Path(bumpers_cfg["intro_audio"]).exists():
+            from .bumpers import get_media_duration
+            offset_seconds = get_media_duration(bumpers_cfg["intro_audio"])
+        elif video_cfg.get("title_image") or bumpers_cfg.get("title_image"):
+            offset_seconds = float(video_cfg.get("title_duration") or bumpers_cfg.get("title_duration") or 3.0)
+            
+    if offset_seconds > 0:
+        timing_parser.shift_timestamps(offset_seconds)
+        
     usfm_parser = USFMParser(usfm_content, target_chapter=timing_parser.chapter)
     
     # Extract book name if available

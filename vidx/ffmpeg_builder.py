@@ -68,9 +68,33 @@ class FFmpegBuilder:
             scale_filter = f"scale={res_x}:{res_y}:force_original_aspect_ratio=decrease,pad={res_x}:{res_y}:(ow-iw)/2:(oh-ih)/2"
             
         sub_path_clean = self._clean_filter_path(subtitle_file)
-        vf_chain = f"{scale_filter},ass='{sub_path_clean}'"
         
-        cmd.extend(["-vf", vf_chain])
+        title_image = video_cfg.get("title_image") or self.config.get("bumpers", {}).get("title_image")
+        title_duration = float(video_cfg.get("title_duration") or self.config.get("bumpers", {}).get("title_duration") or 3.0)
+        outro_image = video_cfg.get("outro_image") or self.config.get("bumpers", {}).get("outro_image")
+        outro_start = float(video_cfg.get("outro_start") or self.config.get("bumpers", {}).get("outro_start") or 0.0)
+        
+        if title_image or outro_image:
+            fc_parts = [f"[0:v]{scale_filter}[bg]"]
+            curr_v = "[bg]"
+            next_idx = 2
+            if title_image:
+                cmd.extend(["-i", str(Path(title_image))])
+                fc_parts.append(f"[{next_idx}:v]scale={res_x}:{res_y}:force_original_aspect_ratio=decrease,pad={res_x}:{res_y}:(ow-iw)/2:(oh-ih)/2[title]")
+                fc_parts.append(f"{curr_v}[title]overlay=0:0:enable='between(t,0,{title_duration})'[v_in]")
+                curr_v = "[v_in]"
+                next_idx += 1
+            if outro_image and outro_start > 0:
+                cmd.extend(["-i", str(Path(outro_image))])
+                fc_parts.append(f"[{next_idx}:v]scale={res_x}:{res_y}:force_original_aspect_ratio=decrease,pad={res_x}:{res_y}:(ow-iw)/2:(oh-ih)/2[outro]")
+                fc_parts.append(f"{curr_v}[outro]overlay=0:0:enable='gte(t,{outro_start})'[v_out]")
+                curr_v = "[v_out]"
+                next_idx += 1
+            fc_parts.append(f"{curr_v}ass='{sub_path_clean}'[v]")
+            cmd.extend(["-filter_complex", ";".join(fc_parts), "-map", "[v]", "-map", "1:a"])
+        else:
+            vf_chain = f"{scale_filter},ass='{sub_path_clean}'"
+            cmd.extend(["-vf", vf_chain])
         
         # Video encoding settings
         codec = video_cfg.get("codec", "libx264")

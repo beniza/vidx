@@ -149,6 +149,26 @@ class BatchRunner:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         ass_path = out_path.with_suffix(".ass")
         
+        bumpers_cfg = self.config.raw_config.get("bumpers", {})
+        intro_audio = bumpers_cfg.get("intro_audio")
+        outro_audio = bumpers_cfg.get("outro_audio")
+        
+        actual_audio = audio_path
+        if (intro_audio and Path(intro_audio).exists()) or (outro_audio and Path(outro_audio).exists()):
+            from .bumpers import prepare_bumper_audio
+            combined_audio_path = out_path.with_name(f"{out_path.stem}_with_bumpers.wav")
+            success_bump, intro_dur, total_dur = prepare_bumper_audio(
+                main_audio=str(audio_path),
+                output_audio=str(combined_audio_path),
+                intro_audio=intro_audio,
+                outro_audio=outro_audio
+            )
+            if success_bump:
+                actual_audio = combined_audio_path
+                if "bumpers" not in self.config.raw_config:
+                    self.config.raw_config["bumpers"] = {}
+                self.config.raw_config["bumpers"]["_calc_intro_duration"] = intro_dur
+        
         self.progress_reporter.emit(ProgressEvent(
             job_id=str(job.usfm_file), worker_id=worker_id, status="EXTRACTING_SUBTITLES",
             percent=10.0, book=job.book, chapter=job.chapter, message="Generating subtitles..."
@@ -162,7 +182,8 @@ class BatchRunner:
             srt_success = convert_to_srt(
                 usfm_file=usfm_path,
                 timing_file=timing_path,
-                output_file=srt_path
+                output_file=srt_path,
+                config=self.config.raw_config
             )
             if not srt_success or not srt_path.exists():
                 job.status = "FAILED"
@@ -205,7 +226,7 @@ class BatchRunner:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         
         render_success, msg = self.builder.render(
-            audio_file=audio_path,
+            audio_file=actual_audio,
             subtitle_file=ass_path,
             output_file=out_path,
             background_media=job.background_media,

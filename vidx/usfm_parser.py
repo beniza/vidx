@@ -202,6 +202,14 @@ class TimingParser:
                     # Skip lines that don't have valid numbers
                     continue
 
+    def shift_timestamps(self, offset_seconds: float):
+        """Shift all start and end timestamps by offset_seconds (for audio intros/bumpers)."""
+        if not offset_seconds or offset_seconds == 0:
+            return
+        for entry in self.entries:
+            entry['start'] += offset_seconds
+            entry['end'] += offset_seconds
+
 
 class TextSegmenter:
     """Split verse text into segments based on separators"""
@@ -389,7 +397,7 @@ class SRTGenerator:
         return '\n'.join(srt_lines)
 
 
-def convert_to_srt(usfm_file, timing_file, output_file=None):
+def convert_to_srt(usfm_file, timing_file, output_file=None, config=None):
     """
     Convert USFM + timing file to SRT
     
@@ -397,6 +405,7 @@ def convert_to_srt(usfm_file, timing_file, output_file=None):
         usfm_file: Path to USFM file
         timing_file: Path to timing file
         output_file: Path to output SRT file (optional)
+        config: Optional project/bumper configuration dict
     """
     usfm_path = Path(usfm_file)
     timing_path = Path(timing_file)
@@ -426,6 +435,21 @@ def convert_to_srt(usfm_file, timing_file, output_file=None):
         
         # Parse timing file first to get chapter number
         timing_parser = TimingParser(timing_content)
+        
+        offset_seconds = 0.0
+        if config:
+            bumpers_cfg = config.get("bumpers", {})
+            video_cfg = config.get("video", {})
+            if "_calc_intro_duration" in bumpers_cfg:
+                offset_seconds = float(bumpers_cfg["_calc_intro_duration"])
+            elif bumpers_cfg.get("intro_audio") and Path(bumpers_cfg["intro_audio"]).exists():
+                from .bumpers import get_media_duration
+                offset_seconds = get_media_duration(bumpers_cfg["intro_audio"])
+            elif video_cfg.get("title_image") or bumpers_cfg.get("title_image"):
+                offset_seconds = float(video_cfg.get("title_duration") or bumpers_cfg.get("title_duration") or 3.0)
+                
+        if offset_seconds > 0:
+            timing_parser.shift_timestamps(offset_seconds)
         
         # Parse USFM with target chapter from timing file
         usfm_parser = USFMParser(usfm_content, target_chapter=timing_parser.chapter)
