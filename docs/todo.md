@@ -89,8 +89,10 @@
 ### 4. Bulk Processing & Performance
 - [ ] **Multi-Worker Memory Profiling:**
   - Optimize memory footprint during large concurrent batch runs (`-w 4` or `-w 8`) when processing entire New Testament (NT) audio libraries (260+ chapters).
-- [ ] **Progress Bar Integration:**
-  - Integrate interactive terminal progress bars (via `tqdm` or `rich`) for CLI users during multi-chapter sequential and parallel rendering jobs.
+- [ ] **Multi-Worker Live Progress Bars (`rich` / `enlighten` / `tqdm`):**
+  - [ ] **Dedicated Worker Mapping:** Display a live interactive progress bar for *each* parallel rendering worker (`-w WORKERS`), showing the exact scripture book, chapter, and file currently being processed (e.g., `[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).
+  - [ ] **Live Rendering Metrics:** Report real-time FFmpeg encoding stats on the progress bar: current processing speed (e.g., `2.3x` real-time), encoded frames per second (`fps`), elapsed time, and estimated time of arrival (`ETA`).
+  - [ ] **Global Batch Queue Summary:** Display a master progress bar tracking total completed chapters vs. remaining jobs across the entire New Testament conversion queue (`24 / 260 Chapters Completed [9%]`).
 
 ---
 
