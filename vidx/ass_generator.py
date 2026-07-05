@@ -9,8 +9,9 @@ from datetime import timedelta
 from usfm_to_srt import TextSegmenter
 
 
-def hex_to_ass(color_str, default_alpha="00"):
-    """Convert CSS hex color (#RRGGBB or #RRGGBBAA) or raw ASS color to ASS format (&HAABBGGRR)"""
+def hex_to_ass(color_str, default_alpha="00", opacity=None, transparency=None):
+    """Convert CSS hex color (#RRGGBB or #RRGGBBAA) or raw ASS color to ASS format (&HAABBGGRR).
+    Supports explicit opacity (0.0 to 1.0 or 0 to 100) or transparency (0.0 to 1.0 or 0 to 100)."""
     if not color_str:
         return "&H00FFFFFF"
     
@@ -19,20 +20,66 @@ def hex_to_ass(color_str, default_alpha="00"):
         return color_str.upper()
         
     color = color_str.lstrip("#")
+    
+    # Determine ASS alpha (00 = opaque, FF = transparent)
+    a = default_alpha
+    if opacity is not None:
+        try:
+            op_val = float(opacity)
+            if op_val > 1.0:
+                op_val /= 100.0
+            op_val = max(0.0, min(1.0, op_val))
+            ass_a = int(round((1.0 - op_val) * 255))
+            a = f"{ass_a:02X}"
+        except (ValueError, TypeError):
+            pass
+    elif transparency is not None:
+        try:
+            tr_val = float(transparency)
+            if tr_val > 1.0:
+                tr_val /= 100.0
+            tr_val = max(0.0, min(1.0, tr_val))
+            ass_a = int(round(tr_val * 255))
+            a = f"{ass_a:02X}"
+        except (ValueError, TypeError):
+            pass
+            
     if len(color) == 6:
         r, g, b = color[0:2], color[2:4], color[4:6]
-        a = default_alpha
     elif len(color) == 8:
         r, g, b = color[0:2], color[2:4], color[4:6]
-        # In CSS, AA=00 is transparent, AA=FF is opaque.
-        # In ASS, 00 is opaque, FF is transparent.
-        css_a = int(color[6:8], 16)
-        ass_a = 255 - css_a
-        a = f"{ass_a:02X}"
+        if opacity is None and transparency is None:
+            # In CSS, AA=00 is transparent, AA=FF is opaque.
+            # In ASS, 00 is opaque, FF is transparent.
+            css_a = int(color[6:8], 16)
+            ass_a = 255 - css_a
+            a = f"{ass_a:02X}"
     else:
         return "&H00FFFFFF"
         
     return f"&H{a}{b.upper()}{g.upper()}{r.upper()}"
+
+
+def clean_subtitle_text(text):
+    """Remove USFM cross-references, footnotes, figures, and stray markers from subtitle text."""
+    if not text:
+        return ""
+    # Remove footnotes \f ... \f* (including nested tags and prefix symbols like +, -)
+    text = re.sub(r'\\f\s+.*?\\f\*', '', text, flags=re.DOTALL)
+    # Remove cross-references \x ... \x* (including nested tags and prefix symbols like +, -)
+    text = re.sub(r'\\x\s+.*?\\x\*', '', text, flags=re.DOTALL)
+    # Remove figures \fig ... \fig*
+    text = re.sub(r'\\fig\s+.*?\\fig\*', '', text, flags=re.DOTALL)
+    # Remove character formatting markers like \bk ... \bk*, \wj ... \wj*, etc.
+    text = re.sub(r'\\(?:bk|wj|nd|tl|qs)\s*([^\\]*?)\\(?:bk|wj|nd|tl|qs)\*', r'\1', text)
+    # Remove all remaining USFM markers (but keep the text after them)
+    text = re.sub(r'\\[a-z0-9]+\*?', ' ', text)
+    # Clean up standalone + or * or extra whitespace
+    text = re.sub(r'\s*\+\s*', ' ', text)
+    text = re.sub(r'\s*\*\s*', ' ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
 
 
 class ASSGenerator:
@@ -126,7 +173,9 @@ class ASSGenerator:
         
         # Background box for verse
         if self.verse_style.get("background_box", True):
-            v_bg_col = hex_to_ass(self.verse_style.get("background_color", "#00000080"), default_alpha="80")
+            v_op = self.verse_style.get("background_opacity", self.verse_style.get("opacity", None))
+            v_tr = self.verse_style.get("background_transparency", self.verse_style.get("transparency", None))
+            v_bg_col = hex_to_ass(self.verse_style.get("background_color", "#00000080"), default_alpha="80", opacity=v_op, transparency=v_tr)
             v_border_style = 3  # 3 = opaque box around text
         else:
             v_bg_col = "&H00000000"
@@ -145,7 +194,9 @@ class ASSGenerator:
         
         # Background box for heading
         if self.heading_style.get("background_box", True):
-            h_bg_col = hex_to_ass(self.heading_style.get("background_color", "#00000080"), default_alpha="80")
+            h_op = self.heading_style.get("background_opacity", self.heading_style.get("opacity", None))
+            h_tr = self.heading_style.get("background_transparency", self.heading_style.get("transparency", None))
+            h_bg_col = hex_to_ass(self.heading_style.get("background_color", "#00000080"), default_alpha="80", opacity=h_op, transparency=h_tr)
             h_border_style = 3
         else:
             h_bg_col = "&H00000000"
@@ -183,7 +234,7 @@ class ASSGenerator:
         # Pre-split verses that have multiple segments
         verse_text_segments = {}
         for verse_num, entries in verse_segments_map.items():
-            verse_text = self.usfm.get_verse_text(verse_num)
+            verse_text = clean_subtitle_text(self.usfm.get_verse_text(verse_num))
             if not verse_text:
                 continue
             has_segments = any(self._parse_segment_id(e['segment'])[1] is not None for e in entries)
@@ -214,7 +265,7 @@ class ASSGenerator:
             if verse_num == 'section':
                 style = 'Heading'
                 section_marker = segment_letter
-                text = self.usfm.get_section_heading(section_marker)
+                text = clean_subtitle_text(self.usfm.get_section_heading(section_marker))
             else:
                 style = 'Verse'
                 if verse_num in verse_text_segments:
