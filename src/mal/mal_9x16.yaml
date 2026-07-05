@@ -1,0 +1,50 @@
+# ==============================================================================
+# VIDX 9:16 Portrait Vertical Project Configuration (Malayalam Philemon)
+# ==============================================================================
+
+project:
+  name: "Malayalam Philemon - 9:16 Portrait Vertical"
+  output_dir: "output/mal_portrait"
+
+video:
+  resolution: "1080x1920"       # 9:16 Vertical / Portrait Aspect Ratio
+  fps: 24
+  codec: "libx264"
+  preset: "fast"
+  crf: 23
+  background_media: "src/mal/1080x1920.mp4"
+  loop_background: true
+  scaling_mode: "pad"
+
+style:
+  verse:
+    font: "Bailey"
+    size: 46
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 2                # Bottom-Center
+    margin_bottom: 140            # Elevated margin to avoid social media UI overlays
+    margin_lr: 45               # Optimized lateral margins for narrower vertical width
+    background_box: true
+    background_color: "#00000080"
+
+  heading:
+    font: "Bailey"
+    size: 52
+    color: "#FFD400"
+    alignment: 8                # Top-Center
+    margin_vertical: 100
+    bold: true
+
+  verse_number:
+    show: true
+    color: "#FFC080"
+    size: 34
+    on_every_segment: false
+
+jobs:
+  - usfm: "src/mal/58PHMMAL10RO.SFM"
+    timing: "src/mal/C01-57-PHM-01-timing.txt"
+    audio: "src/mal/phm/01.mp3"
