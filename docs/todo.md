@@ -43,6 +43,12 @@
   - [ ] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main AUDX scripture audio -> play outro credits bumper.
   - [ ] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
 
+- [ ] **Cloud & Streaming Platform Integration (YouTube / Vimeo One-Touch Publishing)**
+  - [ ] **API Authentication & YAML Config:** Add optional publishing block (`publishing.platform: "youtube"`, OAuth client secrets, channel ID) for direct integration with YouTube Data API v3 and Vimeo API.
+  - [ ] **One-Touch Upload (`--publish`):** Enable single-command or GUI button publishing that automatically uploads rendered `.mp4` video files to the designated channel immediately after generation.
+  - [ ] **Automated Metadata & Thumbnails:** Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (`#AudioBible`, `#Scripture`), and upload the generated `title_card.jpg` as the official video thumbnail!
+  - [ ] **Playlist Organization:** Automatically organize uploaded chapter videos into book-level playlists (e.g., *"Gospel of Mark — Malayalam Translation"*).
+
 ---
 
 ## 🧪 Engineering & Methodology Requirements
