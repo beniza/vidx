@@ -90,6 +90,11 @@ class BatchRunner:
         audio_path = Path(job.audio_file)
         out_path = Path(job.output_file)
         
+        # Determine subtitle format and generate-only mode
+        sub_format = getattr(self, 'subtitle_format', None) or self.config.project.get("subtitle_format", "ass")
+        sub_format = str(sub_format).lower().strip()
+        gen_only = getattr(self, 'generate_only', False) or self.config.project.get("generate_only", False) or self.config.project.get("subtitle_only", False)
+        
         # Verify inputs exist
         if not usfm_path.exists():
             job.status = "FAILED"
@@ -99,24 +104,46 @@ class BatchRunner:
             job.status = "FAILED"
             job.error_msg = f"Timing file not found: {timing_path}"
             return job
-        if not audio_path.exists():
+        if not gen_only and not audio_path.exists():
             job.status = "FAILED"
             job.error_msg = f"Audio file not found: {audio_path}"
             return job
             
-        # 1. Generate subtitle ASS file
+        out_path.parent.mkdir(parents=True, exist_ok=True)
         ass_path = out_path.with_suffix(".ass")
-        print(f"[*] Generating subtitles: {ass_path.name}")
-        success = convert_to_ass(
-            usfm_file=usfm_path,
-            timing_file=timing_path,
-            output_file=ass_path,
-            config=self.config.raw_config
-        )
         
-        if not success or not ass_path.exists():
-            job.status = "FAILED"
-            job.error_msg = f"Subtitle generation failed for {ass_path}"
+        # 1a. Generate SRT subtitles if requested
+        if sub_format in ["srt", "both"]:
+            srt_path = out_path.with_suffix(".srt")
+            print(f"[*] Generating SRT subtitles: {srt_path.name}")
+            from .usfm_parser import convert_to_srt
+            srt_success = convert_to_srt(
+                usfm_file=usfm_path,
+                timing_file=timing_path,
+                output_file=srt_path
+            )
+            if not srt_success or not srt_path.exists():
+                job.status = "FAILED"
+                job.error_msg = f"SRT generation failed for {srt_path}"
+                return job
+
+        # 1b. Generate ASS subtitles (required if rendering video, or if requested)
+        if sub_format in ["ass", "both"] or not gen_only:
+            print(f"[*] Generating ASS subtitles: {ass_path.name}")
+            success = convert_to_ass(
+                usfm_file=usfm_path,
+                timing_file=timing_path,
+                output_file=ass_path,
+                config=self.config.raw_config
+            )
+            if not success or not ass_path.exists():
+                job.status = "FAILED"
+                job.error_msg = f"Subtitle generation failed for {ass_path}"
+                return job
+                
+        if gen_only:
+            job.render_time = time.time() - start_t
+            job.status = "SUCCESS"
             return job
             
         # 2. Render video using FFmpeg

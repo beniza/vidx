@@ -6,7 +6,7 @@ Supports rich styling, section titles, verse numbers, and responsive positioning
 import re
 from pathlib import Path
 from datetime import timedelta
-from usfm_to_srt import TextSegmenter
+from .usfm_parser import TextSegmenter
 
 
 def hex_to_ass(color_str, default_alpha="00", opacity=None, transparency=None):
@@ -301,7 +301,7 @@ def convert_to_ass(usfm_file, timing_file, output_file=None, config=None):
     """
     Convert USFM + timing file to ASS subtitle file.
     """
-    from usfm_to_srt import USFMParser, TimingParser
+    from .usfm_parser import USFMParser, TimingParser
     
     usfm_path = Path(usfm_file)
     timing_path = Path(timing_file)

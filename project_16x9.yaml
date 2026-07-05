@@ -45,8 +45,8 @@ style:
     on_every_segment: false
 
 jobs:
-  - usfm: "src/42MRKsnd.SFM"
-    timing: "src/C01-01-MRK-05-timing.txt"
-    audio: "src/42MRKSND.mpeg"
+  - usfm: "src/snd/42MRKsnd.SFM"
+    timing: "src/snd/C01-01-MRK-05-timing.txt"
+    audio: "src/snd/42MRKSND.mpeg"
     output: "output/Mark_Chapter_05_16x9.mp4"
-    background: "src/bg.mp4"
+    background: "src/snd/bg.mp4"

@@ -1,2 +1,1 @@
 pyyaml>=5.4.1
-usfm-converter @ git+https://github.com/nlci-lab/EditNovaFX-SRT-Generator.git@main

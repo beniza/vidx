@@ -25,7 +25,8 @@ def main():
     parser.add_argument("--keep-ass", action="store_true", default=True, help="Keep intermediate .ass subtitle file.")
     parser.add_argument("--clean-ass", action="store_true", help="Delete intermediate .ass subtitle file after successful render.")
     parser.add_argument("-w", "--workers", type=int, default=1, help="Number of parallel rendering workers.")
-    parser.add_argument("--generate-only", action="store_true", help="Only generate .ass subtitle files without rendering video.")
+    parser.add_argument("--generate-only", action="store_true", help="Only generate subtitle files without rendering video.")
+    parser.add_argument("--format", type=str, choices=["ass", "srt", "both"], help="Subtitle format to generate (ass, srt, both).")
     
     args = parser.parse_args()
     
@@ -46,29 +47,32 @@ def main():
     
     # Mode 1: Single Job from CLI arguments
     if args.usfm and args.timing and (args.audio or args.generate_only):
+        out_f = args.output or (str(Path(args.audio).with_suffix(".mp4")) if args.audio else str(Path(args.usfm).with_suffix(".mp4")))
+        audio_f = args.audio or str(Path(args.usfm).with_suffix(".mp3"))
+        runner = BatchRunner(config=config)
         if args.generate_only:
-            out_p = Path(args.output) if args.output else Path(args.usfm).with_suffix(".ass")
-            print(f"[*] Generating subtitle only: {out_p}")
-            success = convert_to_ass(args.usfm, args.timing, out_p, config=config.raw_config)
-            sys.exit(0 if success else 1)
-        else:
-            out_f = args.output or str(Path(args.audio).with_suffix(".mp4"))
-            runner = BatchRunner(config=config)
-            runner.add_job(
-                usfm_file=args.usfm,
-                timing_file=args.timing,
-                audio_file=args.audio,
-                output_file=out_f,
-                background_media=args.bg,
-                duration=args.duration,
-                keep_ass=keep_ass
-            )
-            res = runner.run_all(max_workers=1)
-            sys.exit(0 if res["failed"] == 0 else 1)
+            runner.generate_only = True
+        if args.format:
+            runner.subtitle_format = args.format
+        runner.add_job(
+            usfm_file=args.usfm,
+            timing_file=args.timing,
+            audio_file=audio_f,
+            output_file=out_f,
+            background_media=args.bg,
+            duration=args.duration,
+            keep_ass=keep_ass
+        )
+        res = runner.run_all(max_workers=1)
+        sys.exit(0 if res["failed"] == 0 else 1)
             
     # Mode 2: Batch Job from YAML configuration
     elif args.config:
         runner = BatchRunner(config=config)
+        if args.generate_only:
+            runner.generate_only = True
+        if args.format:
+            runner.subtitle_format = args.format
         runner.load_jobs_from_config()
         if not runner.jobs:
             print("[-] No jobs defined in YAML configuration under 'jobs' list.")
