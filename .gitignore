@@ -26,7 +26,11 @@ MANIFEST
 
 # Output videos and generated subtitles (do not commit large binary renders)
 output/
+release_videos/
+release/
 *.ass
+*.srt
+!src/**/*.srt
 
 # Environments & IDEs
 .env
@@ -44,6 +48,10 @@ venv.bak/
 # System files
 .DS_Store
 Thumbs.db
-vidx.egg-info 
-mrk-timings 
-*.mp* 
+
+# Scratch and test data
+mrk-timings/
+*.mp*
+*.tmp
+*.log
+*.bak
