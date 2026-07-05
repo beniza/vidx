@@ -145,7 +145,7 @@ Open `output/Mark_Chapter_05_16x9.mp4` in your media player (VLC, Windows Media 
 
 ## 🚀 Step 4: Whole-Book Batch Rendering & Multimedia Enhancements
 
-When you are ready to produce an entire Scripture book (e.g., Gospel of Mark, Chapters 1 through 16), list all chapter jobs under the `jobs` block in your configuration file. Because VIDX's internal USFM parser automatically matches chapters, you only need **one shared `.SFM` book file** for the entire job queue! (See [examples/whole_book_batch.yaml](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/examples/whole_book_batch.yaml) for a complete working template).
+When you are ready to produce an entire Scripture book (e.g., Gospel of Mark, Chapters 1 through 16), list all chapter jobs under the `jobs` block in your configuration file. Because VIDX's internal USFM parser automatically matches chapters, you only need **one shared `.SFM` book file** for the entire job queue! (See [examples/whole_book_batch.yaml](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/examples/whole_book_batch.yaml) for a complete working template).
 
 ### 1. Parallel Multi-Worker Rendering (`-w`)
 Rendering dozens of chapters sequentially can take hours. To accelerate production, use the `-w` (workers) flag to spawn multiple concurrent CPU rendering processes:

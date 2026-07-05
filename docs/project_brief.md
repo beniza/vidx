@@ -1,4 +1,4 @@
-# USFM2VDO — Project Brief (Revised)
+# VIDX — Project Brief (Revised)
 
 > **Revision note:** Updated after discovering the existing [usfm-converter](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter) project. This changes the picture significantly.
 
@@ -24,13 +24,13 @@ The [usfm_to_srt.py](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-conver
 | Standalone EXE build | ✅ Done | [build.bat](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/build.bat) + PyInstaller |
 
 > [!IMPORTANT]
-> This means the **"core engineering challenge"** I flagged in the previous brief — USFM+timing→subtitle alignment — is already solved and tested with real Sindhi/Devanagari data. The usfm2vdo project doesn't need to rewrite this. It needs to **extend** it.
+> This means the **"core engineering challenge"** I flagged in the previous brief — USFM+timing→subtitle alignment — is already solved and tested with real Sindhi/Devanagari data. The VIDX project doesn't need to rewrite this. It needs to **extend** it.
 
 ---
 
 ## 2. What This Project Is
 
-**usfm2vdo** is the layer that sits *on top of* the existing usfm-converter and adds:
+**VIDX** is the layer that sits *on top of* the existing usfm-converter and adds:
 
 1. **`.ass` subtitle output** instead of (or in addition to) `.srt`
 2. **FFmpeg command generation** to composite background + audio + subtitles → video
@@ -41,7 +41,7 @@ That's it. The USFM parsing, timing alignment, and text segmentation are inherit
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                     usfm2vdo                             │
+│                       VIDX                               │
 │                                                          │
 │  ┌─────────────┐  ┌───────────────┐  ┌───────────────┐  │
 │  │ ASS         │  │ FFmpeg Cmd    │  │ Batch Video   │  │
@@ -134,7 +134,7 @@ With the existing converter as a foundation, the risk picture changes dramatical
 | Risk | Previous | Now | Reason |
 |---|---|---|---|
 | USFM ↔ timing alignment | 🔴 HIGH | 🟢 LOW | Already solved in [TextSegmenter](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm-converter/usfm_to_srt.py#L202-L253) |
-| USFM markup stripping | 🟡 MEDIUM | 🟢 LOW | Already handled (though `\fig` stripping [needs fixing](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/src/MRK_05_Segmented.srt#L259)) |
+| USFM markup stripping | 🟡 MEDIUM | 🟢 LOW | Already handled (though `\fig` stripping [needs fixing](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/src/MRK_05_Segmented.srt#L259)) |
 | `.ass` styling/positioning | N/A | 🟡 MEDIUM | New — needs correct alignment math for 3 aspect ratios |
 | Complex script rendering (HarfBuzz) | 🟡 MEDIUM | 🟡 MEDIUM | Unchanged — depends on FFmpeg build |
 | FFmpeg command correctness | N/A | 🟡 MEDIUM | New — filter graph syntax is finicky |
@@ -142,7 +142,7 @@ With the existing converter as a foundation, the risk picture changes dramatical
 | Batch rendering time | N/A | 🟡 MEDIUM | Full NT = hours. Need progress reporting + parallelism option |
 
 ### Remaining Known Bug
-The existing converter doesn't strip `\fig ... \fig*` markers. Evidence: [MRK_05_Segmented.srt line 259](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/src/MRK_05_Segmented.srt#L259) contains `|src="lb00310.jpg" size="col" ref="5:29"` as visible subtitle text. This needs to be fixed in the converter's `_clean_text()` method before we build on top of it.
+The existing converter doesn't strip `\fig ... \fig*` markers. Evidence: [MRK_05_Segmented.srt line 259](file:///C:/Users/BCS_Support/Documents/dev/nlci/vidx/src/MRK_05_Segmented.srt#L259) contains `|src="lb00310.jpg" size="col" ref="5:29"` as visible subtitle text. This needs to be fixed in the converter's `_clean_text()` method before we build on top of it.
 
 ---
 
@@ -196,7 +196,7 @@ The existing converter doesn't strip `\fig ... \fig*` markers. Evidence: [MRK_05
 ## 7. Configuration Design
 
 ```yaml
-# usfm2vdo project config
+# VIDX project config
 project:
   name: "Sindhi NT - Mark"
   language: "snd"
@@ -267,19 +267,19 @@ batch:
 
 ```bash
 # Render all chapters defined in config
-usfm2vdo render --config project.yaml
+vidx render --config project.yaml
 
 # Render specific chapter for testing
-usfm2vdo render --config project.yaml --chapter 5
+vidx render --config project.yaml --chapter 5
 
 # Generate .ass files only (no video rendering)
-usfm2vdo subtitle --config project.yaml
+vidx subtitle --config project.yaml
 
 # Validate inputs before rendering
-usfm2vdo validate --config project.yaml
+vidx validate --config project.yaml
 
 # Preview: render first 15 seconds of one chapter
-usfm2vdo preview --config project.yaml --chapter 5
+vidx preview --config project.yaml --chapter 5
 ```
 
 This is the right choice because:
