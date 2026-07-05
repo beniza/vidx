@@ -113,3 +113,25 @@ def test_convert_to_ass_with_bumpers_config(tmp_path):
     content = out_ass.read_text(encoding="utf-8")
     assert "0:00:05.00" in content
 
+
+def test_prepare_bumper_audio_with_background_music(tmp_path):
+    main_wav = tmp_path / "main.wav"
+    bgm_wav = tmp_path / "bgm.wav"
+    out_wav = tmp_path / "out_bgm.wav"
+    
+    create_dummy_wav(main_wav, duration_sec=4.0)
+    create_dummy_wav(bgm_wav, duration_sec=1.0)
+    
+    success, intro_dur, total_dur = prepare_bumper_audio(
+        main_audio=str(main_wav),
+        output_audio=str(out_wav),
+        background_music=str(bgm_wav),
+        bg_music_volume=0.2
+    )
+    
+    assert success
+    assert out_wav.exists()
+    assert abs(total_dur - 4.0) < 0.2
+    assert abs(get_media_duration(str(out_wav)) - 4.0) < 0.2
+
+

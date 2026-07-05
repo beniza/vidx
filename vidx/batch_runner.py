@@ -150,18 +150,23 @@ class BatchRunner:
         ass_path = out_path.with_suffix(".ass")
         
         bumpers_cfg = self.config.raw_config.get("bumpers", {})
+        audio_cfg = self.config.raw_config.get("audio", {})
         intro_audio = bumpers_cfg.get("intro_audio")
         outro_audio = bumpers_cfg.get("outro_audio")
+        bg_music = audio_cfg.get("background_music") or bumpers_cfg.get("background_music")
+        bg_vol = float(audio_cfg.get("background_music_volume") or bumpers_cfg.get("background_music_volume") or 0.15)
         
         actual_audio = audio_path
-        if (intro_audio and Path(intro_audio).exists()) or (outro_audio and Path(outro_audio).exists()):
+        if (intro_audio and Path(intro_audio).exists()) or (outro_audio and Path(outro_audio).exists()) or (bg_music and Path(bg_music).exists()):
             from .bumpers import prepare_bumper_audio
             combined_audio_path = out_path.with_name(f"{out_path.stem}_with_bumpers.wav")
             success_bump, intro_dur, total_dur = prepare_bumper_audio(
                 main_audio=str(audio_path),
                 output_audio=str(combined_audio_path),
                 intro_audio=intro_audio,
-                outro_audio=outro_audio
+                outro_audio=outro_audio,
+                background_music=bg_music,
+                bg_music_volume=bg_vol
             )
             if success_bump:
                 actual_audio = combined_audio_path

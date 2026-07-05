@@ -20,6 +20,8 @@ class BumperConfig:
     outro_image: Optional[str] = None
     title_duration: Optional[float] = None
     outro_duration: Optional[float] = None
+    background_music: Optional[str] = None
+    background_music_volume: float = 0.15
 
 
 def get_media_duration(file_path: str) -> float:
@@ -75,10 +77,13 @@ def prepare_bumper_audio(
     main_audio: str,
     output_audio: str,
     intro_audio: Optional[str] = None,
-    outro_audio: Optional[str] = None
+    outro_audio: Optional[str] = None,
+    background_music: Optional[str] = None,
+    bg_music_volume: float = 0.15
 ) -> Tuple[bool, float, float]:
     """
-    Concatenate intro_audio + main_audio + outro_audio into output_audio.
+    Concatenate intro_audio + main_audio + outro_audio into output_audio,
+    optionally mixing looped background_music along with main_audio.
     Returns: (success: bool, intro_duration_sec: float, total_duration_sec: float)
     """
     main_path = Path(main_audio)
@@ -89,14 +94,16 @@ def prepare_bumper_audio(
 
     intro_path = Path(intro_audio) if intro_audio else None
     outro_path = Path(outro_audio) if outro_audio else None
+    bgm_path = Path(background_music) if background_music else None
 
     has_intro = intro_path is not None and intro_path.exists()
     has_outro = outro_path is not None and outro_path.exists()
+    has_bgm = bgm_path is not None and bgm_path.exists()
 
     intro_dur = get_media_duration(str(intro_path)) if has_intro else 0.0
 
-    # If no bumpers needed, simply copy or point to main audio
-    if not has_intro and not has_outro:
+    # If no bumpers or BGM needed, simply copy or point to main audio
+    if not has_intro and not has_outro and not has_bgm:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         if str(main_path.resolve()) != str(out_path.resolve()):
             shutil.copyfile(str(main_path), str(out_path))
@@ -104,31 +111,56 @@ def prepare_bumper_audio(
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Build FFmpeg concat command
+    # Build FFmpeg filter complex command
     inputs = []
     filter_parts = []
     idx = 0
 
+    intro_label = None
     if has_intro:
         inputs.extend(["-i", str(intro_path)])
-        filter_parts.append(f"[{idx}:0]")
+        intro_label = f"[{idx}:0]"
         idx += 1
 
     inputs.extend(["-i", str(main_path)])
-    filter_parts.append(f"[{idx}:0]")
+    main_label = f"[{idx}:0]"
     idx += 1
 
+    if has_bgm:
+        inputs.extend(["-stream_loop", "-1", "-i", str(bgm_path)])
+        bgm_label = f"[{idx}:0]"
+        idx += 1
+        mix_label = "[main_mixed]"
+        filter_parts.append(f"{bgm_label}volume={bg_music_volume}[bgm_vol];{main_label}[bgm_vol]amix=inputs=2:duration=first:normalize=0{mix_label};")
+        current_main = mix_label
+    else:
+        current_main = main_label
+
+    outro_label = None
     if has_outro:
         inputs.extend(["-i", str(outro_path)])
-        filter_parts.append(f"[{idx}:0]")
+        outro_label = f"[{idx}:0]"
         idx += 1
 
-    filter_str = "".join(filter_parts) + f"concat=n={idx}:v=0:a=1[outa]"
+    if has_intro or has_outro:
+        concat_inputs = []
+        if has_intro:
+            concat_inputs.append(intro_label)
+        concat_inputs.append(current_main)
+        if has_outro:
+            concat_inputs.append(outro_label)
+        n_concat = len(concat_inputs)
+        filter_parts.append("".join(concat_inputs) + f"concat=n={n_concat}:v=0:a=1[outa]")
+        map_target = "[outa]"
+    else:
+        map_target = current_main
+
+    filter_str = "".join(filter_parts).rstrip(";")
     cmd = [
         "ffmpeg", "-y",
         *inputs,
         "-filter_complex", filter_str,
-        "-map", "[outa]",
+        "-map", map_target,
         str(out_path)
     ]
 

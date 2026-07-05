@@ -38,9 +38,10 @@
   - [x] Enable users to specify a still title image (`video.title_card: "assets/title.jpg"`, `video.title_duration: 4.0`) that displays at the beginning of the video before scripture dialogue starts.
   - [x] Ensure title cards are rendered at the exact target resolution (`1920x1080`, `1080x1920`, or `1080x1080`) so they can serve dual purpose as YouTube, Facebook, and Instagram video thumbnails.
 
-- [x] **Audio Intro & Outro Bumper Clips**
+- [x] **Audio Intro, Outro & Background Music (BGM) Bumpers**
   - [x] Add configuration options for introductory and concluding audio clips (`audio.intro_clip: "assets/intro.mp3"`, `audio.outro_clip: "assets/outro.mp3"`).
   - [x] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main AUDX scripture audio -> play outro credits bumper.
+  - [x] **Looped Background Music Blending:** Allow specifying background music (`audio.background_music: "assets/bgm.mp3"`) with volume control (`audio.background_music_volume: 0.15`). Automatically loop the music continuously to match the scripture reading and seamlessly blend without reducing the narrator's volume!
   - [x] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
 
 - [ ] **Cloud & Streaming Platform Integration (YouTube / Vimeo One-Touch Publishing)**
