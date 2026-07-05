@@ -9,12 +9,14 @@ from pathlib import Path
 from .config import Config
 from .batch_runner import BatchRunner
 from .ass_generator import convert_to_ass
+from . import __version__
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="VIDX: Scripture Video Generator companion to AUDX (combines USFM text, audio, and timing into video)."
     )
+    parser.add_argument("-v", "--version", action="version", version=f"VIDX {__version__}")
     parser.add_argument("-c", "--config", type=str, help="Path to YAML configuration file.")
     parser.add_argument("--usfm", type=str, help="Path to USFM scripture file.")
     parser.add_argument("--timing", type=str, help="Path to timing file (.txt).")
