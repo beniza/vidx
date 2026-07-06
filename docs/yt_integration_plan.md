@@ -93,17 +93,17 @@ publishing:
 
 ## 🛠️ Implementation Roadmap
 
-### Phase 1: Data & Manifest Layer
-* Extend `vidx/config.py` to validate the `publishing:` YAML schema.
-* Update `BatchRunner` to generate a structured `publish_manifest.json` after batch rendering completes.
-* Create a templating utility to resolve `{book}`, `{chapter}`, and `{language}` variables into formatted titles and descriptions.
+### Phase 1: Data & Manifest Layer [COMPLETED]
+* [x] Extend `vidx/config.py` to validate the `publishing:` YAML schema.
+* [x] Update `BatchRunner` to generate a structured `publish_manifest.json` after batch rendering completes.
+* [x] Create a templating utility to resolve `{book}`, `{chapter}`, and `{language}` variables into formatted titles and descriptions.
 
-### Phase 2: Auth & API Engine (`vidx/youtube.py`)
-* Integrate `google-auth-oauthlib`, `google-api-python-client`, and `google-auth-httplib2`.
-* Implement the OAuth 2.0 Installed Application Flow (local browser loopback) and Device Authorization Grant (for headless terminals), saving credentials securely to `~/.vidx/youtube_token.json`.
-* Build the resumable chunked upload engine with rate-limit and quota-tracking logic.
+### Phase 2: Auth & API Engine (`vidx/youtube.py`) [COMPLETED]
+* [x] Integrate `google-auth-oauthlib`, `google-api-python-client`, and `google-auth-httplib2` (as optional dependency `vidx[youtube]`).
+* [x] Implement the OAuth 2.0 Installed Application Flow (local browser loopback) and Device Authorization Grant (for headless terminals), saving credentials securely to `~/.vidx/youtube_token.json`.
+* [x] Build the resumable chunked upload engine with rate-limit and quota-tracking logic.
 
-### Phase 3: CLI & Progress Integration
-* Add the `vidx publish` command (`--manifest`, `--resume`, `--dry-run`).
-* Connect upload transfer speeds, uploaded bytes, and quota counters to the interactive terminal monitor.
-* Generate offline "YouTube Studio Ready" packages when API publishing is disabled or offline.
+### Phase 3: CLI & Progress Integration [COMPLETED]
+* [x] Add the `vidx --publish` and `vidx --manifest` CLI options.
+* [x] Connect upload progress callbacks to the terminal output.
+* [x] Generate offline "YouTube Studio Ready" packages when API publishing is disabled or offline.
