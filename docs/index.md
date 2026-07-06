@@ -196,5 +196,6 @@ jobs:
 ## 📚 Further Documentation
 - **[Configuration & Bulk Processing Guide](configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
 - **[User Guide & Tutorials](user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
+- **[YouTube & Video Publishing Guide](publishing_guide.md):** Plain-language instructions for sharing videos online, setting up Google Cloud keys, and using offline Studio packages.
 - **[Project Brief & Advisory Council Decisions](project_brief.md):** Historical background and engineering decisions.
 - **[Project Roadmap & TODOs](todo.md):** Active milestones, Test-Driven Development (TDD) rules, CI/CD pipelines, and future feature enhancements.
