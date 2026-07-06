@@ -203,6 +203,84 @@ audio:
 
 ---
 
+## 🚀 YouTube Publishing & Team Distribution Guide
+
+VIDX features a built-in **2-Stage Hybrid Publishing Architecture** designed to overcome Google API quota restrictions and simplify video distribution for translation teams operating in remote or low-bandwidth environments.
+
+### 1. Understanding Google API Quotas & The Outbox Manifest
+Google Cloud Platform enforces a daily quota of **10,000 units per project** on the YouTube Data API v3. 
+* Uploading a single video costs **~1,600 units**, attaching a thumbnail costs **50 units**, and adding to a playlist costs **50 units** (~1,700 units total per chapter).
+* This allows an automated tool to publish **5 to 6 chapter videos per day** per Google project before hitting the limit.
+
+To prevent long multi-hour batch runs from failing when this daily quota is reached, VIDX decouples video rendering from online distribution using an **Outbox Manifest**:
+1. When you run `vidx -c project.yaml`, VIDX renders all video files and creates a database called `publish_manifest.json` inside your output folder.
+2. When you are ready to upload online, you run:
+   ```bash
+   vidx --manifest output/publish_manifest.json
+   ```
+3. VIDX uploads videos sequentially. When the 10,000-unit daily limit is reached, **VIDX cleanly pauses**, preserves all progress in `publish_manifest.json`, and advises you to run the exact same command tomorrow after Google resets your quota! Failed or interrupted uploads will automatically retry without re-rendering any video files.
+
+---
+
+### 2. How to Share VIDX with Others (Team Configuration)
+When distributing VIDX to field technicians, translators, or media coordinators, you have two flexible workflows depending on their internet access and technical setup:
+
+#### Option A: Offline "YouTube Studio Ready" Packages (Zero Setup Required)
+For remote team members without stable internet or Google API developer credentials, VIDX generates an offline upload kit automatically.
+In your project YAML configuration, ensure this option is enabled:
+```yaml
+publishing:
+  platform: "youtube"
+  enabled: false                    # Set false so rendering runs without API login
+  generate_offline_package: true    # Generates studio copy-paste folders
+  privacy_status: "unlisted"
+  playlist_name: "Gospel of Matthew — Sindhi Audio Bible"
+  title_template: "{book} Chapter {chapter:02d} — {language} Audio Bible"
+  description_template: |
+    Listen to {book} Chapter {chapter} in {language}.
+    Generated automatically by VIDX Scripture Video Engine.
+  tags: ["AudioBible", "{language}", "{book}", "Scripture"]
+```
+When team members run the batch render, VIDX creates an isolated folder inside `output/YouTube_Upload_Package/` for each chapter containing:
+* The rendered `.mp4` video.
+* The `.jpg` title card thumbnail.
+* A formatted `metadata.txt` file containing the exact title, description, and hashtags.
+**How they use it:** Team members simply open [YouTube Studio](https://studio.youtube.com/) in their web browser, drag-and-drop the MP4 and thumbnail, and copy-paste the text from `metadata.txt`! No Google Cloud Console or API setup is required.
+
+#### Option B: Automated API Publishing with Team Members
+If your team members want to run automated batch uploading directly from their terminal using `vidx --manifest`, follow these modern OAuth 2.0 setup steps:
+
+##### Step 1: Set up Google Cloud Credentials
+1. Go to the **[Google Cloud Console](https://console.cloud.google.com/)** and create/select a project.
+2. Navigate to **APIs & Services > Library**, search for **"YouTube Data API v3"**, and click **Enable**.
+3. Navigate to **APIs & Services > OAuth consent screen** (or **Google Auth Platform / Audience** in newer UI layouts):
+   - Choose **External** (or Internal if within a Google Workspace organization) and click **Create**.
+   - Fill in your App name (e.g., `VIDX Scripture Uploader`) and user support email.
+   - Under **Test users**, **you MUST click "+ ADD USERS" and add the Google/YouTube email addresses of every team member who will be uploading videos.** (Apps in testing status will reject logins from users not explicitly listed here).
+4. Navigate to **APIs & Services > Credentials**:
+   - Click **+ CREATE CREDENTIALS** -> **OAuth client ID**.
+   - Select **Desktop app** as the Application type and click **Create**.
+   - Click **DOWNLOAD JSON** to download the OAuth client secret file.
+
+##### Step 2: Configure Team Computers
+1. Share the downloaded JSON credentials file with your authorized team members (or have them create their own free Google Cloud projects if they need their own separate 10,000 daily quota allowance).
+2. On the team member's Windows computer, open PowerShell and create the configuration directory:
+   ```powershell
+   New-Item -ItemType Directory -Force "$HOME\.vidx"
+   ```
+3. Copy the shared credentials file into that directory and rename it to `client_secrets.json`:
+   ```powershell
+   Copy-Item "path\to\downloaded_secret.json" "$HOME\.vidx\client_secrets.json"
+   ```
+4. Run the upload manifest from terminal:
+   ```powershell
+   vidx --manifest output\publish_manifest.json
+   ```
+5. A browser tab will open on the team member's computer. They must log in with their authorized Google account. If a screen says *"Google hasn't verified this app"*, instruct them to click **Advanced** -> **Go to VIDX Scripture Uploader (unsafe)** -> **Continue/Allow**.
+6. VIDX saves a secure OAuth refresh token locally in `~/.vidx/youtube_token.json` and automatically begins chunked, resumable background uploads!
+
+---
+
 ## ❓ Troubleshooting & FAQ
 
 ### Q1: My text appears as square "tofu" boxes or question marks.
