@@ -1,0 +1,113 @@
+# ==============================================================================
+# VIDX Project Configuration: Sindhi Matthew Scripture Videos
+# Uses real artifacts from C:\Users\BCS_Support\Documents\dev\nlci\usfm2vdo\src\snd\sindhi-audio-bible-artifacts
+# ==============================================================================
+
+project:
+  name: "Gospel of Matthew — Sindhi Audio Bible"
+  output_dir: "output/matthew_sindhi"
+  # generate_only: false          # Set to true if you only want to generate subtitle files (.ass/.srt) without video rendering
+
+# Note: In this run we disable publishing as requested
+publishing:
+  platform: "youtube"
+  enabled: false                    # Disabled for local video generation
+  generate_offline_package: true    # Generates Option 4 YouTube Studio copy-paste ready metadata folders
+  privacy_status: "unlisted"
+  category_id: "22"
+  playlist_name: "Gospel of Matthew — Sindhi Audio Bible"
+  title_template: "Matthew Chapter {chapter:02d} — Sindhi Audio Bible"
+  description_template: |
+    Listen to the Gospel of Matthew Chapter {chapter} in Sindhi.
+    
+    Generated automatically by VIDX Scripture Video Engine.
+  tags:
+    - "AudioBible"
+    - "Sindhi"
+    - "Matthew"
+    - "Scripture"
+
+video:
+  resolution: "1920x1080"           # 16:9 Widescreen
+  fps: 24
+  codec: "libx264"                  # Use 'auto' if you have GPU hardware acceleration enabled
+  preset: "fast"
+  crf: 23
+  background_media: "src/snd/sindhi-audio-bible-artifacts/Background video/Green and White Clean Videocentric India Travel YouTube Intro (6).mp4"
+  loop_background: true
+  scaling_mode: "pad"
+  
+  # Brand watermark overlay using your logo
+  watermark:
+    image: "src/snd/sindhi-audio-bible-artifacts/Logo/logo.png"
+    position: "top-right"
+    margin: 40
+    scale: 0.12                     # 12% of video width
+    opacity: 0.90
+
+audio:
+  codec: "aac"
+  bitrate: "192k"
+  sample_rate: 48000
+  fade_in_sec: 1.0
+  fade_out_sec: 1.5
+  
+  # Relaxing background piano music looped seamlessly under reading
+  background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/peaceful-piano-music-247088.mp3"
+  background_music_volume: 0.12     # Subtle 12% volume so it doesn't overpower the voice reading
+
+style:
+  verse:
+    font: "Nirmala UI"              # Standard Windows font with excellent Sindhi/Arabic script support
+    size: 48
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 2                    # Bottom-Center
+    margin_bottom: 65
+    margin_lr: 80
+    background_box: true
+    background_color: "#00000085"   # 52% opacity black box for readability over video
+
+  heading:
+    font: "Nirmala UI"
+    size: 56
+    color: "#FFD400"                # Gold color for section headings
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 8                    # Top-Center
+    margin_vertical: 80
+    bold: true
+    background_box: true
+    background_color: "#00000085"
+
+  verse_number:
+    show: true
+    color: "#FFC080"
+    size: 36
+    on_every_segment: false
+
+# ==============================================================================
+# Batch Jobs Queue
+# Note: You will need to place your Sindhi Matthew USFM text file (.SFM) and update the usfm path below!
+# ==============================================================================
+jobs:
+  - usfm: "src/snd/40MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+    timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-01-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/001 Matthew.mp3"
+    output: "output/matthew_sindhi/Matthew_Chapter_01.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/Green and White Clean Videocentric India Travel YouTube Intro (6).mp4"
+
+  - usfm: "src/snd/40MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+    timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-02-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/002 Matthew.mp3"
+    output: "output/matthew_sindhi/Matthew_Chapter_02.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/Green and White Clean Videocentric India Travel YouTube Intro (7).mp4"
+
+  - usfm: "src/snd/40MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+    timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-03-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/003 Matthew.mp3"
+    output: "output/matthew_sindhi/Matthew_Chapter_03.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/Green and White Clean Videocentric India Travel YouTube Intro (8).mp4"
