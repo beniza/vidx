@@ -109,26 +109,27 @@ style:
 # Note: You will need to place your Sindhi Matthew USFM text file (.SFM) and update the usfm path below!
 # ==============================================================================
 jobs:
-  - usfm: "src/snd/41MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+  - usfm: "src/snd/41MATsnd.SFM"
     timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-01-timing.txt"
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/001 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_01.mp4"
     background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd.mp4"
-    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music2.mp3"
-    background_music_volume: 0.80
-    
-  - usfm: "src/snd/41MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music3.mp3"
+    background_music_volume: 0.40
+
+  - usfm: "src/snd/41MATsnd.SFM"
     timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-02-timing.txt"
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/002 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_02.mp4"
-    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd2.mp4"
-    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music2.mp3"
-    background_music_volume: 0.80
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd.mp4"
+    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music3.mp3"
+    background_music_volume: 0.40
 
-  - usfm: "src/snd/41MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+  - usfm: "src/snd/41MATsnd.SFM"
     timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-03-timing.txt"
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/003 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_03.mp4"
     background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd.mp4"
-    background_music: "none"
+    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music3.mp3"
+    background_music_volume: 0.40
 

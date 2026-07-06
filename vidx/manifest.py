@@ -101,8 +101,8 @@ class ManifestManager:
         self.entries[entry.id] = entry
 
     def get_pending_entries(self) -> List[ManifestEntry]:
-        """Return all entries waiting to be uploaded."""
-        return [e for e in self.entries.values() if e.status == "PENDING"]
+        """Return all entries waiting to be uploaded (including previously failed attempts)."""
+        return [e for e in self.entries.values() if e.status in ("PENDING", "FAILED")]
 
     def update_status(
         self,
