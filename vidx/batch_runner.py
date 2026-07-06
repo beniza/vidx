@@ -70,6 +70,8 @@ class BatchRunner:
         background_music_volume=None,
         watermark=None,
         title=None,
+        book=None,
+        chapter=None,
     ):
         """Add a rendering job to the batch queue."""
         job = Job(
@@ -84,6 +86,8 @@ class BatchRunner:
             title=str(title) if title is not None else None,
             duration=duration,
             keep_ass=keep_ass,
+            book=str(book) if book is not None else None,
+            chapter=int(chapter) if chapter is not None else None,
         )
         self.jobs.append(job)
         return job
@@ -119,6 +123,13 @@ class BatchRunner:
             title_str = item.get("title")
             dur = item.get("duration", None)
             keep = item.get("keep_ass", True)
+            book_str = item.get("book")
+            chap_val = item.get("chapter")
+            if chap_val is not None:
+                try:
+                    chap_val = int(chap_val)
+                except ValueError:
+                    chap_val = None
 
             self.add_job(
                 usfm_f,
@@ -132,6 +143,8 @@ class BatchRunner:
                 background_music_volume=bg_vol,
                 watermark=wm,
                 title=title_str,
+                book=book_str,
+                chapter=chap_val,
             )
 
     def _execute_single_job(self, job: Job, worker_id: int = 0):
@@ -146,7 +159,7 @@ class BatchRunner:
 
         if not job.book or job.chapter is None:
             try:
-                # 1. Check timing file first for exact chapter number
+                # 1. Check timing file first for exact chapter number or book
                 if timing_path.exists():
                     with open(timing_path, "r", encoding="utf-8", errors="ignore") as f:
                         for line in f:
@@ -160,7 +173,24 @@ class BatchRunner:
                                     pass
                                 if job.book and job.chapter is not None:
                                     break
-                # 2. Check USFM file for any remaining missing metadata (especially book name)
+
+                # 2. Check output, audio, and timing filenames for chapter number before checking shared USFM
+                if job.chapter is None:
+                    audio_name = Path(job.audio_file).name if job.audio_file else ""
+                    m = (
+                        re.search(r"(?:[_-]|\b)(?:Ch|Chapter|Chp|c)[_-]?(\d+)", out_path.name, re.IGNORECASE)
+                        or re.search(r"[_-](\d{1,3})[_-]?(?:timing|\.txt|\.tsv|\b)", timing_path.name, re.IGNORECASE)
+                        or re.search(r"(?:[_-]|\b)(?:Chapter|Ch|Chp)[_-]?(\d+)", timing_path.name, re.IGNORECASE)
+                        or re.search(r"^(\d{1,3})(?:\s+|[_-]|\b)", audio_name)
+                        or re.search(r"(?:[_-]|\b)(?:Ch|Chapter|Chp|c)[_-]?(\d+)", audio_name, re.IGNORECASE)
+                    )
+                    if m:
+                        try:
+                            job.chapter = int(m.group(1))
+                        except ValueError:
+                            pass
+
+                # 3. Check USFM file for any remaining missing metadata (especially book name, or fallback chapter)
                 if usfm_path.exists() and (not job.book or job.chapter is None):
                     with open(usfm_path, "r", encoding="utf-8", errors="ignore") as f:
                         for _ in range(50):
@@ -172,22 +202,6 @@ class BatchRunner:
                                     job.chapter = int(line.split()[1])
                                 except ValueError:
                                     pass
-                # 3. Failsafe: check filename for chapter number
-                if job.chapter is None:
-                    m = re.search(
-                        r"(?:[_-]|^)(?:Ch|Chapter|C)[_-]?(\d+)",
-                        timing_path.name,
-                        re.IGNORECASE,
-                    ) or re.search(
-                        r"(?:[_-]|^)(?:Ch|Chapter|C)[_-]?(\d+)",
-                        out_path.name,
-                        re.IGNORECASE,
-                    )
-                    if m:
-                        try:
-                            job.chapter = int(m.group(1))
-                        except ValueError:
-                            pass
             except Exception:
                 pass
 
