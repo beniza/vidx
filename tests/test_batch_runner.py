@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from vidx.batch_runner import BatchRunner, Job
+from vidx.batch_runner import BatchRunner
 from vidx.config import Config
 
 
@@ -149,3 +149,30 @@ def test_preprocess_background_media_loop_crossfade(monkeypatch, tmp_path):
     fc_val = ff_cmd[fc_idx + 1]
     assert "xfade=transition=fade:duration=1.5:offset=7.000" in fc_val
     assert "xf1.5s" in runner.jobs[0].background_media
+
+
+def test_batch_runner_publishing_manifests(sample_workspace):
+    usfm, timing, tmp_dir = sample_workspace
+    out_mp4 = tmp_dir / "output.mp4"
+    out_mp4.write_text("dummy mp4")
+
+    config = Config(
+        config_dict={
+            "project": {"output_dir": str(tmp_dir), "language": "Sindhi"},
+            "publishing": {"enabled": True, "generate_offline_package": True},
+        }
+    )
+    runner = BatchRunner(config)
+    job = runner.add_job(str(usfm), str(timing), "dummy_audio.mp3", str(out_mp4))
+    job.status = "SUCCESS"
+    job.book = "Mark"
+    job.chapter = 1
+
+    runner._generate_publishing_manifests()
+
+    manifest_file = tmp_dir / "publish_manifest.json"
+    assert manifest_file.exists()
+
+    pkg_dir = tmp_dir / "YouTube_Upload_Package" / "Mark_Ch01"
+    assert pkg_dir.exists()
+    assert (pkg_dir / "metadata.txt").exists()

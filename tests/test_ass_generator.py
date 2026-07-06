@@ -1,4 +1,3 @@
-import pytest
 from vidx.ass_generator import hex_to_ass, clean_subtitle_text, ASSGenerator
 from vidx.usfm_parser import USFMParser, TimingParser
 

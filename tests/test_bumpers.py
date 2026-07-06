@@ -1,4 +1,3 @@
-import pytest
 import wave
 import struct
 from pathlib import Path

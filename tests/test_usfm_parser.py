@@ -1,4 +1,3 @@
-import pytest
 from vidx.usfm_parser import USFMParser, TimingParser, TextSegmenter, SRTGenerator
 
 SAMPLE_USFM = """\\id MRK

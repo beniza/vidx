@@ -17,6 +17,12 @@ from .ass_generator import convert_to_ass
 from .ffmpeg_builder import FFmpegBuilder
 from .config import Config
 from .progress import ProgressReporter, ProgressEvent
+from .manifest import (
+    ManifestManager,
+    ManifestEntry,
+    resolve_metadata_template,
+    generate_offline_package,
+)
 
 
 @dataclass
@@ -893,9 +899,100 @@ class BatchRunner:
                 if job.error_msg:
                     print(f"    Error: {job.error_msg}")
 
+        self._generate_publishing_manifests()
+
         return {
             "total_time": total_time,
             "succeeded": succeeded,
             "failed": failed,
             "jobs": self.jobs,
         }
+
+    def _generate_publishing_manifests(self):
+        """Generate outbox manifest and offline packages for successfully rendered jobs."""
+        if not self.config:
+            return
+        pub_cfg = self.config.publishing
+        if not pub_cfg.get("enabled", False) and not pub_cfg.get(
+            "generate_offline_package", True
+        ):
+            return
+
+        out_dir = Path(self.config.project.get("output_dir", "output"))
+        manifest_file = out_dir / "publish_manifest.json"
+        mgr = ManifestManager(manifest_file)
+
+        lang = self.config.project.get("language", "Language")
+        t_copy = self.config.project.get("text_copyright", "")
+        a_copy = self.config.project.get("audio_copyright", "")
+
+        added_count = 0
+        for job in self.jobs:
+            if job.status != "SUCCESS" or not job.output_file:
+                continue
+
+            book = job.book or "Scripture"
+            ch = job.chapter if isinstance(job.chapter, int) else 1
+            entry_id = f"{book}_Ch{ch:02d}"
+
+            title = resolve_metadata_template(
+                pub_cfg.get("title_template", ""),
+                book=book,
+                chapter=ch,
+                language=lang,
+                text_copyright=t_copy,
+                audio_copyright=a_copy,
+            )
+            desc = resolve_metadata_template(
+                pub_cfg.get("description_template", ""),
+                book=book,
+                chapter=ch,
+                language=lang,
+                text_copyright=t_copy,
+                audio_copyright=a_copy,
+            )
+            tags = [
+                resolve_metadata_template(t, book=book, chapter=ch, language=lang)
+                for t in pub_cfg.get("tags", [])
+            ]
+
+            thumb_path = None
+            possible_thumbs = [
+                Path(job.output_file).with_name("title_card.jpg"),
+                out_dir / "title_card.jpg",
+            ]
+            for pt in possible_thumbs:
+                if pt.exists():
+                    thumb_path = str(pt)
+                    break
+
+            entry = ManifestEntry(
+                id=entry_id,
+                video_path=str(job.output_file),
+                thumbnail_path=thumb_path,
+                book=book,
+                chapter=ch,
+                language=lang,
+                title=title,
+                description=desc,
+                privacy_status=pub_cfg.get("privacy_status", "unlisted"),
+                category_id=str(pub_cfg.get("category_id", "22")),
+                playlist_name=pub_cfg.get("playlist_name", ""),
+                tags=tags,
+            )
+            mgr.add_or_update(entry)
+            added_count += 1
+
+            if pub_cfg.get("generate_offline_package", True):
+                try:
+                    generate_offline_package(entry, out_dir)
+                except Exception as e:
+                    print(
+                        f"[!] Warning: Could not generate offline package for {entry_id}: {e}"
+                    )
+
+        if added_count > 0:
+            mgr.save()
+            print(
+                f"\n[+] YouTube Outbox Manifest updated: {manifest_file} ({added_count} items)"
+            )

@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock
 from vidx.progress import ProgressEvent, ProgressReporter, parse_ffmpeg_progress_line
 

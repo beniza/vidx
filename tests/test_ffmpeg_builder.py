@@ -1,5 +1,3 @@
-import pytest
-from pathlib import Path
 from vidx.ffmpeg_builder import FFmpegBuilder
 
 
