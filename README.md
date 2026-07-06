@@ -74,6 +74,18 @@ Verify the CLI installation:
 vidx --help
 ```
 
+### 3. Building Standalone Executable (.exe)
+To compile a portable, self-contained executable for distribution to team members without requiring Python:
+
+```bash
+# Install PyInstaller (if not already installed)
+pip install pyinstaller
+
+# Compile standalone binary using the project specification
+pyinstaller --clean vidx.spec
+```
+The compiled binary will be generated at `dist/vidx.exe`. You can distribute this single file along with your project assets to any Windows machine.
+
 ---
 
 ## 🛠️ Command-Line Usage
