@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from vidx.config import Config, merge_dict, DEFAULT_CONFIG
+from vidx.config import Config, merge_dict
 
 
 def test_merge_dict():
@@ -16,6 +16,8 @@ def test_config_defaults():
     assert cfg.video["codec"] == "libx264"
     assert cfg.project["output_dir"] == "output"
     assert cfg.style["verse"]["font"] == "Nirmala UI"
+    assert cfg.publishing["platform"] == "youtube"
+    assert cfg.publishing["enabled"] is False
 
 
 def test_config_from_dict():

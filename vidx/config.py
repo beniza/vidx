@@ -54,6 +54,23 @@ DEFAULT_CONFIG = {
             "on_every_segment": False,
         },
     },
+    "publishing": {
+        "platform": "youtube",
+        "enabled": False,
+        "client_secrets_file": "~/.vidx/client_secrets.json",
+        "privacy_status": "unlisted",  # 'private', 'unlisted', or 'public'
+        "category_id": "22",  # 22 = People & Blogs, 27 = Education
+        "playlist_name": "",
+        "title_template": "{book} Chapter {chapter:02d} — {language} Audio Bible",
+        "description_template": (
+            "Listen to {book} Chapter {chapter} in {language}.\n\n"
+            "Text Copyright: {text_copyright}\n"
+            "Audio Copyright: {audio_copyright}\n"
+            "Generated automatically by VIDX Scripture Video Engine."
+        ),
+        "tags": ["AudioBible", "Scripture", "{language}", "{book}"],
+        "generate_offline_package": True,
+    },
 }
 
 
@@ -103,6 +120,10 @@ class Config:
     @property
     def project(self):
         return self.raw_config.get("project", {})
+
+    @property
+    def publishing(self):
+        return self.raw_config.get("publishing", {})
 
     def save(self, output_path):
         """Save current config to YAML file."""
