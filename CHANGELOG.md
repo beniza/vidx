@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2026-07-06
+
+### Fixed
+- **PyInstaller Google API Bundling:** Fixed runtime `ImportError` when running `--manifest` on end-user computers without Python installed by collecting all `google.auth`, `google.oauth2`, `google_auth_httplib2` submodules and all 582 JSON discovery data files in `vidx.spec`.
+- **Error Diagnostics:** Updated `youtube.py` and `cli.py` to capture and display explicit import error messages instead of generic installation instructions when API dependencies fail to load.
+
 ## [0.3.2] - 2026-07-06
 
 ### Added

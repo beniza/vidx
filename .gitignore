@@ -23,6 +23,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 *.spec
+!vidx.spec
 
 # Output videos and generated subtitles (do not commit large binary renders)
 output/

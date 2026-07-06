@@ -18,8 +18,10 @@ try:
     from googleapiclient.errors import HttpError
 
     YOUTUBE_AVAILABLE = True
-except ImportError:
+    _YOUTUBE_IMPORT_ERROR = None
+except Exception as e:
     YOUTUBE_AVAILABLE = False
+    _YOUTUBE_IMPORT_ERROR = str(e)
     HttpError = Exception
 
 
@@ -45,7 +47,7 @@ class YouTubePublisher:
     ):
         if not YOUTUBE_AVAILABLE:
             raise RuntimeError(
-                "YouTube API dependencies not installed. Please run: pip install vidx[youtube]"
+                f"YouTube API dependencies not installed or failed to load: {_YOUTUBE_IMPORT_ERROR}. Please run: pip install vidx[youtube]"
             )
 
         self.client_secrets_file = Path(client_secrets_file).expanduser().resolve()

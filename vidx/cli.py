@@ -12,7 +12,7 @@ from .config import Config
 from .batch_runner import BatchRunner
 from .progress import TerminalProgressObserver
 from .manifest import ManifestManager
-from .youtube import YouTubePublisher, QuotaExceededError, YOUTUBE_AVAILABLE
+from .youtube import YouTubePublisher, QuotaExceededError, YOUTUBE_AVAILABLE, _YOUTUBE_IMPORT_ERROR
 from . import __version__
 
 
@@ -20,8 +20,9 @@ def run_publisher(manifest_path: str, config: Optional[Config] = None):
     """Execute outbox publishing loop against YouTube Data API."""
     if not YOUTUBE_AVAILABLE:
         print(
-            "[-] Error: YouTube API dependencies not installed. Run: pip install vidx[youtube]"
+            f"[-] Error: YouTube API dependencies failed to load: {_YOUTUBE_IMPORT_ERROR}"
         )
+        print("Run: pip install vidx[youtube] (or use standard offline studio upload packages)")
         sys.exit(1)
 
     p = Path(manifest_path)
