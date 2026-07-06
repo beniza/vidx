@@ -114,6 +114,7 @@ class FFmpegBuilder:
         output_file,
         background_media=None,
         duration=None,
+        watermark=None,
     ):
         """
         Construct a list of command arguments for running subprocess.Popen / run.
@@ -202,7 +203,8 @@ class FFmpegBuilder:
                 af_list.append(f"afade=t=out:st={st:.3f}:d={fade_out}")
 
         wm_cfg = (
-            video_cfg.get("watermark")
+            watermark
+            or video_cfg.get("watermark")
             or video_cfg.get("logo")
             or self.config.get("watermark")
             or self.config.get("logo")
@@ -367,13 +369,14 @@ class FFmpegBuilder:
         worker_id=0,
         book=None,
         chapter=None,
+        watermark=None,
     ):
         """
         Execute the FFmpeg render synchronously. Returns (success, stdout/stderr message).
         If progress_callback is provided, emits ProgressEvent objects during rendering.
         """
         cmd = self.build_command(
-            audio_file, subtitle_file, output_file, background_media, duration
+            audio_file, subtitle_file, output_file, background_media, duration, watermark=watermark
         )
         if not progress_callback:
             try:

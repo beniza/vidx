@@ -11,7 +11,7 @@ import subprocess
 import re
 from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Optional, List, Union, Any
 
 from .ass_generator import convert_to_ass
 from .ffmpeg_builder import FFmpegBuilder
@@ -32,6 +32,10 @@ class Job:
     audio_file: str
     output_file: str
     background_media: Optional[str] = None
+    background_music: Optional[str] = None
+    background_music_volume: Optional[float] = None
+    watermark: Optional[Union[str, dict]] = None
+    title: Optional[str] = None
     duration: Optional[float] = None
     keep_ass: bool = True
     book: Optional[str] = None
@@ -62,6 +66,10 @@ class BatchRunner:
         background_media=None,
         duration=None,
         keep_ass=True,
+        background_music=None,
+        background_music_volume=None,
+        watermark=None,
+        title=None,
     ):
         """Add a rendering job to the batch queue."""
         job = Job(
@@ -70,6 +78,10 @@ class BatchRunner:
             audio_file=str(audio_file),
             output_file=str(output_file),
             background_media=str(background_media) if background_media else None,
+            background_music=str(background_music) if background_music is not None and str(background_music).strip() != "" else None,
+            background_music_volume=float(background_music_volume) if background_music_volume is not None else None,
+            watermark=watermark,
+            title=str(title) if title is not None else None,
             duration=duration,
             keep_ass=keep_ass,
         )
@@ -100,11 +112,27 @@ class BatchRunner:
                 base_name = Path(audio_f).stem
                 out_f = str(output_dir / f"{base_name}.mp4")
 
-            bg_media = item.get("background", default_bg)
+            bg_media = item.get("background") or item.get("background_media") or default_bg
+            bg_music = item.get("background_music") if "background_music" in item else item.get("bg_music")
+            bg_vol = item.get("background_music_volume") if "background_music_volume" in item else item.get("bg_music_volume")
+            wm = item.get("watermark")
+            title_str = item.get("title")
             dur = item.get("duration", None)
             keep = item.get("keep_ass", True)
 
-            self.add_job(usfm_f, timing_f, audio_f, out_f, bg_media, dur, keep)
+            self.add_job(
+                usfm_f,
+                timing_f,
+                audio_f,
+                out_f,
+                background_media=bg_media,
+                duration=dur,
+                keep_ass=keep,
+                background_music=bg_music,
+                background_music_volume=bg_vol,
+                watermark=wm,
+                title=title_str,
+            )
 
     def _execute_single_job(self, job: Job, worker_id: int = 0):
         """Execute a single job: 1) generate ASS, 2) render FFmpeg."""
@@ -240,13 +268,21 @@ class BatchRunner:
         audio_cfg = self.config.raw_config.get("audio", {})
         intro_audio = bumpers_cfg.get("intro_audio")
         outro_audio = bumpers_cfg.get("outro_audio")
-        bg_music = audio_cfg.get("background_music") or bumpers_cfg.get(
-            "background_music"
+        bg_music = (
+            job.background_music
+            if job.background_music is not None
+            else (audio_cfg.get("background_music") or bumpers_cfg.get("background_music"))
         )
+        if bg_music and str(bg_music).lower() in ["none", "false", "off", ""]:
+            bg_music = None
         bg_vol = float(
-            audio_cfg.get("background_music_volume")
-            or bumpers_cfg.get("background_music_volume")
-            or 0.15
+            job.background_music_volume
+            if job.background_music_volume is not None
+            else (
+                audio_cfg.get("background_music_volume")
+                or bumpers_cfg.get("background_music_volume")
+                or 0.15
+            )
         )
 
         actual_audio = audio_path
@@ -322,6 +358,10 @@ class BatchRunner:
                 timing_file=timing_path,
                 output_file=ass_path,
                 config=self.config.raw_config,
+                job_book=job.book,
+                job_chapter=job.chapter,
+                job_title=job.title,
+                job_watermark=job.watermark,
             )
             if not success or not ass_path.exists():
                 job.status = "FAILED"
@@ -377,6 +417,7 @@ class BatchRunner:
             worker_id=worker_id,
             book=job.book,
             chapter=job.chapter,
+            watermark=job.watermark,
         )
 
         job.render_time = time.time() - start_t

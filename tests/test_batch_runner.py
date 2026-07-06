@@ -176,3 +176,37 @@ def test_batch_runner_publishing_manifests(sample_workspace):
     pkg_dir = tmp_dir / "YouTube_Upload_Package" / "Mark_Ch01"
     assert pkg_dir.exists()
     assert (pkg_dir / "metadata.txt").exists()
+
+
+def test_job_level_overrides():
+    config = Config(
+        config_dict={
+            "video": {"background_media": "global_bg.mp4"},
+            "audio": {"background_music": "global_bgm.mp3", "background_music_volume": 0.2},
+            "jobs": [
+                {
+                    "usfm": "gen1.sfm",
+                    "timing": "gen1.txt",
+                    "audio": "gen1.mp3",
+                    "background": "custom_bg.mp4",
+                    "background_music": "custom_bgm.mp3",
+                    "background_music_volume": 0.3,
+                },
+                {
+                    "usfm": "gen2.sfm",
+                    "timing": "gen2.txt",
+                    "audio": "gen2.mp3",
+                    "background_music": "none",
+                },
+            ],
+        }
+    )
+    runner = BatchRunner(config)
+    runner.load_jobs_from_config()
+    assert len(runner.jobs) == 2
+    assert runner.jobs[0].background_media == "custom_bg.mp4"
+    assert runner.jobs[0].background_music == "custom_bgm.mp3"
+    assert runner.jobs[0].background_music_volume == 0.3
+    assert runner.jobs[1].background_media == "global_bg.mp4"
+    assert runner.jobs[1].background_music == "none"
+

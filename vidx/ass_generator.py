@@ -91,11 +91,24 @@ def clean_subtitle_text(text):
 class ASSGenerator:
     """Generate Advanced SubStation Alpha (.ass) subtitle files from USFM and Timing data."""
 
-    def __init__(self, usfm_parser, timing_parser, config=None):
+    def __init__(
+        self,
+        usfm_parser,
+        timing_parser,
+        config=None,
+        job_book=None,
+        job_chapter=None,
+        job_title=None,
+        job_watermark=None,
+    ):
         self.usfm = usfm_parser
         self.timing = timing_parser
         self.segmenter = TextSegmenter(timing_parser.separators)
         self.config = config or {}
+        self.job_book = job_book
+        self.job_chapter = job_chapter
+        self.job_title = job_title
+        self.job_watermark = job_watermark
 
         # Load video defaults
         video_cfg = self.config.get("video", {})
@@ -341,7 +354,16 @@ class ASSGenerator:
         return "\n".join(lines)
 
 
-def convert_to_ass(usfm_file, timing_file, output_file=None, config=None):
+def convert_to_ass(
+    usfm_file,
+    timing_file,
+    output_file=None,
+    config=None,
+    job_book=None,
+    job_chapter=None,
+    job_title=None,
+    job_watermark=None,
+):
     """
     Convert USFM + timing file to ASS subtitle file.
     """
@@ -399,7 +421,15 @@ def convert_to_ass(usfm_file, timing_file, output_file=None, config=None):
         elif line.startswith("\\id "):
             usfm_parser.book_id = line[4:].split()[0].strip()
 
-    generator = ASSGenerator(usfm_parser, timing_parser, config=config)
+    generator = ASSGenerator(
+        usfm_parser,
+        timing_parser,
+        config=config,
+        job_book=job_book,
+        job_chapter=job_chapter,
+        job_title=job_title,
+        job_watermark=job_watermark,
+    )
     ass_content = generator.generate()
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
