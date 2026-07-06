@@ -88,12 +88,18 @@ class USFMParser:
 
                 # Check if this is our target chapter
                 if self.target_chapter:
-                    in_target_chapter = self.chapter == str(self.target_chapter)
+                    try:
+                        in_target_chapter = int(self.chapter) == int(self.target_chapter)
+                    except (ValueError, TypeError):
+                        in_target_chapter = str(self.chapter).strip() == str(self.target_chapter).strip()
 
                     # If we've passed our target chapter, stop parsing
-                    if self.chapter and int(self.chapter) > int(self.target_chapter):
-                        self.chapter = str(self.target_chapter)
-                        break
+                    try:
+                        if self.chapter and int(self.chapter) > int(self.target_chapter):
+                            self.chapter = str(self.target_chapter)
+                            break
+                    except (ValueError, TypeError):
+                        pass
                 else:
                     in_target_chapter = (
                         True  # Parse all chapters if no target specified
@@ -173,12 +179,24 @@ class USFMParser:
 class TimingParser:
     """Parse timing files"""
 
-    def __init__(self, timing_content):
+    def __init__(self, timing_content, filepath=None):
         self.entries = []
         self.level = None
         self.separators = []
         self.chapter = None
         self._parse(timing_content)
+        if self.chapter is None and filepath:
+            name = Path(filepath).name
+            m = (
+                re.search(r"(?:[_-]|\b)(?:Ch|Chapter|Chp|c)[_-]?(\d+)", name, re.IGNORECASE)
+                or re.search(r"[_-](\d{1,3})[_-]?(?:timing|\.txt|\.tsv|\b)", name, re.IGNORECASE)
+                or re.search(r"(?:[_-]|\b)(?:Chapter|Ch|Chp)[_-]?(\d+)", name, re.IGNORECASE)
+            )
+            if m:
+                try:
+                    self.chapter = str(int(m.group(1)))
+                except ValueError:
+                    self.chapter = m.group(1)
 
     def _parse(self, content):
         """Parse timing file"""
@@ -457,7 +475,7 @@ def convert_to_srt(usfm_file, timing_file, output_file=None, config=None):
         timing_content = timing_path.read_text(encoding="utf-8")
 
         # Parse timing file first to get chapter number
-        timing_parser = TimingParser(timing_content)
+        timing_parser = TimingParser(timing_content, filepath=timing_path)
 
         offset_seconds = 0.0
         if config:
@@ -606,7 +624,7 @@ def convert_batch(usfm_file, timing_files, output_folder=None, combined=False):
             timing_content = timing_path.read_text(encoding="utf-8")
 
             # Parse timing file first to get chapter number
-            timing_parser = TimingParser(timing_content)
+            timing_parser = TimingParser(timing_content, filepath=timing_path)
             chapter_num = timing_parser.chapter or "unknown"
 
             # Parse USFM with target chapter

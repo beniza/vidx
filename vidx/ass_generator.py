@@ -458,7 +458,7 @@ def convert_to_ass(
     usfm_content = usfm_path.read_text(encoding="utf-8")
     timing_content = timing_path.read_text(encoding="utf-8")
 
-    timing_parser = TimingParser(timing_content)
+    timing_parser = TimingParser(timing_content, filepath=timing_path)
 
     offset_seconds = 0.0
     if config:
@@ -482,7 +482,18 @@ def convert_to_ass(
     if offset_seconds > 0:
         timing_parser.shift_timestamps(offset_seconds)
 
-    usfm_parser = USFMParser(usfm_content, target_chapter=timing_parser.chapter)
+    target_chap = job_chapter or timing_parser.chapter
+    if not target_chap and output_file:
+        m = (
+            re.search(r"(?:[_-]|\b)(?:Ch|Chapter|Chp|c)[_-]?(\d+)", Path(output_file).name, re.IGNORECASE)
+            or re.search(r"[_-](\d{1,3})[_-]?(?:timing|\.txt|\.tsv|\b)", timing_path.name, re.IGNORECASE)
+        )
+        if m:
+            try:
+                target_chap = str(int(m.group(1)))
+            except ValueError:
+                target_chap = m.group(1)
+    usfm_parser = USFMParser(usfm_content, target_chapter=target_chap)
 
     # Extract book name if available
     for line in usfm_content.split("\n"):
