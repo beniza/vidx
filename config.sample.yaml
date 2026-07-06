@@ -92,6 +92,18 @@ style:
     size: 36                    # Font size for verse number
     on_every_segment: false     # If false, displays reference only on first fragment (2a) of a split verse
 
+  overlay:
+    enabled: true               # Enable title, subtitle, watermark, and divider overlays
+    title: true                 # Automatically derive title from book/chapter
+    title_color: "#FFFFFF"      # Title color (default white)
+    title_position: 5           # ASS numpad alignment (5=middle-center, 8=top-center)
+    subtitle: "AUDIO BIBLE"     # Subtitle text displayed below title
+    subtitle_position: 5        # Subtitle alignment
+    watermark_text: "BRAND"     # Text watermark rendered onto video
+    watermark_position: 4       # Watermark alignment (4=middle-left, 7=top-left)
+    watermark_opacity: 0.50     # Watermark opacity (0.50 = 50% opacity)
+    divider_line: true          # Draw horizontal divider line between title and subtitle
+
 # ==============================================================================
 # Batch Jobs Queue
 # Define specific chapter conversions to run sequentially or in parallel.
@@ -101,5 +113,7 @@ jobs:
     timing: "src/C01-01-MRK-05-timing.txt"
     audio: "src/42MRKSND.mpeg"
     output: "output/mark_chapter_5.mp4"
-    background: "src/bg.mp4"
+    background: "src/bg.mp4"                  # Per-chapter background video override
+    background_music: "src/audio/piano.mp3"   # Per-chapter background music override ("none" disables)
+    background_music_volume: 0.15             # Per-chapter music volume override
     keep_ass: true

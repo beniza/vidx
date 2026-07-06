@@ -174,7 +174,26 @@ style:
     color: "#FFC080"            # Accent color for verse numbers
     size: 38                    # Typically 75% of verse font size
     on_every_segment: false     # If false, only shows reference on first segment (e.g., 1a, not 1b)
+
+  overlay:
+    enabled: true
+    title: true                 # Automatically derives title from book and chapter (or override per job)
+    title_color: "#FFFFFF"      # Color for chapter heading/title
+    title_position: 5           # ASS alignment (5 = Middle-Center, 8 = Top-Center)
+    subtitle: "AUDIO BIBLE"     # Subtitle text displayed below title
+    subtitle_position: 5        # Alignment for subtitle text
+    watermark_text: "BRAND"     # Text watermark rendered onto video
+    watermark_position: 4       # Alignment (4 = Middle-Left, 7 = Top-Left)
+    watermark_opacity: 0.50     # Opacity float (0.50 = 50% opacity)
+    opacity: 0.50               # General overlay opacity fallback
+    divider_line: true          # Draw horizontal divider line between title and subtitle
 ```
+
+### 5.5 ASS Numpad Alignment Reference
+When configuring positioning (`alignment`, `title_position`, `watermark_position`), VIDX uses standard ASS numeric layout (similar to a keyboard numpad):
+*   **7**: Top-Left | **8**: Top-Center | **9**: Top-Right
+*   **4**: Middle-Left | **5**: Middle-Center | **6**: Middle-Right
+*   **1**: Bottom-Left | **2**: Bottom-Center | **3**: Bottom-Right
 
 ---
 
@@ -240,10 +259,12 @@ You can override global `video` settings on a **per-chapter basis** directly ins
 | Override Key | Description | Example |
 | :--- | :--- | :--- |
 | `background` | Overrides the default `background_media` for this specific chapter. | `background: "src/backgrounds/waterfall.mp4"` |
+| `background_music` | Overrides default background music track for this specific chapter (`"none"` disables music). | `background_music: "src/audio/piano_ch1.mp3"` |
+| `background_music_volume` | Overrides the background music volume level for this chapter. | `background_music_volume: 0.15` |
 | `duration` | Limits rendering to `N` seconds (useful for quick chapter testing). | `duration: 15` |
 | `keep_ass` | Override intermediate subtitle retention (`true` / `false`). | `keep_ass: true` |
 
-#### Example: Bulk Run with Per-Chapter Backgrounds
+#### Example: Bulk Run with Per-Chapter Backgrounds & Music
 ```yaml
 jobs:
   - usfm: "src/snd/42MRKsnd.SFM"
@@ -251,12 +272,15 @@ jobs:
     audio: "src/snd/01.mp3"
     output: "output/Mark_01.mp4"
     background: "src/backgrounds/desert_sunrise.mp4"  # Custom background for Ch 1
+    background_music: "src/audio/gentle_piano.mp3"    # Custom music track
+    background_music_volume: 0.12
 
   - usfm: "src/snd/42MRKsnd.SFM"
     timing: "src/snd/MRK_02_timing.txt"
     audio: "src/snd/02.mp3"
     output: "output/Mark_02.mp4"
     background: "src/backgrounds/sea_of_galilee.mp4"  # Custom background for Ch 2
+    background_music: "none"                          # Disable background music for Ch 2
 ```
 
 ---

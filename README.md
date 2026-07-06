@@ -173,12 +173,22 @@ style:
     size: 36
     on_every_segment: false     # If false, displays reference only on first fragment (a) of a split verse
 
+  overlay:
+    enabled: true
+    title: true                 # Derive chapter title automatically
+    title_position: 5           # ASS alignment (5=Middle-Center, 8=Top-Center)
+    watermark_text: "BRAND"     # Text watermark on video
+    watermark_position: 4       # Watermark alignment (4=Middle-Left, 7=Top-Left)
+    watermark_opacity: 0.50     # Watermark transparency level
+
 jobs:
   - usfm: "src/snd/42MRKsnd.SFM"
     timing: "src/snd/C01-01-MRK-05-timing.txt"
     audio: "src/snd/42MRKSND.mpeg"
     output: "output/Mark_Chapter_05_16x9.mp4"
-    background: "src/snd/bg.mp4"
+    background: "src/snd/bg.mp4"              # Per-job background override
+    background_music: "src/snd/music.mp3"     # Per-job music override ("none" disables)
+    background_music_volume: 0.15
 ```
 
 ---
