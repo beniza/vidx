@@ -123,6 +123,7 @@ class ASSGenerator:
         self.verse_style = style_cfg.get("verse", {})
         self.heading_style = style_cfg.get("heading", {})
         self.num_style = style_cfg.get("verse_number", {})
+        self.overlay_style = style_cfg.get("overlay", self.config.get("overlay", {}))
 
     def _format_timestamp(self, seconds):
         """Convert seconds to ASS timestamp format: H:MM:SS.cs"""
@@ -239,11 +240,35 @@ class ASSGenerator:
             h_bg_col = "&H00000000"
             h_border_style = 1
 
+        # Overlay styling properties
+        o_title_font = self.overlay_style.get("title_font", h_font)
+        o_title_size = self.overlay_style.get("title_size", int(v_size * 1.5))
+        o_title_col = hex_to_ass(self.overlay_style.get("title_color", "#FFD400"))
+        o_title_out_col = hex_to_ass(self.overlay_style.get("title_outline_color", "#000000"))
+        o_title_out = self.overlay_style.get("title_outline_width", v_outline)
+
+        o_sub_font = self.overlay_style.get("subtitle_font", v_font)
+        o_sub_size = self.overlay_style.get("subtitle_size", int(v_size * 0.75))
+        o_sub_col = hex_to_ass(self.overlay_style.get("subtitle_color", "#FFFFFF"))
+
+        o_brand_font = self.overlay_style.get("branding_font", v_font)
+        o_brand_size = self.overlay_style.get("branding_size", int(v_size * 0.6))
+        o_brand_col = hex_to_ass(self.overlay_style.get("branding_color", "#FFFFFF"))
+
+        o_wm_font = self.overlay_style.get("watermark_font", v_font)
+        o_wm_size = self.overlay_style.get("watermark_size", int(v_size * 0.65))
+        o_wm_col = hex_to_ass(self.overlay_style.get("watermark_color", "#FFFFFFA0"))
+
         lines = [
             "[V4+ Styles]",
             "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
             f"Style: Verse,{v_font},{v_size},{v_color},&H000000FF,{v_outline_col},{v_bg_col},0,0,0,0,100,100,0,0,{v_border_style},{v_outline},{v_shadow},{v_align},{v_margin_lr},{v_margin_lr},{v_margin_b},1",
             f"Style: Heading,{h_font},{h_size},{h_color},&H000000FF,{h_outline_col},{h_bg_col},{h_bold},0,0,0,100,100,0,0,{h_border_style},{h_outline},{h_shadow},{h_align},{v_margin_lr},{v_margin_lr},{h_margin_v},1",
+            f"Style: OverlayTitle,{o_title_font},{o_title_size},{o_title_col},&H000000FF,{o_title_out_col},&H00000000,-1,0,0,0,100,100,0,0,1,{o_title_out},1,8,60,60,40,1",
+            f"Style: OverlaySubtitle,{o_sub_font},{o_sub_size},{o_sub_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,{o_title_out},1,8,60,60,130,1",
+            f"Style: OverlayBranding,{o_brand_font},{o_brand_size},{o_brand_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,2,1,9,40,40,140,1",
+            f"Style: OverlayWatermark,{o_wm_font},{o_wm_size},{o_wm_col},&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,0,7,40,40,40,1",
+            f"Style: OverlayDivider,{o_title_font},24,{o_title_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,{v_outline},1,8,60,60,190,1",
             "",
         ]
         return lines
@@ -302,6 +327,52 @@ class ASSGenerator:
         # (By default, inline numbering appears on segment 'a' or unsegmented verse)
         num_on_every_segment = self.num_style.get("on_every_segment", False)
         seen_verses = set()
+
+        # Generate static overlay events if enabled or configured
+        is_overlay_enabled = self.overlay_style.get("enabled", False)
+        title_val = self.job_title or self.overlay_style.get("title")
+        sub_val = self.overlay_style.get("subtitle")
+        brand_val = self.overlay_style.get("branding_text")
+        wm_val = self.overlay_style.get("watermark_text")
+        if self.job_watermark and not str(self.job_watermark).lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif", ".svg")):
+            wm_val = str(self.job_watermark)
+
+        if is_overlay_enabled or any([title_val, sub_val, brand_val, wm_val]):
+            last_end = 36000.0
+            if self.timing.entries:
+                last_end = float(self.timing.entries[-1]["end"]) + 10.0
+            dur_val = self.overlay_style.get("duration", "full")
+            if isinstance(dur_val, (int, float)) and dur_val > 0:
+                end_ts = self._format_timestamp(float(dur_val))
+            else:
+                end_ts = self._format_timestamp(last_end)
+            start_ts = "0:00:00.00"
+
+            # Title
+            if title_val is True or (title_val is None and is_overlay_enabled):
+                title_val = f"{book_name} {chapter_num}".strip()
+            if title_val and isinstance(title_val, str) and str(title_val).strip() and str(title_val).lower() != "false":
+                lines.append(f"Dialogue: 0,{start_ts},{end_ts},OverlayTitle,,0,0,0,,{clean_subtitle_text(str(title_val))}")
+
+            # Subtitle
+            if sub_val and str(sub_val).strip() and str(sub_val).lower() != "false":
+                s_txt = str(sub_val).replace("\\n", "\\N").replace("\n", "\\N")
+                lines.append(f"Dialogue: 0,{start_ts},{end_ts},OverlaySubtitle,,0,0,0,,{s_txt}")
+
+            # Branding
+            if brand_val and str(brand_val).strip() and str(brand_val).lower() != "false":
+                b_txt = str(brand_val).replace("\\n", "\\N").replace("\n", "\\N")
+                lines.append(f"Dialogue: 0,{start_ts},{end_ts},OverlayBranding,,0,0,0,,{b_txt}")
+
+            # Watermark text
+            if wm_val and str(wm_val).strip() and str(wm_val).lower() != "false":
+                w_txt = str(wm_val).replace("\\n", "\\N").replace("\n", "\\N")
+                lines.append(f"Dialogue: 0,{start_ts},{end_ts},OverlayWatermark,,0,0,0,,{w_txt}")
+
+            # Divider line
+            show_div = self.overlay_style.get("divider_line", True if (title_val or sub_val) else False)
+            if show_div and str(show_div).lower() not in ["false", "0", "none", "off"]:
+                lines.append(f"Dialogue: 0,{start_ts},{end_ts},OverlayDivider,,0,0,0,,────────────────────────────")
 
         # Second pass: generate ASS dialogue events
         for entry in self.timing.entries:

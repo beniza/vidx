@@ -73,3 +73,40 @@ def test_ass_generator():
         in ass_content
     )
     assert "In the beginning was the Word." in ass_content
+
+
+def test_ass_overlay_generation():
+    usfm_data = "\\id MAT\n\\h Matthew\n\\c 1\n\\v 1 Genealogy of Jesus."
+    timing_data = "\\c 1\n\\level phrase\n\\separators . : ; , ? !\n0.0\t5.0\t1a"
+
+    up = USFMParser(usfm_data, target_chapter="1")
+    tp = TimingParser(timing_data)
+
+    config = {
+        "style": {
+            "overlay": {
+                "enabled": True,
+                "title": True,
+                "subtitle": "SINDHI AUDIO BIBLE",
+                "branding_text": "PARMESHWAR JO\\nPYAAR",
+                "watermark_text": "PARMESHWERJOPYAAR",
+                "divider_line": True,
+            }
+        }
+    }
+
+    gen = ASSGenerator(up, tp, config=config, job_title="मत्ती 01")
+    ass_content = gen.generate()
+
+    assert "Style: OverlayTitle," in ass_content
+    assert "Style: OverlaySubtitle," in ass_content
+    assert "Style: OverlayBranding," in ass_content
+    assert "Style: OverlayWatermark," in ass_content
+    assert "Style: OverlayDivider," in ass_content
+
+    assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlayTitle,,0,0,0,,मत्ती 01" in ass_content
+    assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlaySubtitle,,0,0,0,,SINDHI AUDIO BIBLE" in ass_content
+    assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlayBranding,,0,0,0,,PARMESHWAR JO\\NPYAAR" in ass_content
+    assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlayWatermark,,0,0,0,,PARMESHWERJOPYAAR" in ass_content
+    assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlayDivider,,0,0,0,,────────────────────────────" in ass_content
+
