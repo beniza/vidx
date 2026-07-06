@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-07-06
+
+### Added
+- **Dynamic ASS Overlays & Positioning:** Added support for custom positioning, alignment, opacity, and color configuration for overlay titles, subtitles, watermarks, and headings (`style.overlay`).
+- **Job-Level Overrides:** Enabled job-level overrides for audio, background video, and background music in batch configurations.
+
+### Fixed
+- **USFM Chapter Isolation:** Fixed USFM verse extraction logic to properly isolate target chapters when internal `\c` tags are missing or when rendering multi-chapter batches.
+- **Title and Heading Defaults:** Changed default overlay title color to clean white (`#FFFFFF`) and fixed position alignment handling.
+
 ## [0.3.0] - 2026-07-06
 
 ### Added

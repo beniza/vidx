@@ -33,9 +33,9 @@ video:
   codec: "libx264"                  # Use 'auto' if you have GPU hardware acceleration enabled
   preset: "fast"
   crf: 23
-  background_media: "src/snd/sindhi-audio-bible-artifacts/Background video/Green and White Clean Videocentric India Travel YouTube Intro (6).mp4"
+  background_media: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd2.mp4"
   loop_background: true
-  scaling_mode: "pad"
+  scaling_mode: "stretch"
   
   # Brand watermark overlay using your logo
   watermark:
@@ -43,7 +43,6 @@ video:
     position: "top-right"
     margin: 40
     scale: 0.12                     # 12% of video width
-    opacity: 0.90
 
 audio:
   codec: "aac"
@@ -53,8 +52,8 @@ audio:
   fade_out_sec: 1.5
   
   # Relaxing background piano music looped seamlessly under reading
-  background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/peaceful-piano-music-247088.mp3"
-  background_music_volume: 0.12     # Subtle 12% volume so it doesn't overpower the voice reading
+#  background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music1.mp3"
+#  background_music_volume: 0.12     # Subtle 12% volume so it doesn't overpower the voice reading
 
 style:
   verse:
@@ -67,34 +66,41 @@ style:
     alignment: 2                    # Bottom-Center
     margin_bottom: 65
     margin_lr: 80
-    background_box: true
+    background_box: false
     background_color: "#00000085"   # 52% opacity black box for readability over video
 
   heading:
     font: "Nirmala UI"
-    size: 124
-    color: "#FFD400"                # Gold color for section headings
+    size: 80
+    color: "#FFFFFF"                # Gold color for section headings
     outline_color: "#000000"
     outline_width: 3
     shadow: 1
-    alignment: 8                    # Top-Center
+    alignment: 5                    # Center / Middle alignment
     margin_vertical: 80
     bold: true
-    background_box: true
+    background_box: false
     background_color: "#00000085"
 
   verse_number:
     show: true
     color: "#FFC080"
-    size: 36
+    size: 44
+    margin_bottom: 65
     on_every_segment: false
 
   overlay:
     enabled: true
     title: true                     # Automatically derives title from book and chapter (or override per job)
+    title_color: "#FFFFFF"          # White color for chapter heading/title
+    title_position: 5               # Center / Middle alignment
     subtitle: "SINDHI AUDIO BIBLE"
-    branding_text: "PARMESHWAR JO\\nPYAAR"
+    subtitle_position: 5
+#    branding_text: "PARMESHWAR JO\\nPYAAR"
     watermark_text: "PARMESHWERJOPYAAR"
+    watermark_position: 4           # Position 4 = Middle-Left alignment
+    watermark_opacity: 0.50         # Explicit watermark opacity at 50%
+#    opacity: 0.50                   # General overlay opacity fallback
     divider_line: true
 
 
@@ -103,20 +109,26 @@ style:
 # Note: You will need to place your Sindhi Matthew USFM text file (.SFM) and update the usfm path below!
 # ==============================================================================
 jobs:
-  - usfm: "src/snd/40MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+  - usfm: "src/snd/41MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
     timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-01-timing.txt"
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/001 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_01.mp4"
     background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd.mp4"
-
-  - usfm: "src/snd/40MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music2.mp3"
+    background_music_volume: 0.80
+    
+  - usfm: "src/snd/41MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
     timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-02-timing.txt"
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/002 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_02.mp4"
     background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd2.mp4"
+    background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music2.mp3"
+    background_music_volume: 0.80
 
-  - usfm: "src/snd/40MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
+  - usfm: "src/snd/41MATsnd.SFM"    # <-- PLACE YOUR MATTHEW USFM FILE HERE
     timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-03-timing.txt"
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/003 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_03.mp4"
     background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd.mp4"
+    background_music: "none"
+

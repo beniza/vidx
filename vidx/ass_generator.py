@@ -241,34 +241,76 @@ class ASSGenerator:
             h_border_style = 1
 
         # Overlay styling properties
+        wm_style_cfg = self.config.get("style", {}).get("watermark", {})
+        gen_op = self.overlay_style.get("opacity", wm_style_cfg.get("opacity"))
+        gen_tr = self.overlay_style.get("transparency", wm_style_cfg.get("transparency"))
+
         o_title_font = self.overlay_style.get("title_font", h_font)
         o_title_size = self.overlay_style.get("title_size", int(v_size * 1.5))
-        o_title_col = hex_to_ass(self.overlay_style.get("title_color", "#FFD400"))
+        o_title_col = hex_to_ass(
+            self.overlay_style.get("title_color", self.overlay_style.get("color", "#FFFFFF")),
+            opacity=self.overlay_style.get("title_opacity", gen_op),
+            transparency=self.overlay_style.get("title_transparency", gen_tr),
+        )
         o_title_out_col = hex_to_ass(self.overlay_style.get("title_outline_color", "#000000"))
         o_title_out = self.overlay_style.get("title_outline_width", v_outline)
+        o_title_align = self.overlay_style.get(
+            "title_alignment",
+            self.overlay_style.get(
+                "title_position",
+                self.overlay_style.get("alignment", self.overlay_style.get("position", 8)),
+            ),
+        )
+        o_title_margin_v = self.overlay_style.get("title_margin_v", self.overlay_style.get("title_margin", 40))
 
         o_sub_font = self.overlay_style.get("subtitle_font", v_font)
         o_sub_size = self.overlay_style.get("subtitle_size", int(v_size * 0.75))
-        o_sub_col = hex_to_ass(self.overlay_style.get("subtitle_color", "#FFFFFF"))
+        o_sub_col = hex_to_ass(
+            self.overlay_style.get("subtitle_color", "#FFFFFF"),
+            opacity=self.overlay_style.get("subtitle_opacity", gen_op),
+            transparency=self.overlay_style.get("subtitle_transparency", gen_tr),
+        )
+        o_sub_align = self.overlay_style.get("subtitle_alignment", self.overlay_style.get("subtitle_position", 8))
+        o_sub_margin_v = self.overlay_style.get("subtitle_margin_v", self.overlay_style.get("subtitle_margin", 130))
 
         o_brand_font = self.overlay_style.get("branding_font", v_font)
         o_brand_size = self.overlay_style.get("branding_size", int(v_size * 0.6))
-        o_brand_col = hex_to_ass(self.overlay_style.get("branding_color", "#FFFFFF"))
+        o_brand_col = hex_to_ass(
+            self.overlay_style.get("branding_color", "#FFFFFF"),
+            opacity=self.overlay_style.get("branding_opacity", gen_op),
+            transparency=self.overlay_style.get("branding_transparency", gen_tr),
+        )
+        o_brand_align = self.overlay_style.get("branding_alignment", self.overlay_style.get("branding_position", 9))
+        o_brand_margin_v = self.overlay_style.get("branding_margin_v", self.overlay_style.get("branding_margin", 140))
 
         o_wm_font = self.overlay_style.get("watermark_font", v_font)
         o_wm_size = self.overlay_style.get("watermark_size", int(v_size * 0.65))
-        o_wm_col = hex_to_ass(self.overlay_style.get("watermark_color", "#FFFFFFA0"))
+        wm_op = self.overlay_style.get("watermark_opacity", wm_style_cfg.get("opacity", gen_op))
+        wm_tr = self.overlay_style.get("watermark_transparency", wm_style_cfg.get("transparency", gen_tr))
+        default_wm_alpha = "00" if (wm_op is not None or wm_tr is not None) else "A0"
+        o_wm_col = hex_to_ass(
+            self.overlay_style.get("watermark_color", "#FFFFFF"),
+            default_alpha=default_wm_alpha,
+            opacity=wm_op,
+            transparency=wm_tr,
+        )
+        o_wm_align = self.overlay_style.get("watermark_alignment", self.overlay_style.get("watermark_position", 7))
+        o_wm_margin_v = self.overlay_style.get("watermark_margin_v", self.overlay_style.get("watermark_margin", 40))
+        o_wm_margin_lr = self.overlay_style.get("watermark_margin_lr", self.overlay_style.get("watermark_margin", 40))
+
+        o_div_align = self.overlay_style.get("divider_alignment", self.overlay_style.get("divider_position", o_title_align))
+        o_div_margin_v = self.overlay_style.get("divider_margin_v", self.overlay_style.get("divider_margin", 190))
 
         lines = [
             "[V4+ Styles]",
             "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
             f"Style: Verse,{v_font},{v_size},{v_color},&H000000FF,{v_outline_col},{v_bg_col},0,0,0,0,100,100,0,0,{v_border_style},{v_outline},{v_shadow},{v_align},{v_margin_lr},{v_margin_lr},{v_margin_b},1",
             f"Style: Heading,{h_font},{h_size},{h_color},&H000000FF,{h_outline_col},{h_bg_col},{h_bold},0,0,0,100,100,0,0,{h_border_style},{h_outline},{h_shadow},{h_align},{v_margin_lr},{v_margin_lr},{h_margin_v},1",
-            f"Style: OverlayTitle,{o_title_font},{o_title_size},{o_title_col},&H000000FF,{o_title_out_col},&H00000000,-1,0,0,0,100,100,0,0,1,{o_title_out},1,8,60,60,40,1",
-            f"Style: OverlaySubtitle,{o_sub_font},{o_sub_size},{o_sub_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,{o_title_out},1,8,60,60,130,1",
-            f"Style: OverlayBranding,{o_brand_font},{o_brand_size},{o_brand_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,2,1,9,40,40,140,1",
-            f"Style: OverlayWatermark,{o_wm_font},{o_wm_size},{o_wm_col},&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,0,7,40,40,40,1",
-            f"Style: OverlayDivider,{o_title_font},24,{o_title_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,{v_outline},1,8,60,60,190,1",
+            f"Style: OverlayTitle,{o_title_font},{o_title_size},{o_title_col},&H000000FF,{o_title_out_col},&H00000000,-1,0,0,0,100,100,0,0,1,{o_title_out},1,{o_title_align},60,60,{o_title_margin_v},1",
+            f"Style: OverlaySubtitle,{o_sub_font},{o_sub_size},{o_sub_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,{o_title_out},1,{o_sub_align},60,60,{o_sub_margin_v},1",
+            f"Style: OverlayBranding,{o_brand_font},{o_brand_size},{o_brand_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,2,1,{o_brand_align},40,40,{o_brand_margin_v},1",
+            f"Style: OverlayWatermark,{o_wm_font},{o_wm_size},{o_wm_col},&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,0,{o_wm_align},{o_wm_margin_lr},{o_wm_margin_lr},{o_wm_margin_v},1",
+            f"Style: OverlayDivider,{o_title_font},24,{o_title_col},&H000000FF,{o_title_out_col},&H00000000,0,0,0,0,100,100,0,0,1,{v_outline},1,{o_div_align},60,60,{o_div_margin_v},1",
             "",
         ]
         return lines
