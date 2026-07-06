@@ -95,3 +95,15 @@ def test_cli_gpu_flag(tmp_path):
             assert exc_info.value.code == 0
             passed_cfg = mock_runner_cls.call_args[1]["config"]
             assert passed_cfg.raw_config["video"]["codec"] == "auto"
+
+
+def test_cli_manifest_flag(tmp_path):
+    manifest_file = tmp_path / "publish_manifest.json"
+    manifest_file.write_text("[]", encoding="utf-8")
+
+    with patch("vidx.cli.run_publisher") as mock_pub:
+        with patch.object(sys, "argv", ["vidx", "--manifest", str(manifest_file)]):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 0
+            mock_pub.assert_called_once_with(str(manifest_file), config=None)
