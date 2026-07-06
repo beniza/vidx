@@ -194,6 +194,7 @@ jobs:
 ---
 
 ## 📚 Further Documentation
+- **[🌟 Complete Getting Started & Distribution Guide](getting_started.md):** Plain-language onboarding guide explaining the entire VIDX application, generating videos, and YouTube publishing.
 - **[Configuration & Bulk Processing Guide](configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
 - **[User Guide & Tutorials](user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
 - **[YouTube & Video Publishing Guide](publishing_guide.md):** Plain-language instructions for sharing videos online, setting up Google Cloud keys, and using offline Studio packages.
