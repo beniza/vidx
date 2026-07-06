@@ -9,6 +9,25 @@ project:
   # generate_only: false          # Set true to extract subtitles without rendering MP4 video
   # subtitle_format: "ass"        # Subtitle output format when generate_only is true: 'ass', 'srt', or 'both'
 
+publishing:
+  platform: "youtube"
+  enabled: true                     # Set true to generate manifest/packages or publish automatically with --publish
+  generate_offline_package: true    # Create Option 4 'YouTube_Upload_Package/' folders with copy-paste metadata
+  client_secrets_file: "~/.vidx/client_secrets.json"
+  privacy_status: "unlisted"        # 'private' (default), 'unlisted', or 'public'
+  category_id: "22"                 # 22 = People & Blogs, 27 = Education
+  playlist_name: "Gospel of Mark — Sindhi Audio Bible"
+  title_template: "{book} Chapter {chapter:02d} — {language} Scripture Video"
+  description_template: |
+    Listen to {book} Chapter {chapter} in {language}.
+    
+    Generated automatically by VIDX Scripture Video Engine.
+  tags:
+    - "AudioBible"
+    - "Scripture"
+    - "{language}"
+    - "{book}"
+
 video:
   resolution: "1920x1080"       # Video resolution: 1920x1080 (16:9), 1080x1920 (vertical), 1080x1080 (square)
   fps: 24                       # Frame rate
