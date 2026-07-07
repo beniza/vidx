@@ -55,7 +55,7 @@
 ## 🚀 Installation
 
 ### 1. Prerequisites
-- **Python:** 3.8 or higher
+- **Python:** 3.10 or higher
 - **FFmpeg:** Version 4.3+ compiled with `--enable-libass` and `--enable-libharfbuzz` (standard on modern Linux/Windows/macOS builds).
 - **Fonts:** Target fonts (e.g., `Nirmala UI`, `Bailey`, `Mangal`, `Noto Sans Devanagari`) must be installed on your operating system.
 

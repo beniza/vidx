@@ -56,23 +56,24 @@
 ## 🧪 Engineering & Methodology Requirements
 
 - [x] **Comprehensive Automated Test Suite (`pytest`)**
-  - [x] Built test suites covering `Config`, `USFMParser`, `TimingParser`, `TextSegmenter`, `SRTGenerator`, `ASSGenerator`, `FFmpegBuilder`, and `BatchRunner` (22 tests passing).
+  - [x] Built test suites covering `Config`, `USFMParser`, `ASSGenerator`, `FFmpegBuilder`, `BatchRunner`, `CLI`, `Manifest`, `Bumpers`, `Progress`, and `YouTube` (~54 tests across 10 files).
 - [ ] **Test-Driven Development (TDD) Enforcement**
   - [ ] **Mandatory Rule:** All future feature developments, bug fixes, and refactoring **must** follow strict TDD workflow:
     1. Write a failing test in `tests/` capturing the desired behavior or bug reproduction.
     2. Implement minimal production code to pass the test.
-    3. Refactor while ensuring all 22+ tests remain green.
+    3. Refactor while ensuring the full suite remains green.
 
 ---
 
 ## 🚀 Future Enhancements & Roadmap
 
 ### 1. CI/CD & Automation
-- [ ] **GitHub Actions CI Pipeline:**
-  - Automatically run `pytest` across Python 3.8, 3.10, and 3.12 on every push and pull request.
-  - Automate linting and formatting verification.
-- [ ] **Automated Release Builder:**
-  - Create a GitHub Actions workflow triggered by version tags (e.g., `v0.2.0`) to automatically compile PyInstaller executables across Windows and Linux, attaching them to the GitHub Release page.
+- [x] **GitHub Actions CI Pipeline:** (`.github/workflows/tests.yml`)
+  - [x] Automatically run `pytest` across Python 3.10, 3.11, and 3.12 on every push and pull request.
+  - [x] Automate linting verification via `flake8`.
+- [x] **Automated Release Builder:** (`.github/workflows/release.yml`)
+  - [x] Version-tag-triggered (`v*`) workflow that builds the wheel, sdist, and Windows `vidx.exe` (PyInstaller) and attaches them to the GitHub Release.
+  - [ ] **Linux executable:** currently Windows-only (`runs-on: windows-latest`); add a Linux PyInstaller build if demand arises.
 
 ### 2. Video & Audio Rendering Enhancements
 - [x] **GPU Hardware-Accelerated Video Encoding:**
