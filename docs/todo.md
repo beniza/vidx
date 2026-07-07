@@ -10,14 +10,14 @@
   - [ ] Ensure user guides, configuration references, and tutorials are easily browsable by field coordinators and translation technicians online.
   - [ ] Add site navigation and search functionality for rapid troubleshooting.
 
-- [ ] **Release `v0.2.0` (Self-Contained & Dual-Purpose Engine)**
-  - [ ] Build standalone Windows executable (`vidx.exe`) using PyInstaller bundling the newly internalized `vidx.usfm_parser` and zero external Git dependencies.
-  - [ ] Draft comprehensive GitHub Release notes highlighting:
+- [x] **Release `v0.2.0` (Self-Contained & Dual-Purpose Engine)** — *superseded by v0.3.2*
+  - [x] Build standalone Windows executable (`vidx.exe`) using PyInstaller bundling the newly internalized `vidx.usfm_parser` and zero external Git dependencies.
+  - [x] Draft comprehensive GitHub Release notes highlighting:
     - **Dual-Purpose Subtitle Mode:** `--generate-only --format srt|ass|both` (and YAML `generate_only: true`).
     - **Self-Contained Architecture:** Internalized USFM 3.0 parser removing external Git requirements.
     - **Configurable Transparency:** Exact opacity decimals and transparency percentages for background readability boxes.
     - **Clean Workspace Hierarchy:** Introduction of `examples/` directory for multi-language templates.
-  - [ ] Publish pre-compiled Windows executable and Python wheel artifacts to GitHub Release.
+  - [x] Publish pre-compiled Windows executable and Python wheel artifacts to GitHub Release.
 
 ---
 
@@ -44,11 +44,12 @@
   - [x] **Looped Background Music Blending:** Allow specifying background music (`audio.background_music: "assets/bgm.mp3"`) with volume control (`audio.background_music_volume: 0.15`). Automatically loop the music continuously to match the scripture reading and seamlessly blend without reducing the narrator's volume!
   - [x] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
 
-- [ ] **Cloud & Streaming Platform Integration (YouTube / Vimeo One-Touch Publishing)**
-  - [ ] **API Authentication & YAML Config:** Add optional publishing block (`publishing.platform: "youtube"`, OAuth client secrets, channel ID) for direct integration with YouTube Data API v3 and Vimeo API.
-  - [ ] **One-Touch Upload (`--publish`):** Enable single-command or GUI button publishing that automatically uploads rendered `.mp4` video files to the designated channel immediately after generation.
-  - [ ] **Automated Metadata & Thumbnails:** Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (`#AudioBible`, `#Scripture`), and upload the generated `title_card.jpg` as the official video thumbnail!
-  - [ ] **Playlist Organization:** Automatically organize uploaded chapter videos into book-level playlists (e.g., *"Gospel of Mark — Malayalam Translation"*).
+- [x] **Cloud & Streaming Platform Integration (YouTube One-Touch Publishing)** — *shipped; validated by publishing the full book of Matthew (Sindhi) to YouTube*
+  - [x] **API Authentication & YAML Config:** Add optional publishing block (`publishing.platform: "youtube"`, OAuth client secrets, channel ID) for direct integration with YouTube Data API v3.
+  - [x] **One-Touch Upload (`--publish`):** Enable single-command or GUI button publishing that automatically uploads rendered `.mp4` video files to the designated channel immediately after generation.
+  - [x] **Automated Metadata & Thumbnails:** Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (`#AudioBible`, `#Scripture`), and upload the generated `title_card.jpg` as the official video thumbnail!
+  - [x] **Playlist Organization:** Automatically organize uploaded chapter videos into book-level playlists (e.g., *"Gospel of Mark — Malayalam Translation"*).
+  - [ ] **Vimeo support:** Extend the publishing block to the Vimeo API (YouTube done; Vimeo still pending).
 
 ---
 
@@ -103,7 +104,9 @@
 
 ---
 
-## ✅ Recently Completed Milestones (v0.2.0 Evolution)
+## ✅ Recently Completed Milestones (v0.2.0 → v0.3.2 Evolution)
+- [x] **v0.3.2 Release & Standalone Distribution:** Shipped `vidx.exe` via PyInstaller (bundling the internalized `vidx.usfm_parser`, Google auth submodules, and discovery schemas) with GitHub Release notes and distribution guides — superseding the original `v0.2.0` milestone.
+- [x] **YouTube One-Touch Publishing:** Direct YouTube Data API v3 integration with OAuth config, `--publish` upload, automated title/description/tags/thumbnail metadata, and book-level playlist organization — validated end-to-end by publishing the entire book of Matthew (Sindhi) in a single day.
 - [x] **GPU Hardware Acceleration & Monitoring:** Autodetect NVIDIA NVENC and Intel QSV encoding with `--gpu` CLI flag and `video.gpu: true`, featuring real-time GPU time and usage tracking in live batch progress tables.
 - [x] **Automatic Background Media Preprocessing & Loop Caching:** Automatically pre-scales 4K media down to 1080p and bakes seamless loop crossfades (`xfade`) before batch execution, avoiding multi-worker CPU decoding bottlenecks.
 - [x] **Audio Transitions & Branding Overlays:** Implemented smooth audio fade-in/fade-out (`afade`) and custom corner watermarks/channel logos (`overlay` + RGBA alpha blending).
