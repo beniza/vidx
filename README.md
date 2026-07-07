@@ -1,4 +1,6 @@
 # VIDX — Scripture Video Generator
+> **Repository:** https://github.com/beniza/vidx
+>
 > **The official video rendering companion to [AUDX](https://github.com/beniza/audx) (Audio Scripture Conversion Tool suite).**
 > 🌟 **NEW USERS & TEAM MEMBERS:** Please read our **[Complete Getting Started & Distribution Guide](docs/getting_started.md)** for simple, non-technical instructions on generating Scripture videos and publishing them to YouTube!
 
