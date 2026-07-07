@@ -5,10 +5,10 @@
 
 ## 🚨 Immediate Priorities (Next Steps)
 
-- [ ] **GitHub Pages Documentation Site (`gh-pages` Deployment)**
-  - [ ] Set up static documentation deployment (e.g., using MkDocs Material or Jekyll / GitHub Actions) to publish `docs/` and `README.md` to GitHub Pages.
-  - [ ] Ensure user guides, configuration references, and tutorials are easily browsable by field coordinators and translation technicians online.
-  - [ ] Add site navigation and search functionality for rapid troubleshooting.
+- [x] **GitHub Pages Documentation Site (`gh-pages` Deployment)** — *live at https://beniza.github.io/vidx/*
+  - [x] Set up static documentation deployment (e.g., using MkDocs Material or Jekyll / GitHub Actions) to publish `docs/` and `README.md` to GitHub Pages.
+  - [x] Ensure user guides, configuration references, and tutorials are easily browsable by field coordinators and translation technicians online.
+  - [x] Add site navigation and search functionality for rapid troubleshooting.
 
 - [x] **Release `v0.2.0` (Self-Contained & Dual-Purpose Engine)** — *superseded by v0.3.2*
   - [x] Build standalone Windows executable (`vidx.exe`) using PyInstaller bundling the newly internalized `vidx.usfm_parser` and zero external Git dependencies.
