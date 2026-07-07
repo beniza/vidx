@@ -19,7 +19,7 @@ except ImportError:
     VALIDATION_AVAILABLE = False
     USFM_GRAMMAR_AVAILABLE = False
 
-VERSION = "0.1.1-alpha"
+from . import __version__
 
 
 class USFMParser:
@@ -689,7 +689,7 @@ def convert_batch(usfm_file, timing_files, output_folder=None, combined=False):
 def main():
     """Main entry point"""
     print("=" * 60)
-    print(f"  USFM to SRT Converter v{VERSION}")
+    print(f"  USFM to SRT Converter v{__version__}")
     print("=" * 60)
 
     # Parse arguments
