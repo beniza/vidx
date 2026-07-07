@@ -1,6 +1,8 @@
 # 🌟 Welcome to VIDX — The Scripture Video Engine
 *The Complete Guide to Generating and Publishing Audio Bibles*
 
+**Repository:** https://github.com/beniza/vidx
+
 ---
 
 ## 💡 Why Do We Need VIDX? (The "WHY")
