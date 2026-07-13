@@ -1,0 +1,273 @@
+# ==============================================================================
+# VIDX Project Configuration: Acts Scripture Videos
+# ==============================================================================
+
+project:
+  name: "Acts — Sindhi Audio Bible"
+  output_dir: "output/acts_sindhi"
+  # generate_only: false          # Set to true if you only want to generate subtitle files (.ass/.srt) without video rendering
+
+publishing:
+  platform: "youtube"
+  enabled: false                    # Disabled for local video generation
+  generate_offline_package: true    # Generates YouTube Studio copy-paste ready metadata folders
+  privacy_status: "unlisted"
+  category_id: "22"
+  playlist_name: "Acts — Sindhi Audio Bible"
+  title_template: "Acts Chapter {chapter:02d} — Sindhi Audio Bible"
+  description_template: |
+    Listen to the Acts Chapter {chapter} in Sindhi.
+    
+    Generated automatically by VIDX Scripture Video Engine.
+  tags:
+    - "AudioBible"
+    - "Sindhi"
+    - "Acts"
+    - "Scripture"
+
+video:
+  resolution: "1920x1080"           # 16:9 Widescreen
+  fps: 24
+  codec: "libx264"
+  preset: "fast"
+  crf: 23
+  background_media: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video1.mp4" # Default fallback
+  loop_background: true
+  scaling_mode: "stretch"
+  
+  # Brand watermark overlay using logo
+  watermark:
+    image: "src/snd/sindhi-audio-bible-artifacts/Logo/logo.png"
+    position: "top-right"
+    margin: 40
+    scale: 0.12                     # 12% of video width
+
+audio:
+  codec: "aac"
+  bitrate: "192k"
+  sample_rate: 48000
+  fade_in_sec: 1.0
+  fade_out_sec: 1.5
+  
+  # Background music details
+  background_music: "src/snd/sindhi-audio-bible-artifacts/Background audio/bg-music1.mp3"
+  background_music_volume: 0.12
+
+style:
+  verse:
+    font: "Nirmala UI"              # Standard Windows font with excellent Sindhi/Arabic script support
+    size: 64
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 2                    # Bottom-Center
+    margin_bottom: 65
+    margin_lr: 80
+    background_box: false
+    background_color: "#00000085"
+
+  heading:
+    font: "Nirmala UI"
+    size: 80
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 5                    # Center / Middle alignment
+    margin_vertical: 80
+    bold: true
+    background_box: false
+    background_color: "#00000085"
+
+  verse_number:
+    show: true
+    color: "#FFC080"
+    size: 44
+    margin_bottom: 65
+    on_every_segment: false
+
+  overlay:
+    enabled: true
+    title: true                     # Automatically derives title from book and chapter
+    title_color: "#FFFFFF"
+    title_position: 5
+    subtitle: "SINDHI AUDIO BIBLE"
+    subtitle_position: 5
+    watermark_text: "PARMESHWERJOPYAAR"
+    watermark_position: 4
+    watermark_opacity: 0.50
+    divider_line: true
+
+# ==============================================================================
+# Batch Jobs Queue
+# ==============================================================================
+jobs:
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-01-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 001.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_01.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video3.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-02-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 002.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_02.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video7.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-03-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 003.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_03.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video5.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-04-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 004.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_04.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video9.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-05-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 005.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_05.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video4.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-06-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 006.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_06.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video6.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-07-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 007.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_07.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video8.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-08-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 008.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_08.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video2.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-09-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 009.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_09.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video9.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-10-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 010.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_10.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video6.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-11-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 011.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_11.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video4.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-12-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 012.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_12.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video7.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-13-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 013.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_13.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video5.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-14-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 014.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_14.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video8.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-15-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 015.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_15.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video1.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-16-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 016.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_16.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video3.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-17-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 017.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_17.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video2.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-18-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 018.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_18.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video2.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-19-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 019.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_19.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video3.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-20-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 020.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_20.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video4.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-21-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 021.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_21.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video5.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-22-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 022.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_22.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video7.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-23-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 023.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_23.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video1.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-24-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 024.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_24.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video6.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-25-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 025.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_25.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video8.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-26-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 026.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_26.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video9.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-27-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 027.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_27.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video4.mp4"
+
+  - usfm: "src/snd/45ACTsnd.SFM"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Timing file/C01-04-ACT-28-timing.txt"
+    audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/ACTS/Audio/Acts 028.mp3"
+    output: "output/acts_sindhi/Acts_Chapter_28.mp4"
+    background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg-video7.mp4"
+

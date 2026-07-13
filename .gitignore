@@ -53,9 +53,12 @@ Thumbs.db
 # Scratch and test data
 mrk-timings/
 *.mp*
+*.wav
+*.zip
 *.tmp
 *.log
 *.bak
+.coverage
 
 # MkDocs generated site
 site/
