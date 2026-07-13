@@ -257,7 +257,8 @@ class TextSegmenter:
     """Split verse text into segments based on separators"""
 
     def __init__(self, separators):
-        self.separators = separators
+        # Fallback to standard and Arabic/Sindhi punctuation if no separators are specified in timing files
+        self.separators = separators if separators else [".", "?", "؟", "!", ",", "،", ";", "؛", ":", "।"]
 
     def segment_text(self, text, num_segments):
         """
