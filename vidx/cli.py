@@ -40,8 +40,15 @@ def run_publisher(manifest_path: str, config: Optional[Config] = None):
     if config and config.publishing.get("client_secrets_file"):
         secrets_file = config.publishing.get("client_secrets_file")
 
+    # Default token cache lives alongside the manifest so each project/channel
+    # keeps its own YouTube login instead of sharing the global ~/.vidx token.
+    token_file = str(p.parent / "youtube_token.json")
+    if config and config.publishing.get("token_file"):
+        token_file = config.publishing.get("token_file")
+
+    print(f"[*] YouTube token cache: {Path(token_file).expanduser().resolve()}")
     try:
-        pub = YouTubePublisher(client_secrets_file=secrets_file)
+        pub = YouTubePublisher(client_secrets_file=secrets_file, token_file=token_file)
     except Exception as e:
         print(f"[-] YouTube Publisher Init Error: {e}")
         sys.exit(1)

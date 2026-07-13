@@ -107,3 +107,47 @@ def test_cli_manifest_flag(tmp_path):
                 main()
             assert exc_info.value.code == 0
             mock_pub.assert_called_once_with(str(manifest_file), config=None)
+
+
+def test_run_publisher_defaults_token_file_next_to_manifest(tmp_path):
+    from vidx.cli import run_publisher
+
+    manifest_file = tmp_path / "publish_manifest.json"
+    manifest_file.write_text(
+        '{"entries": [{"id": "1", "video_path": "v.mp4", "thumbnail_path": null, '
+        '"book": "LUK", "chapter": 1, "language": "snd", "title": "t", "description": "d", '
+        '"privacy_status": "unlisted", "category_id": "22", "playlist_name": "", "tags": [], '
+        '"status": "PENDING"}]}',
+        encoding="utf-8",
+    )
+
+    with patch("vidx.cli.YouTubePublisher") as mock_pub_cls:
+        mock_pub_cls.return_value.publish_entry.return_value = "yt-id"
+        run_publisher(str(manifest_file))
+
+    _, kwargs = mock_pub_cls.call_args
+    assert kwargs["token_file"] == str(manifest_file.parent / "youtube_token.json")
+
+
+def test_run_publisher_honors_config_token_file_override(tmp_path):
+    from vidx.cli import run_publisher
+    from vidx.config import Config
+
+    manifest_file = tmp_path / "publish_manifest.json"
+    manifest_file.write_text(
+        '{"entries": [{"id": "1", "video_path": "v.mp4", "thumbnail_path": null, '
+        '"book": "LUK", "chapter": 1, "language": "snd", "title": "t", "description": "d", '
+        '"privacy_status": "unlisted", "category_id": "22", "playlist_name": "", "tags": [], '
+        '"status": "PENDING"}]}',
+        encoding="utf-8",
+    )
+
+    config = Config()
+    config.raw_config["publishing"]["token_file"] = "~/.vidx/custom_token.json"
+
+    with patch("vidx.cli.YouTubePublisher") as mock_pub_cls:
+        mock_pub_cls.return_value.publish_entry.return_value = "yt-id"
+        run_publisher(str(manifest_file), config=config)
+
+    _, kwargs = mock_pub_cls.call_args
+    assert kwargs["token_file"] == "~/.vidx/custom_token.json"
