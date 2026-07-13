@@ -93,6 +93,8 @@
   - Add specific regression test cases and layout presets for Arabic, Urdu, and Hebrew scripture rendering.
 
 ### 4. Bulk Processing & Performance
+- [ ] **Skip-Existing-Output / Resume Support:** `batch_runner.py` re-renders every job in a config on every invocation with no check for an already-completed output file. Confirmed real cost: Luke's 24 chapters were fully re-rendered twice in one production session (once as a full 24-job run, again later split as 20+4 jobs) after an interrupted/restarted batch. Add an existence check (or explicit `--resume` flag) so interrupted or re-run batches only process what's missing.
+- [ ] **GPU Worker Count Right-Sizing:** production logs show `-w 4` GPU batches averaging 120-150s/chapter vs. 54-75s when rendering the same book solo — NVENC encoder session contention likely caps real parallelism well below 4x on a single consumer GPU. Benchmark `-w 2` vs `-w 4` wall-clock time before assuming higher worker counts help; may free CPU/disk for other work with no real throughput loss.
 - [ ] **Multi-Worker Memory Profiling:**
   - Optimize memory footprint during large concurrent batch runs (`-w 4` or `-w 8`) when processing entire New Testament (NT) audio libraries (260+ chapters).
 - [x] **Multi-Worker Live Progress Bars (`rich` / `enlighten` / `tqdm`):**
@@ -103,9 +105,24 @@
 - [x] **Automatic Background Preprocessing & 1080p Caching:**
   - [x] Automatically downscale 4K/high-res background video clips to 1080p (`*_1080p.mp4`) and apply loop crossfades (`*_xf1.0s.mp4`) in a pre-rendering cache pass to eliminate CPU decoding bottlenecks during parallel batch runs.
 
+### 5. YouTube Publishing Reliability & Throughput
+- [ ] **Persisted, Date-Scoped Quota Tracking:** `YouTubePublisher.quota_used` (`vidx/youtube.py`) is a plain in-memory counter reset to `0` on every process start — it has no connection to Google's real server-side daily quota. Repeatedly re-invoking `vidx --manifest ...` after hitting the local "9500 unit" safety stop can silently exceed the actual account-level daily cap, since the check only ever knows what *this process* has uploaded. Persist quota usage to disk (e.g. alongside the per-manifest token file), scoped to the current calendar day (Pacific time), so process restarts — or parallel workers — don't reset the safety net to zero.
+- [ ] **Parallel Upload Workers (`-w`-style for `--manifest`):** feasibility confirmed (see `run_publisher()` in `vidx/cli.py`) — needs a lock around `ManifestManager.update_status()`/`save()`, a lock around the quota check-and-increment (ties into the item above), and one `YouTubePublisher`/`service` instance per worker thread (Google's `googleapiclient`/`httplib2` transport isn't documented thread-safe for a shared instance). Note: this speeds up *finishing* a day's uploads, it does not raise the real daily quota ceiling.
+- [ ] **Automate the Daily Publish Retry:** manual re-invocation of `vidx --manifest ...` once per day (after hitting the quota-safety stop) was the actual bottleneck observed while publishing Luke/John/Acts — not upload speed. A scheduled task (Windows Task Scheduler / cron) running the publish command automatically once every 24h would remove this toil entirely.
+- [ ] **Request a YouTube API Quota Increase:** if this is ongoing production usage rather than one-off, request a quota increase via Google Cloud Console — the real lever for raising the ~5-6 videos/day ceiling, more impactful than any client-side optimization.
+
+### 6. Packaging & CLI Robustness
+- [ ] **Fix the persistent `RequestsDependencyWarning`:** (`Unable to find acceptable character detection dependency`) — flagged earlier as cosmetic, but confirmed to print on every single `vidx.exe` invocation in production logs (15+ times in one session). Worth actually resolving in `vidx.spec`'s bundled dependencies now that it's proven recurring, not hypothetical.
+- [ ] **Clean Ctrl+C handling mid-render:** interrupting a render (`KeyboardInterrupt`) during `ffmpeg_builder.py`'s `process.stdout.readline()` prints a raw Python traceback instead of a clean cancellation message.
+- [ ] **`run.bat` robustness:** a stray mis-encoded character (introduced via a shell `echo >>` edit) silently broke all three launcher lines (`'.\dist\vidx┬á-c' is not recognized...`) until manually rewritten. Consider validating/regenerating this file programmatically rather than hand-editing.
+
 ---
 
 ## ✅ Recently Completed Milestones (v0.2.0 → v0.3.2 Evolution)
+- [x] **Multi-Book GPU Production Run (Luke, John, Acts — Sindhi):** rendered and published all three books end-to-end via the packaged `vidx.exe` with `--gpu -w 4`; see `docs/session_summary.md` for the full session log and findings.
+- [x] **Background Video Audio Muting Fix:** background clips are now demuxed with `-an` (`vidx/ffmpeg_builder.py`) so their own audio track can never bleed into the output regardless of which render branch (watermark/title/outro vs. plain) runs.
+- [x] **Per-Manifest YouTube Token Caching:** `run_publisher()` now defaults the OAuth token cache to `<manifest's folder>/youtube_token.json` instead of the global `~/.vidx/youtube_token.json`, so publishing to multiple clients'/channels' projects no longer clobbers each other's login.
+- [x] **John Subtitle Position Typo Fix:** `john.yaml`'s overlay config had `fsubtitle_position` instead of `subtitle_position`, silently falling back to the wrong default alignment (top instead of middle).
 - [x] **v0.3.2 Release & Standalone Distribution:** Shipped `vidx.exe` via PyInstaller (bundling the internalized `vidx.usfm_parser`, Google auth submodules, and discovery schemas) with GitHub Release notes and distribution guides — superseding the original `v0.2.0` milestone.
 - [x] **YouTube One-Touch Publishing:** Direct YouTube Data API v3 integration with OAuth config, `--publish` upload, automated title/description/tags/thumbnail metadata, and book-level playlist organization — validated end-to-end by publishing the entire book of Matthew (Sindhi) in a single day.
 - [x] **GPU Hardware Acceleration & Monitoring:** Autodetect NVIDIA NVENC and Intel QSV encoding with `--gpu` CLI flag and `video.gpu: true`, featuring real-time GPU time and usage tracking in live batch progress tables.

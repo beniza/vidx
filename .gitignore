@@ -59,6 +59,7 @@ mrk-timings/
 *.log
 *.bak
 .coverage
+src/snd/upload_history.md
 
 # MkDocs generated site
 site/
