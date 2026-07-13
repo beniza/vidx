@@ -154,9 +154,9 @@ class FFmpegBuilder:
                 ]
             else:
                 if video_cfg.get("loop_background", True):
-                    bg_input = ["-stream_loop", "-1", "-i", str(bg_path)]
+                    bg_input = ["-stream_loop", "-1", "-an", "-i", str(bg_path)]
                 else:
-                    bg_input = ["-i", str(bg_path)]
+                    bg_input = ["-an", "-i", str(bg_path)]
 
         cmd = ["ffmpeg", "-y"]
         cmd.extend(bg_input)
