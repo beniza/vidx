@@ -153,7 +153,18 @@ Rendering dozens of chapters sequentially can take hours. To accelerate producti
 ```bash
 # Render 4 chapters simultaneously with hardware GPU acceleration!
 vidx -c examples/whole_book_batch.yaml -w 4 --gpu
+
+# Add -y if your background video/image is above your target resolution (e.g. a
+# 4K clip on a 1080p project) - it auto-confirms the one-time downscale-to-1080p
+# prompt instead of pausing the batch to wait for input:
+vidx -c examples/whole_book_batch.yaml -w 4 --gpu -y
 ```
+
+> **Real-world worker tuning note:** a controlled comparison on a 21-chapter book showed `-w 4`
+> finishing in roughly 1.6x less wall-clock time than `-w 1` — but each chapter took ~2.5x longer
+> to encode individually (NVENC encoder contention when 4 processes share one GPU). `-w 4` is
+> usually still the better choice for fastest turnaround, but if the machine is shared with other
+> work, `-w 2` may be a better balance. See `docs/todo.md` for the full numbers.
 
 During a multi-worker batch run, VIDX displays an interactive, real-time terminal UI showing:
 *   **Worker Mapping:** A dedicated live progress bar for each active worker (`[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).

@@ -72,6 +72,14 @@ In your command window, type the following command and press **Enter**:
 ```
 *(Tip: If your `vidx.exe` is in the main folder, type `.\vidx.exe -c your_config.yaml`).*
 
+> **💡 Producing a full book on a GPU machine:** if you have an NVIDIA/Intel GPU and a whole book
+> to render, this is the command pattern actually used in production across multiple books:
+> ```powershell
+> .\dist\vidx.exe -c examples/sindhi_matthew_batch.yaml --gpu -y -w 4
+> ```
+> `--gpu` turns on hardware encoding, `-w 4` renders 4 chapters at once, and `-y` auto-confirms
+> the one-time prompt to downscale an oversized (e.g. 4K) background video to 1080p.
+
 **What happens next:**
 VIDX will begin processing your chapters. You will see a live progress bar on your screen showing the speed and rendering status of each chapter. Sit back and let VIDX do the heavy lifting! When it finishes, your completed videos will be waiting inside the `output/` folder.
 

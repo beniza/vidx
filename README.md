@@ -106,6 +106,13 @@ vidx -c examples/malayalam_philemon_16x9.yaml -w 4
 
 # Shakedown Test: Render only the first 15 seconds of each job to verify styling
 vidx -c examples/sindhi_mark_16x9.yaml -t 15
+
+# Production pattern validated on real multi-book batches: GPU encoding, 4 parallel
+# workers, and -y to auto-confirm the one-time 4K-background-to-1080p downscale prompt
+vidx -c examples/whole_book_batch.yaml --gpu -y -w 4
+
+# Or, using the standalone packaged executable (no Python install required)
+dist\vidx.exe -c examples\whole_book_batch.yaml --gpu -y -w 4
 ```
 
 ### Mode 2: Quick Direct Conversion
@@ -135,6 +142,20 @@ vidx --generate-only --format srt \
   --timing src/snd/C01-01-MRK-05-timing.txt \
   -o output/Mark_05.srt
 ```
+
+### Mode 4: Publish Rendered Videos to YouTube
+
+Every batch render writes a `publish_manifest.json` "outbox" alongside its output. Publishing is a
+separate, resumable step — run it any time after rendering, including the next day if YouTube's
+daily upload quota pauses it partway through:
+
+```bash
+vidx --manifest output/mark_video_book/publish_manifest.json
+```
+
+Re-running the exact same command resumes from wherever it left off, without re-uploading or
+re-rendering anything already done. See [docs/publishing_guide.md](docs/publishing_guide.md) for
+the full OAuth setup walkthrough.
 
 ---
 
