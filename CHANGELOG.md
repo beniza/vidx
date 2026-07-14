@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] - 2026-07-14
+
+### Added
+- **Luke, John & Acts (Sindhi Audio Bible):** batch configs, USFM source, timing data, and channel logo for three new GPU-rendered production books.
+- **Per-Manifest YouTube Token Caching:** `--manifest` publishing now defaults the OAuth token cache to `<manifest's folder>/youtube_token.json` instead of the global `~/.vidx/youtube_token.json`, so publishing to multiple projects/channels no longer clobbers a shared login.
+- **`docs/session_summary.md` and expanded `docs/todo.md`:** logged production findings (YouTube quota mechanics, GPU worker-count scaling, timing-data validation idea) as actionable follow-ups.
+
+### Fixed
+- **Background Video Audio Leakage:** background clips are now demuxed with `-an` so their own audio track can never bleed into the output, regardless of which render branch (watermark/title/outro vs. plain) runs.
+- **Batch Summary Reporting Clobbered by Live Progress Display:** `run_all()`'s summary tables and "Total Elapsed" wall-clock panel were being printed while the Rich live progress display was still active, so the output was overwritten for any multi-chapter batch. Extracted into `BatchRunner.print_summary()`, now called only after the progress display stops.
+- **`john.yaml` Subtitle Position Typo:** `fsubtitle_position` (should be `subtitle_position`) was silently falling back to the wrong default overlay alignment.
+- **Verse Segmentation Fallback:** `TextSegmenter` now falls back to standard/Arabic/Sindhi punctuation separators when none are supplied by the timing file, instead of producing a single unsplit segment.
+
 ## [0.3.3] - 2026-07-06
 
 ### Fixed
