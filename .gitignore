@@ -61,5 +61,14 @@ mrk-timings/
 .coverage
 src/snd/upload_history.md
 
+# Client/production project data (real book-specific batch work, not generic
+# library examples) - kept locally, never versioned. See examples/ for
+# genuine reusable templates instead.
+src/snd/sindhi-audio-bible-artifacts/
+src/snd/41MATsnd.SFM
+src/snd/43LUKsnd.SFM
+src/snd/44JHNsnd.SFM
+src/snd/45ACTsnd.SFM
+
 # MkDocs generated site
 site/
