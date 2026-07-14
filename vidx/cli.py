@@ -229,6 +229,7 @@ def main():
             res = runner.run_all(max_workers=1)
         finally:
             observer.stop()
+        runner.print_summary(res)
         if args.publish and res["failed"] == 0:
             out_dir = Path(config.project.get("output_dir", "."))
             run_publisher(str(out_dir / "publish_manifest.json"), config=config)
@@ -255,6 +256,7 @@ def main():
             res = runner.run_all(max_workers=args.workers)
         finally:
             observer.stop()
+        runner.print_summary(res)
         if args.publish and res["failed"] == 0:
             out_dir = Path(config.project.get("output_dir", "output"))
             run_publisher(str(out_dir / "publish_manifest.json"), config=config)

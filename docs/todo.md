@@ -96,7 +96,14 @@
 
 ### 4. Bulk Processing & Performance
 - [ ] **Skip-Existing-Output / Resume Support:** `batch_runner.py` re-renders every job in a config on every invocation with no check for an already-completed output file. Confirmed real cost: Luke's 24 chapters were fully re-rendered twice in one production session (once as a full 24-job run, again later split as 20+4 jobs) after an interrupted/restarted batch. Add an existence check (or explicit `--resume` flag) so interrupted or re-run batches only process what's missing.
-- [ ] **GPU Worker Count Right-Sizing:** production logs show `-w 4` GPU batches averaging 120-150s/chapter vs. 54-75s when rendering the same book solo — NVENC encoder session contention likely caps real parallelism well below 4x on a single consumer GPU. Benchmark `-w 2` vs `-w 4` wall-clock time before assuming higher worker counts help; may free CPU/disk for other work with no real throughput loss.
+- [ ] **GPU Worker Count Right-Sizing:** confirmed with a controlled same-book comparison (John, 21 chapters, both `-w 1` and `-w 4`):
+
+  | | `-w 1` | `-w 4` |
+  |---|---|---|
+  | Avg time/chapter | 50.79s | 125.37s (2.47x slower per chapter — NVENC contention) |
+  | True wall-clock | 17m 46.6s (measured) | not captured (see reporting fix below); estimated ~11min from steady-state math, i.e. `-w 4` ≈1.6x faster wall-clock despite the per-chapter slowdown |
+
+  So `-w 4` still wins on turnaround time, but nowhere near a naive "4x faster," and it burns ~2.5x more total GPU-seconds to get there. `-w 1`/`-w 2` is the better choice when GPU heat/wear or a shared machine matters more than turnaround. Benchmark `-w 2` directly (with the reporting fix below) to find the actual sweet spot.
 - [ ] **Multi-Worker Memory Profiling:**
   - Optimize memory footprint during large concurrent batch runs (`-w 4` or `-w 8`) when processing entire New Testament (NT) audio libraries (260+ chapters).
 - [x] **Multi-Worker Live Progress Bars (`rich` / `enlighten` / `tqdm`):**
@@ -114,6 +121,7 @@
 - [ ] **Request a YouTube API Quota Increase:** if this is ongoing production usage rather than one-off, request a quota increase via Google Cloud Console — the real lever for raising the ~5-6 videos/day ceiling, more impactful than any client-side optimization.
 
 ### 6. Packaging & CLI Robustness
+- [x] **Fix Batch Summary / "Total Elapsed" Reporting Getting Clobbered:** `run_all()` used to print its Rich summary tables and the "🏁 FINAL RESULTS" panel (including true wall-clock time) *while* `TerminalProgressObserver`'s live progress display was still active — Rich's `Live` redraw loop would clobber that output, so the wall-clock reading never survived for any multi-chapter batch (only ever visible for single-job runs, by coincidence of timing). Fixed by extracting the printing into `BatchRunner.print_summary(res)`, called from `cli.py` only *after* `observer.stop()`. This is what makes the `-w` worker-count benchmarking above actually possible to measure directly instead of estimating.
 - [ ] **Fix the persistent `RequestsDependencyWarning`:** (`Unable to find acceptable character detection dependency`) — flagged earlier as cosmetic, but confirmed to print on every single `vidx.exe` invocation in production logs (15+ times in one session). Worth actually resolving in `vidx.spec`'s bundled dependencies now that it's proven recurring, not hypothetical.
 - [ ] **Clean Ctrl+C handling mid-render:** interrupting a render (`KeyboardInterrupt`) during `ffmpeg_builder.py`'s `process.stdout.readline()` prints a raw Python traceback instead of a clean cancellation message.
 - [ ] **`run.bat` robustness:** a stray mis-encoded character (introduced via a shell `echo >>` edit) silently broke all three launcher lines (`'.\dist\vidx┬á-c' is not recognized...`) until manually rewritten. Consider validating/regenerating this file programmatically rather than hand-editing.

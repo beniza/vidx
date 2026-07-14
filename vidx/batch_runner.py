@@ -758,6 +758,31 @@ class BatchRunner:
         succeeded = sum(1 for j in self.jobs if j.status == "SUCCESS")
         failed = sum(1 for j in self.jobs if j.status == "FAILED")
 
+        self._generate_publishing_manifests()
+
+        return {
+            "total_time": total_time,
+            "succeeded": succeeded,
+            "failed": failed,
+            "jobs": self.jobs,
+        }
+
+    def print_summary(self, res):
+        """
+        Print the rich batch summary tables and FINAL RESULTS panel for a run_all() result.
+
+        Deliberately NOT called from inside run_all() itself: a Rich Progress/Live
+        display (e.g. TerminalProgressObserver) is typically still active for the
+        duration of run_all(), and printing other Console output while it's active
+        gets clobbered by the Live display's own redraws (this is why "Total Elapsed"
+        never showed up for multi-chapter batches previously - only single-job runs,
+        where the timing happened to coincide with the observer already stopping).
+        Callers must call observer.stop() first, then this method.
+        """
+        total_time = res["total_time"]
+        succeeded = res["succeeded"]
+        failed = res["failed"]
+
         print("")
         try:
             from rich.console import Console
@@ -953,15 +978,6 @@ class BatchRunner:
                 )
                 if job.error_msg:
                     print(f"    Error: {job.error_msg}")
-
-        self._generate_publishing_manifests()
-
-        return {
-            "total_time": total_time,
-            "succeeded": succeeded,
-            "failed": failed,
-            "jobs": self.jobs,
-        }
 
     def _generate_publishing_manifests(self):
         """Generate outbox manifest and offline packages for successfully rendered jobs."""
