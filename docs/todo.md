@@ -57,6 +57,7 @@
 
 ## 🧪 Engineering & Methodology Requirements
 
+- [ ] **Pre-Flight Timing Data Heuristic Check:** before starting the actual GPU encoding queue, validate each verse/section's timing entry (`TimingParser`, `vidx/usfm_parser.py`) against its word count: compute seconds-per-word for every segment (`(end - start) / len(verse_text.split())`), then flag statistical outliers (e.g. IQR or z-score against the chapter's or book's own median rate) as likely bad timing data — misaligned rows, duplicated/skipped segments, or a wrong verse-to-timing mapping — rather than assuming every `.txt` timing file is correct. Surface flagged verses to the user for review/confirmation before rendering proceeds, instead of silently baking bad sync into the final video.
 - [x] **Comprehensive Automated Test Suite (`pytest`)**
   - [x] Built test suites covering `Config`, `USFMParser`, `ASSGenerator`, `FFmpegBuilder`, `BatchRunner`, `CLI`, `Manifest`, `Bumpers`, `Progress`, and `YouTube` (~54 tests across 10 files).
 - [ ] **Test-Driven Development (TDD) Enforcement**
