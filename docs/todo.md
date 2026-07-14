@@ -1,5 +1,7 @@
 # VIDX Project Roadmap & TODOs
 > Tracking active milestones, future feature enhancements, and engineering requirements for the VIDX Scripture Video Generator.
+>
+> **Open work now lives as [GitHub Issues](https://github.com/beniza/vidx/issues)**, each written with a user story, acceptance criteria, guardrails, and a TDD plan (full template for scoped items, a lighter template for small fixes, or a `needs-design` placeholder for undesigned ideas — see the issue itself for which tier applies). This file stays as a one-line index plus the history of what's already shipped, so there's a single source of truth per item instead of two drifting copies.
 
 ---
 
@@ -23,12 +25,7 @@
 
 ## 🖥️ User Experience & Graphical Interface (GUI)
 
-- [ ] **Graphical User Interface (GUI) Config Editor**
-  - [ ] Develop a user-friendly GUI application (e.g., desktop app using Tkinter/PyQt or a local web-based editor) for translation field teams who are unfamiliar with command-line tools or YAML syntax.
-  - [ ] **Interactive File Browsers:** Visual file pickers to select USFM scripture files, audio recordings (.mp3/.wav/.mpeg), verse timing maps (.txt), and background video loops/images.
-  - [ ] **Visual Color & Transparency Pickers:** Built-in color selection palettes with real-time sliders for background bounding box opacity (`0%` to `100% transparent`) and font outline width.
-  - [ ] **Live Subtitle Previewer:** Render an instant visual mockup showing how scripture dialogue, gold section headings (`\s1`), and verse prefixes (`5:1`) will look over the selected background video without running full FFmpeg rendering jobs.
-  - [ ] **One-Click Batch Execution:** Button to launch sequential or multi-worker (`-w 4`) rendering queues directly from the GUI with live progress reporting.
+- [ ] GUI Config Editor for translation field teams — [#13](https://github.com/beniza/vidx/issues/13) *(needs-design)*
 
 ---
 
@@ -49,18 +46,18 @@
   - [x] **One-Touch Upload (`--publish`):** Enable single-command or GUI button publishing that automatically uploads rendered `.mp4` video files to the designated channel immediately after generation.
   - [x] **Automated Metadata & Thumbnails:** Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (`#AudioBible`, `#Scripture`), and upload the generated `title_card.jpg` as the official video thumbnail!
   - [x] **Playlist Organization:** Automatically organize uploaded chapter videos into book-level playlists (e.g., *"Gospel of Mark — Malayalam Translation"*).
-  - [ ] **YouTube Chapters from Section Headings:** `usfm_parser.py` already extracts `\s1`/`\s2` section headings with their timing (`self.sections`, used today for on-screen ASS heading overlays) — reuse that same data to auto-generate a YouTube chapters list (`0:00 Heading One`, `2:34 Heading Two`, ...) prepended to the video description via `resolve_metadata_template()` (`vidx/manifest.py`). Requires a first timestamp of exactly `0:00` and at least 3 chapters for YouTube to render them.
-  - [ ] **Verse Timing in Description:** also include per-verse or per-section timing references in the generated description text (not just chapters), so viewers/readers can locate a specific verse's timestamp without relying on YouTube's chapter UI.
-  - [ ] **Vimeo support:** Extend the publishing block to the Vimeo API (YouTube done; Vimeo still pending).
+  - [ ] YouTube Chapters from Section Headings — [#9](https://github.com/beniza/vidx/issues/9)
+  - [ ] Verse Timing in Description — [#10](https://github.com/beniza/vidx/issues/10)
+  - [ ] Vimeo support — [#15](https://github.com/beniza/vidx/issues/15) *(needs-design)*
 
 ---
 
 ## 🧪 Engineering & Methodology Requirements
 
-- [ ] **Pre-Flight Timing Data Heuristic Check:** before starting the actual GPU encoding queue, validate each verse/section's timing entry (`TimingParser`, `vidx/usfm_parser.py`) against its word count: compute seconds-per-word for every segment (`(end - start) / len(verse_text.split())`), then flag statistical outliers (e.g. IQR or z-score against the chapter's or book's own median rate) as likely bad timing data — misaligned rows, duplicated/skipped segments, or a wrong verse-to-timing mapping — rather than assuming every `.txt` timing file is correct. Surface flagged verses to the user for review/confirmation before rendering proceeds, instead of silently baking bad sync into the final video.
+- [ ] Pre-Flight Timing Data Heuristic Check — [#4](https://github.com/beniza/vidx/issues/4)
 - [x] **Comprehensive Automated Test Suite (`pytest`)**
   - [x] Built test suites covering `Config`, `USFMParser`, `ASSGenerator`, `FFmpegBuilder`, `BatchRunner`, `CLI`, `Manifest`, `Bumpers`, `Progress`, and `YouTube` (~54 tests across 10 files).
-- [ ] **Test-Driven Development (TDD) Enforcement**
+- [ ] **Test-Driven Development (TDD) Enforcement** *(standing process rule, not a GitHub issue — nothing to close)*
   - [ ] **Mandatory Rule:** All future feature developments, bug fixes, and refactoring **must** follow strict TDD workflow:
     1. Write a failing test in `tests/` capturing the desired behavior or bug reproduction.
     2. Implement minimal production code to pass the test.
@@ -76,7 +73,7 @@
   - [x] Automate linting verification via `flake8`.
 - [x] **Automated Release Builder:** (`.github/workflows/release.yml`)
   - [x] Version-tag-triggered (`v*`) workflow that builds the wheel, sdist, and Windows `vidx.exe` (PyInstaller) and attaches them to the GitHub Release.
-  - [ ] **Linux executable:** currently Windows-only (`runs-on: windows-latest`); add a Linux PyInstaller build if demand arises.
+  - [ ] Linux executable — [#12](https://github.com/beniza/vidx/issues/12)
 
 ### 2. Video & Audio Rendering Enhancements
 - [x] **GPU Hardware-Accelerated Video Encoding:**
@@ -90,23 +87,13 @@
   - Enable placing station or organization logos (PNG with alpha) in any corner of the video via YAML config (`video.watermark` / `video.logo`).
 
 ### 3. Typography & Internationalization
-- [ ] **Font Fallback Validation:**
-  - Create an automated CLI pre-flight check that verifies required fonts (e.g., `Bailey`, `Nirmala UI`, `Mangal`) are installed on the OS before launching long FFmpeg render queues.
-- [ ] **Right-to-Left (RTL) Script Optimization:**
-  - Add specific regression test cases and layout presets for Arabic, Urdu, and Hebrew scripture rendering.
+- [ ] Font Fallback Validation — [#16](https://github.com/beniza/vidx/issues/16) *(needs-design)*
+- [ ] Right-to-Left (RTL) Script Optimization — [#14](https://github.com/beniza/vidx/issues/14) *(needs-design)*
 
 ### 4. Bulk Processing & Performance
-- [ ] **Skip-Existing-Output / Resume Support:** `batch_runner.py` re-renders every job in a config on every invocation with no check for an already-completed output file. Confirmed real cost: Luke's 24 chapters were fully re-rendered twice in one production session (once as a full 24-job run, again later split as 20+4 jobs) after an interrupted/restarted batch. Add an existence check (or explicit `--resume` flag) so interrupted or re-run batches only process what's missing.
-- [ ] **GPU Worker Count Right-Sizing:** confirmed with a controlled same-book comparison (John, 21 chapters, both `-w 1` and `-w 4`):
-
-  | | `-w 1` | `-w 4` |
-  |---|---|---|
-  | Avg time/chapter | 50.79s | 125.37s (2.47x slower per chapter — NVENC contention) |
-  | True wall-clock | 17m 46.6s (measured) | not captured (see reporting fix below); estimated ~11min from steady-state math, i.e. `-w 4` ≈1.6x faster wall-clock despite the per-chapter slowdown |
-
-  So `-w 4` still wins on turnaround time, but nowhere near a naive "4x faster," and it burns ~2.5x more total GPU-seconds to get there. `-w 1`/`-w 2` is the better choice when GPU heat/wear or a shared machine matters more than turnaround. Benchmark `-w 2` directly (with the reporting fix below) to find the actual sweet spot.
-- [ ] **Multi-Worker Memory Profiling:**
-  - Optimize memory footprint during large concurrent batch runs (`-w 4` or `-w 8`) when processing entire New Testament (NT) audio libraries (260+ chapters).
+- [ ] Skip-Existing-Output / Resume Support — [#1](https://github.com/beniza/vidx/issues/1)
+- [ ] GPU Worker Count Right-Sizing (benchmark `-w 2`, document recommendation) — [#5](https://github.com/beniza/vidx/issues/5)
+- [ ] Multi-Worker Memory Profiling — [#17](https://github.com/beniza/vidx/issues/17) *(needs-design)*
 - [x] **Multi-Worker Live Progress Bars (`rich` / `enlighten` / `tqdm`):**
   - [x] **Decoupled GUI-Ready Callback Architecture (Observer Pattern):** **MANDATORY ARCHITECTURAL RULE:** Progress reporting must NOT be hardcoded to console prints or terminal UI libraries. Instead, implement an event/callback interface (`progress_callback(event: ProgressEvent)`) emitted by `FFmpegBuilder` and `BatchRunner`. Structured events (`job_id`, `worker_id`, `book`, `chapter`, `status`, `percent`, `speed`, `fps`, `elapsed`, `eta`) will allow both the CLI terminal observer and the upcoming GUI application to display live progress bars from the exact same backend engine!
   - [x] **Dedicated Worker Mapping:** Display a live interactive progress bar for *each* parallel rendering worker (`-w WORKERS`), showing the exact scripture book, chapter, and file currently being processed (e.g., `[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━`).
@@ -116,16 +103,16 @@
   - [x] Automatically downscale 4K/high-res background video clips to 1080p (`*_1080p.mp4`) and apply loop crossfades (`*_xf1.0s.mp4`) in a pre-rendering cache pass to eliminate CPU decoding bottlenecks during parallel batch runs.
 
 ### 5. YouTube Publishing Reliability & Throughput
-- [ ] **Persisted, Date-Scoped Quota Tracking:** `YouTubePublisher.quota_used` (`vidx/youtube.py`) is a plain in-memory counter reset to `0` on every process start — it has no connection to Google's real server-side daily quota. Repeatedly re-invoking `vidx --manifest ...` after hitting the local "9500 unit" safety stop can silently exceed the actual account-level daily cap, since the check only ever knows what *this process* has uploaded. Persist quota usage to disk (e.g. alongside the per-manifest token file), scoped to the current calendar day (Pacific time), so process restarts — or parallel workers — don't reset the safety net to zero.
-- [ ] **Parallel Upload Workers (`-w`-style for `--manifest`):** feasibility confirmed (see `run_publisher()` in `vidx/cli.py`) — needs a lock around `ManifestManager.update_status()`/`save()`, a lock around the quota check-and-increment (ties into the item above), and one `YouTubePublisher`/`service` instance per worker thread (Google's `googleapiclient`/`httplib2` transport isn't documented thread-safe for a shared instance). Note: this speeds up *finishing* a day's uploads, it does not raise the real daily quota ceiling.
-- [ ] **Automate the Daily Publish Retry:** manual re-invocation of `vidx --manifest ...` once per day (after hitting the quota-safety stop) was the actual bottleneck observed while publishing Luke/John/Acts — not upload speed. A scheduled task (Windows Task Scheduler / cron) running the publish command automatically once every 24h would remove this toil entirely.
-- [ ] **Request a YouTube API Quota Increase:** if this is ongoing production usage rather than one-off, request a quota increase via Google Cloud Console — the real lever for raising the ~5-6 videos/day ceiling, more impactful than any client-side optimization.
+- [ ] Persisted, Date-Scoped Quota Tracking — [#2](https://github.com/beniza/vidx/issues/2)
+- [ ] Parallel Upload Workers (`-w`-style for `--manifest`) — [#3](https://github.com/beniza/vidx/issues/3) *(blocked by #2)*
+- [ ] Automate the Daily Publish Retry — [#11](https://github.com/beniza/vidx/issues/11)
+- [ ] **Request a YouTube API Quota Increase** *(an administrative action via Google Cloud Console, not engineering work — no GitHub issue; the real lever for raising the ~5-6 videos/day ceiling if this is ongoing production usage)*
 
 ### 6. Packaging & CLI Robustness
 - [x] **Fix Batch Summary / "Total Elapsed" Reporting Getting Clobbered:** `run_all()` used to print its Rich summary tables and the "🏁 FINAL RESULTS" panel (including true wall-clock time) *while* `TerminalProgressObserver`'s live progress display was still active — Rich's `Live` redraw loop would clobber that output, so the wall-clock reading never survived for any multi-chapter batch (only ever visible for single-job runs, by coincidence of timing). Fixed by extracting the printing into `BatchRunner.print_summary(res)`, called from `cli.py` only *after* `observer.stop()`. This is what makes the `-w` worker-count benchmarking above actually possible to measure directly instead of estimating.
-- [ ] **Fix the persistent `RequestsDependencyWarning`:** (`Unable to find acceptable character detection dependency`) — flagged earlier as cosmetic, but confirmed to print on every single `vidx.exe` invocation in production logs (15+ times in one session). Worth actually resolving in `vidx.spec`'s bundled dependencies now that it's proven recurring, not hypothetical.
-- [ ] **Clean Ctrl+C handling mid-render:** interrupting a render (`KeyboardInterrupt`) during `ffmpeg_builder.py`'s `process.stdout.readline()` prints a raw Python traceback instead of a clean cancellation message.
-- [ ] **`run.bat` robustness:** a stray mis-encoded character (introduced via a shell `echo >>` edit) silently broke all three launcher lines (`'.\dist\vidx┬á-c' is not recognized...`) until manually rewritten. Consider validating/regenerating this file programmatically rather than hand-editing.
+- [ ] Fix the persistent `RequestsDependencyWarning` — [#7](https://github.com/beniza/vidx/issues/7)
+- [ ] Clean Ctrl+C handling mid-render — [#8](https://github.com/beniza/vidx/issues/8)
+- [ ] `run.bat` robustness — [#6](https://github.com/beniza/vidx/issues/6)
 
 ---
 
