@@ -49,6 +49,8 @@
   - [x] **One-Touch Upload (`--publish`):** Enable single-command or GUI button publishing that automatically uploads rendered `.mp4` video files to the designated channel immediately after generation.
   - [x] **Automated Metadata & Thumbnails:** Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (`#AudioBible`, `#Scripture`), and upload the generated `title_card.jpg` as the official video thumbnail!
   - [x] **Playlist Organization:** Automatically organize uploaded chapter videos into book-level playlists (e.g., *"Gospel of Mark — Malayalam Translation"*).
+  - [ ] **YouTube Chapters from Section Headings:** `usfm_parser.py` already extracts `\s1`/`\s2` section headings with their timing (`self.sections`, used today for on-screen ASS heading overlays) — reuse that same data to auto-generate a YouTube chapters list (`0:00 Heading One`, `2:34 Heading Two`, ...) prepended to the video description via `resolve_metadata_template()` (`vidx/manifest.py`). Requires a first timestamp of exactly `0:00` and at least 3 chapters for YouTube to render them.
+  - [ ] **Verse Timing in Description:** also include per-verse or per-section timing references in the generated description text (not just chapters), so viewers/readers can locate a specific verse's timestamp without relying on YouTube's chapter UI.
   - [ ] **Vimeo support:** Extend the publishing block to the Vimeo API (YouTube done; Vimeo still pending).
 
 ---
