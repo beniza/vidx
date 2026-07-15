@@ -72,3 +72,4 @@ src/snd/45ACTsnd.SFM
 
 # MkDocs generated site
 site/
+.gstack/
