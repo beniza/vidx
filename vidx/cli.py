@@ -75,7 +75,7 @@ def run_publisher(manifest_path: str, config: Optional[Config] = None):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="VIDX: Scripture Video Generator companion to AUDX (combines USFM text, audio, and timing into video)."
+        description="VIDX: Scripture Video Generator (combines USFM text, audio, and timing into video)."
     )
     parser.add_argument(
         "-v", "--version", action="version", version=f"VIDX {__version__}"

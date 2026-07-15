@@ -47,7 +47,7 @@ jobs:
         run: |
           echo "## 🚀 VIDX Release ${GITHUB_REF#refs/tags/}" > release_notes.md
           echo "" >> release_notes.md
-          echo "Official video rendering companion to **AUDX** (Audio Scripture Conversion Tool suite)." >> release_notes.md
+          echo "Scripture video rendering engine for Bible translation teams." >> release_notes.md
           echo "" >> release_notes.md
           echo "For full release history and feature details, see [CHANGELOG.md](https://github.com/beniza/vidx/blob/main/CHANGELOG.md) and our live documentation at **[https://beniza.github.io/vidx/](https://beniza.github.io/vidx/)**." >> release_notes.md
           echo "" >> release_notes.md

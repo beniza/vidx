@@ -37,7 +37,7 @@
 
 - [x] **Audio Intro, Outro & Background Music (BGM) Bumpers**
   - [x] Add configuration options for introductory and concluding audio clips (`audio.intro_clip: "assets/intro.mp3"`, `audio.outro_clip: "assets/outro.mp3"`).
-  - [x] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main AUDX scripture audio -> play outro credits bumper.
+  - [x] Implement automatic FFmpeg audio concatenation: play intro bumper -> play main scripture narration audio -> play outro credits bumper.
   - [x] **Looped Background Music Blending:** Allow specifying background music (`audio.background_music: "assets/bgm.mp3"`) with volume control (`audio.background_music_volume: 0.15`). Automatically loop the music continuously to match the scripture reading and seamlessly blend without reducing the narrator's volume!
   - [x] **Automatic Subtitle Timestamp Shifting:** When an intro clip is added, automatically offset all verse start/end timestamps in the `.ass`/`.srt` subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!
 

@@ -3,16 +3,16 @@
 
 ---
 
-## 📖 Introduction: The AUDX + VIDX Workflow
+## 📖 Introduction: From Scripture App to YouTube Video
 
-When producing multimedia scripture releases, translation teams typically follow a two-stage automated pipeline:
-1. **AUDX:** Processes raw studio recordings, validates chapter structures, applies noise reduction/normalization, and outputs standardized audio files (e.g., `SND-MRK-5.mp3`).
-2. **VIDX (This Companion Tool):** Takes the finished AUDX audio, combines it with the USFM scripture text and verse timing maps (from Aeneas or Scripture App), and composites broadcast-ready lyric videos with rich subtitles.
+If your team has already built a Scripture App for your language using **Scripture App Builder (SAB)**, you've already done the hard work: aligning scripture text to narration audio. VIDX takes those same assets and repurposes them for video:
+1. **Your SAB project:** already has the USFM scripture text, standardized narration audio (e.g., `SND-MRK-5.mp3`), and verse-level timing maps that power the app's audio-sync highlighting.
+2. **VIDX:** takes that same USFM text, audio, and timing map, and composites broadcast-ready lyric videos with rich subtitles — no re-alignment needed.
 
 ```
-[Studio Recording] ──► [ AUDX ] ──► Standardized Audio (.mp3) ─┐
+[Studio Recording] ──────────────────► Narration Audio (.mp3) ─┐
                                                              │
-[USFM Scripture]   ──► [ Aeneas ] ──► Timing Map (.txt)       ┼─► [ VIDX ] ──► MP4 Video / SRT Subtitles
+[USFM Scripture]   ──► [ Scripture App Builder ] ──► Timing Map (.txt)       ┼─► [ VIDX ] ──► MP4 Video / SRT Subtitles
                                                              │
 [Background Media] ──► (Video Loop / Image) ─────────────────┘
 ```
@@ -33,12 +33,12 @@ my_scripture_project/
 ├── usfm/                     # Scripture text source files
 │   └── 42MRKsnd.SFM          # Whole book USFM 3.0 file (or entire NT bundle)
 │
-├── audio/                    # Standardized studio recordings (produced via AUDX)
+├── audio/                    # Standardized studio narration recordings
 │   ├── SND-MRK-01.mp3        # Chapter 1 audio (.mp3, .wav, or .mpeg)
 │   ├── SND-MRK-02.mp3        # Chapter 2 audio
 │   └── SND-MRK-03.mp3
 │
-├── timing/                   # Verse-level timing maps (from Aeneas or Scripture App)
+├── timing/                   # Verse-level timing maps (from Scripture App Builder)
 │   ├── MRK_01_timing.txt     # Tab-delimited timecodes for Chapter 1
 │   ├── MRK_02_timing.txt
 │   └── MRK_03_timing.txt
@@ -56,7 +56,7 @@ my_scripture_project/
 
 ### Asset Type Guidelines:
 1. **USFM Scripture (`usfm/`):** Place standard UTF-8 encoded `.SFM` or `.usfm` files here. VIDX automatically strips formatting noise (footnotes `\f`, cross-references `\x`, figures `\fig`) and targets the exact chapter requested by your timing file.
-2. **Audio Recordings (`audio/`):** Use standardized audio exported from your AUDX pipeline. Supported formats include `.mp3`, `.wav`, `.aac`, and `.mpeg`. Ensure filenames clearly identify the book and chapter.
+2. **Audio Recordings (`audio/`):** Use your standardized studio narration recordings. Supported formats include `.mp3`, `.wav`, `.aac`, and `.mpeg`. Ensure filenames clearly identify the book and chapter.
 3. **Timing Maps (`timing/`):** Standard tab-delimited files (`start_sec \t end_sec \t segment_id`). Punctuation splits and verse fragments (`1a`, `1b`) are matched automatically.
 4. **Backgrounds (`backgrounds/`):** You can use short looping video clips (`.mp4`, `.mov`) or static images (`.jpg`, `.png`). If your video loop is shorter than the chapter audio, VIDX will automatically loop it (`loop_background: true`) to match the exact duration!
 5. **Title Cards & Bumpers (`assets/` - Upcoming v0.3 Features):** You can prepare still title images (`title_card.jpg`) to serve as video intros and YouTube thumbnails, along with introductory/closing audio bumpers (`intro.mp3` / `outro.mp3`). VIDX will automatically offset subtitle timestamps to account for intro audio delays!
