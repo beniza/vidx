@@ -1,0 +1,1508 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Scripture video rendering engine for Bible translation teams.">
+      
+      
+        <meta name="author" content="The Free Bible Foundation">
+      
+      
+        <link rel="canonical" href="https://beniza.github.io/vidx/user_guide/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../configuration_guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>User Guide & Tutorials - VIDX — Scripture Video Generator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vidx-user-guide-tutorials" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-header__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VIDX — Scripture Video Generator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              User Guide & Tutorials
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide & Tutorials
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../configuration_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../todo/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap & TODOs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../project_brief/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Project Brief & History
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-nav__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    VIDX — Scripture Video Generator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide & Tutorials
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide & Tutorials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-from-scripture-app-to-youtube-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Introduction: From Scripture App to YouTube Video
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-setting-up-your-workspace-folder-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Step 1: Setting Up Your Workspace Folder Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Step 1: Setting Up Your Workspace Folder Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Directory Structure:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asset-type-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Type Guidelines:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-creating-your-configuration-projectyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Step 2: Creating Your Configuration (project.yaml)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-performing-a-10-second-shakedown-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎬 Step 3: Performing a 10-Second Shakedown Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-whole-book-batch-rendering-multimedia-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Step 4: Whole-Book Batch Rendering &amp; Multimedia Enhancements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Step 4: Whole-Book Batch Rendering &amp; Multimedia Enhancements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-parallel-multi-worker-rendering-gpu-acceleration-w-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Parallel Multi-Worker Rendering &amp; GPU Acceleration (-w, --gpu)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-adding-title-cards-thumbnails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Adding Title Cards &amp; Thumbnails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-audio-bumpers-looped-background-music-bgm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Audio Bumpers &amp; Looped Background Music (BGM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-custom-watermarks-channel-corner-logos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Custom Watermarks &amp; Channel Corner Logos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-smooth-audio-fade-in-fade-out-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Smooth Audio Fade-In &amp; Fade-Out Transitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#youtube-publishing-team-distribution-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 YouTube Publishing &amp; Team Distribution Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 YouTube Publishing &amp; Team Distribution Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-understanding-google-api-quotas-the-outbox-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Understanding Google API Quotas &amp; The Outbox Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-how-to-share-vidx-with-others-team-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. How to Share VIDX with Others (Team Configuration)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. How to Share VIDX with Others (Team Configuration)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-offline-youtube-studio-ready-packages-zero-setup-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Offline "YouTube Studio Ready" Packages (Zero Setup Required)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-automated-api-publishing-with-team-members" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Automated API Publishing with Team Members
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Automated API Publishing with Team Members">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-google-cloud-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set up Google Cloud Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-team-computers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Team Computers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❓ Troubleshooting &amp; FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="❓ Troubleshooting &amp; FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-my-text-appears-as-square-tofu-boxes-or-question-marks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: My text appears as square "tofu" boxes or question marks.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-how-do-i-create-vertical-videos-for-youtube-shorts-or-instagram-reels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: How do I create vertical videos for YouTube Shorts or Instagram Reels?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-can-i-generate-subtitle-files-srt-or-ass-without-creating-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Can I generate subtitle files (.srt or .ass) without creating video?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../todo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & TODOs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project_brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Brief & History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-from-scripture-app-to-youtube-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Introduction: From Scripture App to YouTube Video
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-setting-up-your-workspace-folder-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Step 1: Setting Up Your Workspace Folder Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Step 1: Setting Up Your Workspace Folder Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Directory Structure:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asset-type-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Type Guidelines:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-creating-your-configuration-projectyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Step 2: Creating Your Configuration (project.yaml)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-performing-a-10-second-shakedown-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎬 Step 3: Performing a 10-Second Shakedown Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-whole-book-batch-rendering-multimedia-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Step 4: Whole-Book Batch Rendering &amp; Multimedia Enhancements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Step 4: Whole-Book Batch Rendering &amp; Multimedia Enhancements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-parallel-multi-worker-rendering-gpu-acceleration-w-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Parallel Multi-Worker Rendering &amp; GPU Acceleration (-w, --gpu)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-adding-title-cards-thumbnails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Adding Title Cards &amp; Thumbnails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-audio-bumpers-looped-background-music-bgm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Audio Bumpers &amp; Looped Background Music (BGM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-custom-watermarks-channel-corner-logos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Custom Watermarks &amp; Channel Corner Logos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-smooth-audio-fade-in-fade-out-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Smooth Audio Fade-In &amp; Fade-Out Transitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#youtube-publishing-team-distribution-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 YouTube Publishing &amp; Team Distribution Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 YouTube Publishing &amp; Team Distribution Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-understanding-google-api-quotas-the-outbox-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Understanding Google API Quotas &amp; The Outbox Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-how-to-share-vidx-with-others-team-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. How to Share VIDX with Others (Team Configuration)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. How to Share VIDX with Others (Team Configuration)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-offline-youtube-studio-ready-packages-zero-setup-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Offline "YouTube Studio Ready" Packages (Zero Setup Required)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-automated-api-publishing-with-team-members" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Automated API Publishing with Team Members
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Automated API Publishing with Team Members">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-google-cloud-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set up Google Cloud Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-team-computers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Team Computers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❓ Troubleshooting &amp; FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="❓ Troubleshooting &amp; FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-my-text-appears-as-square-tofu-boxes-or-question-marks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: My text appears as square "tofu" boxes or question marks.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-how-do-i-create-vertical-videos-for-youtube-shorts-or-instagram-reels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: How do I create vertical videos for YouTube Shorts or Instagram Reels?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-can-i-generate-subtitle-files-srt-or-ass-without-creating-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Can I generate subtitle files (.srt or .ass) without creating video?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="vidx-user-guide-tutorials">VIDX User Guide &amp; Tutorials</h1>
+<blockquote>
+<p>Step-by-step documentation for Bible translation field coordinators and technicians.</p>
+</blockquote>
+<hr />
+<h2 id="introduction-from-scripture-app-to-youtube-video">📖 Introduction: From Scripture App to YouTube Video</h2>
+<p>If your team has already built a Scripture App for your language using <strong>Scripture App Builder (SAB)</strong>, you've already done the hard work: aligning scripture text to narration audio. VIDX takes those same assets and repurposes them for video:
+1. <strong>Your SAB project:</strong> already has the USFM scripture text, standardized narration audio (e.g., <code>SND-MRK-5.mp3</code>), and verse-level timing maps that power the app's audio-sync highlighting.
+2. <strong>VIDX:</strong> takes that same USFM text, audio, and timing map, and composites broadcast-ready lyric videos with rich subtitles — no re-alignment needed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[Studio Recording] ──────────────────► Narration Audio (.mp3) ─┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                                             │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>[USFM Scripture]   ──► [ Scripture App Builder ] ──► Timing Map (.txt)       ┼─► [ VIDX ] ──► MP4 Video / SRT Subtitles
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                                                             │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[Background Media] ──► (Video Loop / Image) ─────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="step-1-setting-up-your-workspace-folder-structure">🛠️ Step 1: Setting Up Your Workspace Folder Structure</h2>
+<p>To ensure repeatable, error-free batch conversions across single chapters, full books, or the entire New Testament, we strongly recommend adopting a standardized folder hierarchy in your workspace directory. </p>
+<p>Because VIDX includes an intelligent internal USFM parser, <strong>multiple chapters or even entire New Testaments can share a single USFM source file</strong>, removing the need to split USFM files by chapter!</p>
+<h3 id="recommended-directory-structure">Recommended Directory Structure:</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>my_scripture_project/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── project.yaml              # Main configuration file (copy from our examples/ folder)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── usfm/                     # Scripture text source files
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   └── 42MRKsnd.SFM          # Whole book USFM 3.0 file (or entire NT bundle)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>├── audio/                    # Standardized studio narration recordings
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   ├── SND-MRK-01.mp3        # Chapter 1 audio (.mp3, .wav, or .mpeg)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   ├── SND-MRK-02.mp3        # Chapter 2 audio
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └── SND-MRK-03.mp3
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>├── timing/                   # Verse-level timing maps (from Scripture App Builder)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   ├── MRK_01_timing.txt     # Tab-delimited timecodes for Chapter 1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ├── MRK_02_timing.txt
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   └── MRK_03_timing.txt
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>├── backgrounds/              # Visual background loops and static canvas images
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ├── nature_loop_16x9.mp4  # Widescreen video loop for landscape videos
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   ├── vertical_sky_9x16.mp4 # Vertical loop for YouTube Shorts / TikTok Reels
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   └── abstract_bg.png       # Static high-resolution background image
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>└── assets/                   # Branding, Bumpers &amp; Thumbnails (Upcoming Features)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    ├── title_card.jpg        # Still image displayed at start (also serves as YouTube thumbnail!)
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    ├── intro_bumper.mp3      # Short station/intro audio clip played before scripture starts
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    └── outro_credits.mp3     # Short closing music played after scripture finishes
+</code></pre></div>
+<h3 id="asset-type-guidelines">Asset Type Guidelines:</h3>
+<ol>
+<li><strong>USFM Scripture (<code>usfm/</code>):</strong> Place standard UTF-8 encoded <code>.SFM</code> or <code>.usfm</code> files here. VIDX automatically strips formatting noise (footnotes <code>\f</code>, cross-references <code>\x</code>, figures <code>\fig</code>) and targets the exact chapter requested by your timing file.</li>
+<li><strong>Audio Recordings (<code>audio/</code>):</strong> Use your standardized studio narration recordings. Supported formats include <code>.mp3</code>, <code>.wav</code>, <code>.aac</code>, and <code>.mpeg</code>. Ensure filenames clearly identify the book and chapter.</li>
+<li><strong>Timing Maps (<code>timing/</code>):</strong> Standard tab-delimited files (<code>start_sec \t end_sec \t segment_id</code>). Punctuation splits and verse fragments (<code>1a</code>, <code>1b</code>) are matched automatically.</li>
+<li><strong>Backgrounds (<code>backgrounds/</code>):</strong> You can use short looping video clips (<code>.mp4</code>, <code>.mov</code>) or static images (<code>.jpg</code>, <code>.png</code>). If your video loop is shorter than the chapter audio, VIDX will automatically loop it (<code>loop_background: true</code>) to match the exact duration!</li>
+<li><strong>Title Cards &amp; Bumpers (<code>assets/</code> - Upcoming v0.3 Features):</strong> You can prepare still title images (<code>title_card.jpg</code>) to serve as video intros and YouTube thumbnails, along with introductory/closing audio bumpers (<code>intro.mp3</code> / <code>outro.mp3</code>). VIDX will automatically offset subtitle timestamps to account for intro audio delays!</li>
+</ol>
+<hr />
+<h2 id="step-2-creating-your-configuration-projectyaml">⚙️ Step 2: Creating Your Configuration (<code>project.yaml</code>)</h2>
+<p>You can copy an existing template from our <code>examples/</code> folder or create a custom <code>project.yaml</code> file in your workspace directory:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sindhi</span><span class="nv"> </span><span class="s">Mark</span><span class="nv"> </span><span class="s">Release&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;release_videos&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">generate_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1"># Set true if you only want SRT/ASS subtitle files</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1920x1080&quot;</span><span class="w">       </span><span class="c1"># Use &quot;1080x1920&quot; for vertical reels/shorts</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">fps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">codec</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;libx264&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">preset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fast&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">crf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span><span class="w">                       </span><span class="c1"># 22 gives sharp text and crisp backgrounds</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">background_media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;backgrounds/nature_loop.mp4&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nt">loop_background</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">scaling_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pad&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span><span class="w">              </span><span class="c1"># Ensure font is installed on Windows/macOS/Linux</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="nt">outline_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="nt">outline_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="nt">shadow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                </span><span class="c1"># Bottom-Center</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="nt">margin_bottom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="nt">margin_lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="nt">background_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span><span class="w"> </span><span class="c1"># Base color for background box</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="nt">background_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.65</span><span class="w">    </span><span class="c1"># Configurable opacity (0.65 = 65% opaque / 35% transparent)</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">  </span><span class="nt">heading</span><span class="p">:</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFD400&quot;</span><span class="w">            </span><span class="c1"># Gold heading text</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                </span><span class="c1"># Top-Center</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">    </span><span class="nt">margin_vertical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">    </span><span class="nt">bold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">  </span><span class="nt">verse_number</span><span class="p">:</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">    </span><span class="nt">show</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFC080&quot;</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">    </span><span class="nt">on_every_segment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># Reference prefix only shown on first fragment (2a)</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;usfm/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;timing/MRK_01_timing.txt&quot;</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;audio/SND-MRK-1.mp3&quot;</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;release_videos/Mark_Chapter_01.mp4&quot;</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;usfm/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;timing/MRK_02_timing.txt&quot;</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;audio/SND-MRK-2.mp3&quot;</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;release_videos/Mark_Chapter_02.mp4&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="step-3-performing-a-10-second-shakedown-test">🎬 Step 3: Performing a 10-Second Shakedown Test</h2>
+<p>Before committing to a full render (which can take several minutes per chapter), always run a <strong>10-second shakedown test</strong> to verify that your fonts look great and your background video scales correctly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test rendering using one of our built-in examples or your custom yaml</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vidx<span class="w"> </span>-c<span class="w"> </span>examples/sindhi_mark_16x9.yaml<span class="w"> </span>-t<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+<p>Open <code>output/Mark_Chapter_05_16x9.mp4</code> in your media player (VLC, Windows Media Player) and verify:
+1. Are section titles (<code>\s1</code>) showing at the top center in gold?
+2. Are verse references (<code>Mark 5:1</code>) prefixing the dialogue lines clearly?
+3. Are Indic/Devanagari/Sindhi/Malayalam conjuncts and nuktas shaping properly without any square "tofu" blocks?
+4. Is the semi-transparent background box providing clean readability over the video background?</p>
+<hr />
+<h2 id="step-4-whole-book-batch-rendering-multimedia-enhancements">🚀 Step 4: Whole-Book Batch Rendering &amp; Multimedia Enhancements</h2>
+<p>When you are ready to produce an entire Scripture book (e.g., Gospel of Mark, Chapters 1 through 16), list all chapter jobs under the <code>jobs</code> block in your configuration file. Because VIDX's internal USFM parser automatically matches chapters, you only need <strong>one shared <code>.SFM</code> book file</strong> for the entire job queue! (See <a href="../examples/whole_book_batch.yaml">examples/whole_book_batch.yaml</a> for a complete working template).</p>
+<h3 id="1-parallel-multi-worker-rendering-gpu-acceleration-w-gpu">1. Parallel Multi-Worker Rendering &amp; GPU Acceleration (<code>-w</code>, <code>--gpu</code>)</h3>
+<p>Rendering dozens of chapters sequentially can take hours. To accelerate production, use the <code>-w</code> (workers) flag to spawn multiple concurrent CPU rendering processes, and pass <code>--gpu</code> (or set <code>video.gpu: true</code> in your YAML) to enable NVIDIA NVENC or Intel QSV hardware encoding:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Render 4 chapters simultaneously with hardware GPU acceleration!</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vidx<span class="w"> </span>-c<span class="w"> </span>examples/whole_book_batch.yaml<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>--gpu
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add -y if your background video/image is above your target resolution (e.g. a</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 4K clip on a 1080p project) - it auto-confirms the one-time downscale-to-1080p</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># prompt instead of pausing the batch to wait for input:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>vidx<span class="w"> </span>-c<span class="w"> </span>examples/whole_book_batch.yaml<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>--gpu<span class="w"> </span>-y
+</code></pre></div>
+<blockquote>
+<p><strong>Real-world worker tuning note:</strong> a controlled comparison on a 21-chapter book showed <code>-w 4</code>
+finishing in roughly 1.6x less wall-clock time than <code>-w 1</code> — but each chapter took ~2.5x longer
+to encode individually (NVENC encoder contention when 4 processes share one GPU). <code>-w 4</code> is
+usually still the better choice for fastest turnaround, but if the machine is shared with other
+work, <code>-w 2</code> may be a better balance. See <code>docs/todo.md</code> for the full numbers.</p>
+</blockquote>
+<p>During a multi-worker batch run, VIDX displays an interactive, real-time terminal UI showing:
+*   <strong>Worker Mapping:</strong> A dedicated live progress bar for each active worker (<code>[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━</code>).
+*   <strong>Live Metrics:</strong> Real-time encoding speed (<code>2.3x</code>), frames per second (<code>fps</code>), elapsed time, ETA, and <strong>GPU usage/time tracking</strong>.
+*   <strong>Global Batch Summary:</strong> A master progress bar tracking completed chapters versus total remaining jobs in the queue.</p>
+<blockquote>
+<p>[!TIP]
+<strong>Automatic 1080p Preprocessing &amp; Loop Caching:</strong> If your background media is high-resolution 4K (&gt; 1080p), VIDX automatically downscales and caches a 1080p version (<code>*_1080p.mp4</code>) in the background before batch rendering begins. If <code>loop_crossfade_sec</code> is enabled, VIDX pre-calculates and bakes seamless crossfades into the cached loop (<code>*_xf1.0s.mp4</code>), completely eliminating CPU decoding bottlenecks and preventing jump cuts when loops repeat!</p>
+</blockquote>
+<h3 id="2-adding-title-cards-thumbnails">2. Adding Title Cards &amp; Thumbnails</h3>
+<p>You can attach a still title image that displays for a set number of seconds before scripture reading begins:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">title_card</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/title.jpg&quot;</span><span class="w"> </span><span class="c1"># Doubles as your YouTube/social media video thumbnail!</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">title_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4.0</span><span class="w">            </span><span class="c1"># Duration in seconds</span>
+</code></pre></div></p>
+<h3 id="3-audio-bumpers-looped-background-music-bgm">3. Audio Bumpers &amp; Looped Background Music (BGM)</h3>
+<p>Give your videos a broadcast-ready feel by adding introductory/concluding audio clips and seamless background instrumental music:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">audio</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">intro_clip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/intro.mp3&quot;</span><span class="w">       </span><span class="c1"># Plays before scripture starts (subtitles shift automatically!)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">outro_clip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/outro.mp3&quot;</span><span class="w">       </span><span class="c1"># Plays after scripture concludes</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">background_music</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/bgm.mp3&quot;</span><span class="w">   </span><span class="c1"># Automatically looped to match reading duration</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">background_music_volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span><span class="w">        </span><span class="c1"># Blended cleanly without reducing narrator voice volume</span>
+</code></pre></div></p>
+<h3 id="4-custom-watermarks-channel-corner-logos">4. Custom Watermarks &amp; Channel Corner Logos</h3>
+<p>Add your station or ministry logo to any corner of the screen with alpha transparency:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">watermark</span><span class="p">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/logo.png&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">position</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;top-right&quot;</span><span class="w">    </span><span class="c1"># top-left, top-right, bottom-left, bottom-right, or custom coordinates</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">margin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">               </span><span class="c1"># Distance from screen edge in pixels</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span><span class="w">              </span><span class="c1"># Width relative to video width (15%)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.85</span><span class="w">            </span><span class="c1"># Alpha transparency</span>
+</code></pre></div></p>
+<h3 id="5-smooth-audio-fade-in-fade-out-transitions">5. Smooth Audio Fade-In &amp; Fade-Out Transitions</h3>
+<p>Apply clean audio transitions at the start and end of chapter videos:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">audio</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">fade_in_sec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">           </span><span class="c1"># Smooth fade-in over first 1.5 seconds</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">fade_out_sec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">          </span><span class="c1"># Smooth fade-out over last 2.0 seconds</span>
+</code></pre></div></p>
+<hr />
+<h2 id="youtube-publishing-team-distribution-guide">🚀 YouTube Publishing &amp; Team Distribution Guide</h2>
+<p>VIDX features a built-in <strong>2-Stage Hybrid Publishing Architecture</strong> designed to overcome Google API quota restrictions and simplify video distribution for translation teams operating in remote or low-bandwidth environments.</p>
+<h3 id="1-understanding-google-api-quotas-the-outbox-manifest">1. Understanding Google API Quotas &amp; The Outbox Manifest</h3>
+<p>Google Cloud Platform enforces a daily quota of <strong>10,000 units per project</strong> on the YouTube Data API v3. 
+* Uploading a single video costs <strong>~1,600 units</strong>, attaching a thumbnail costs <strong>50 units</strong>, and adding to a playlist costs <strong>50 units</strong> (~1,700 units total per chapter).
+* This allows an automated tool to publish <strong>5 to 6 chapter videos per day</strong> per Google project before hitting the limit.</p>
+<p>To prevent long multi-hour batch runs from failing when this daily quota is reached, VIDX decouples video rendering from online distribution using an <strong>Outbox Manifest</strong>:
+1. When you run <code>vidx -c project.yaml</code>, VIDX renders all video files and creates a database called <code>publish_manifest.json</code> inside your output folder.
+2. When you are ready to upload online, you run:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vidx<span class="w"> </span>--manifest<span class="w"> </span>output/publish_manifest.json
+</code></pre></div>
+3. VIDX uploads videos sequentially. When the 10,000-unit daily limit is reached, <strong>VIDX cleanly pauses</strong>, preserves all progress in <code>publish_manifest.json</code>, and advises you to run the exact same command tomorrow after Google resets your quota! Failed or interrupted uploads will automatically retry without re-rendering any video files.</p>
+<hr />
+<h3 id="2-how-to-share-vidx-with-others-team-configuration">2. How to Share VIDX with Others (Team Configuration)</h3>
+<p>When distributing VIDX to field technicians, translators, or media coordinators, you have two flexible workflows depending on their internet access and technical setup:</p>
+<h4 id="option-a-offline-youtube-studio-ready-packages-zero-setup-required">Option A: Offline "YouTube Studio Ready" Packages (Zero Setup Required)</h4>
+<p>For remote team members without stable internet or Google API developer credentials, VIDX generates an offline upload kit automatically.
+In your project YAML configuration, ensure this option is enabled:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">publishing</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;youtube&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">                    </span><span class="c1"># Set false so rendering runs without API login</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">generate_offline_package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Generates studio copy-paste folders</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">privacy_status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;unlisted&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">playlist_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Gospel</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">Matthew</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">Sindhi</span><span class="nv"> </span><span class="s">Audio</span><span class="nv"> </span><span class="s">Bible&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nt">title_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{book}</span><span class="nv"> </span><span class="s">Chapter</span><span class="nv"> </span><span class="s">{chapter:02d}</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">{language}</span><span class="nv"> </span><span class="s">Audio</span><span class="nv"> </span><span class="s">Bible&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nt">description_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="no">Listen to {book} Chapter {chapter} in {language}.</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="no">Generated automatically by VIDX Scripture Video Engine.</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;AudioBible&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;{language}&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;{book}&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Scripture&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+When team members run the batch render, VIDX creates an isolated folder inside <code>output/YouTube_Upload_Package/</code> for each chapter containing:
+* The rendered <code>.mp4</code> video.
+* The <code>.jpg</code> title card thumbnail.
+* A formatted <code>metadata.txt</code> file containing the exact title, description, and hashtags.
+<strong>How they use it:</strong> Team members simply open <a href="https://studio.youtube.com/">YouTube Studio</a> in their web browser, drag-and-drop the MP4 and thumbnail, and copy-paste the text from <code>metadata.txt</code>! No Google Cloud Console or API setup is required.</p>
+<h4 id="option-b-automated-api-publishing-with-team-members">Option B: Automated API Publishing with Team Members</h4>
+<p>If your team members want to run automated batch uploading directly from their terminal using <code>vidx --manifest</code>, follow these modern OAuth 2.0 setup steps:</p>
+<h5 id="step-1-set-up-google-cloud-credentials">Step 1: Set up Google Cloud Credentials</h5>
+<ol>
+<li>Go to the <strong><a href="https://console.cloud.google.com/">Google Cloud Console</a></strong> and create/select a project.</li>
+<li>Navigate to <strong>APIs &amp; Services &gt; Library</strong>, search for <strong>"YouTube Data API v3"</strong>, and click <strong>Enable</strong>.</li>
+<li>Navigate to <strong>APIs &amp; Services &gt; OAuth consent screen</strong> (or <strong>Google Auth Platform / Audience</strong> in newer UI layouts):</li>
+<li>Choose <strong>External</strong> (or Internal if within a Google Workspace organization) and click <strong>Create</strong>.</li>
+<li>Fill in your App name (e.g., <code>VIDX Scripture Uploader</code>) and user support email.</li>
+<li>Under <strong>Test users</strong>, <strong>you MUST click "+ ADD USERS" and add the Google/YouTube email addresses of every team member who will be uploading videos.</strong> (Apps in testing status will reject logins from users not explicitly listed here).</li>
+<li>Navigate to <strong>APIs &amp; Services &gt; Credentials</strong>:</li>
+<li>Click <strong>+ CREATE CREDENTIALS</strong> -&gt; <strong>OAuth client ID</strong>.</li>
+<li>Select <strong>Desktop app</strong> as the Application type and click <strong>Create</strong>.</li>
+<li>Click <strong>DOWNLOAD JSON</strong> to download the OAuth client secret file.</li>
+</ol>
+<h5 id="step-2-configure-team-computers">Step 2: Configure Team Computers</h5>
+<ol>
+<li>Share the downloaded JSON credentials file with your authorized team members (or have them create their own free Google Cloud projects if they need their own separate 10,000 daily quota allowance).</li>
+<li>On the team member's Windows computer, open PowerShell and create the configuration directory:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="s2">&quot;$HOME\.vidx&quot;</span>
+</code></pre></div></li>
+<li>Copy the shared credentials file into that directory and rename it to <code>client_secrets.json</code>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;path\to\downloaded_secret.json&quot;</span> <span class="s2">&quot;$HOME\.vidx\client_secrets.json&quot;</span>
+</code></pre></div></li>
+<li>Run the upload manifest from terminal:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">vidx</span> <span class="p">-</span><span class="n">-manifest</span> <span class="n">output</span><span class="p">\</span><span class="n">publish_manifest</span><span class="p">.</span><span class="n">json</span>
+</code></pre></div></li>
+<li>A browser tab will open on the team member's computer. They must log in with their authorized Google account. If a screen says <em>"Google hasn't verified this app"</em>, instruct them to click <strong>Advanced</strong> -&gt; <strong>Go to VIDX Scripture Uploader (unsafe)</strong> -&gt; <strong>Continue/Allow</strong>.</li>
+<li>VIDX saves a secure OAuth refresh token locally in <code>~/.vidx/youtube_token.json</code> and automatically begins chunked, resumable background uploads!</li>
+</ol>
+<hr />
+<h2 id="troubleshooting-faq">❓ Troubleshooting &amp; FAQ</h2>
+<h3 id="q1-my-text-appears-as-square-tofu-boxes-or-question-marks">Q1: My text appears as square "tofu" boxes or question marks.</h3>
+<p><strong>Cause:</strong> The font specified in <code>style.verse.font</code> or <code>style.heading.font</code> is not installed on your operating system, or FFmpeg cannot locate it.
+<strong>Solution:</strong>
+- Check installed Windows fonts or run <code>fc-list</code> on Linux.
+- Set <code>font: "Nirmala UI"</code>, <code>"Bailey"</code>, or <code>"Mangal"</code> on standard machines.
+- Ensure your FFmpeg build includes <code>--enable-fontconfig</code> and <code>--enable-libass</code>.</p>
+<h3 id="q2-how-do-i-create-vertical-videos-for-youtube-shorts-or-instagram-reels">Q2: How do I create vertical videos for YouTube Shorts or Instagram Reels?</h3>
+<p><strong>Solution:</strong> Change the resolution and safety margins in your YAML config (or use our <code>examples/malayalam_philemon_9x16.yaml</code> template):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1080x1920&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">scaling_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;crop&quot;</span><span class="w">          </span><span class="c1"># Automatically crops landscape backgrounds to fill vertical screens</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="nt">margin_bottom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">140</span><span class="w">          </span><span class="c1"># Elevated bottom margin avoids TikTok/Reels UI overlay buttons!</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="nt">margin_lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+</code></pre></div></p>
+<h3 id="q3-can-i-generate-subtitle-files-srt-or-ass-without-creating-video">Q3: Can I generate subtitle files (.srt or .ass) without creating video?</h3>
+<p><strong>Solution:</strong> Yes! VIDX has a built-in <strong>dual-purpose subtitle extraction mode</strong>. You can output standard SubRip (<code>.srt</code>) or Aegisub (<code>.ass</code>) subtitle files instantly without running FFmpeg video rendering:</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Extract both SRT and ASS subtitles for an entire batch YAML project</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vidx<span class="w"> </span>-c<span class="w"> </span>examples/sindhi_mark_16x9.yaml<span class="w"> </span>--generate-only<span class="w"> </span>--format<span class="w"> </span>both
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Or generate a standalone SRT subtitle file directly from command line</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>vidx<span class="w"> </span>--generate-only<span class="w"> </span>--format<span class="w"> </span>srt<span class="w"> </span>--usfm<span class="w"> </span>usfm/42MRKsnd.SFM<span class="w"> </span>--timing<span class="w"> </span>timing/MRK_01_timing.txt<span class="w"> </span>-o<span class="w"> </span>Mark_01.srt
+</code></pre></div>
+In subtitle-only mode, audio soundtrack files are not required—you can extract broadcast subtitles from text and timing files alone!</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2040 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Scripture video rendering engine for Bible translation teams.">
+      
+      
+        <meta name="author" content="The Free Bible Foundation">
+      
+      
+        <link rel="canonical" href="https://beniza.github.io/vidx/configuration_guide/">
+      
+      
+        <link rel="prev" href="../user_guide/">
+      
+      
+        <link rel="next" href="../todo/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Configuration Reference - VIDX — Scripture Video Generator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vidx-configuration-bulk-processing-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-header__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VIDX — Scripture Video Generator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide & Tutorials
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../todo/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap & TODOs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../project_brief/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Project Brief & History
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-nav__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    VIDX — Scripture Video Generator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide & Tutorials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview-yaml-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 1. Overview &amp; YAML Anatomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-project-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ 2. The project Block
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ 2. The project Block">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-video-block-canvas-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎬 3. The video Block (Canvas &amp; Media)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎬 3. The video Block (Canvas &amp; Media)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-aspect-ratio-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Aspect Ratio Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-watermark-channel-corner-logo-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖼️ Custom Watermark &amp; Channel Corner Logo Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-background-preprocessing-loop-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Automatic Background Preprocessing &amp; Loop Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-audio-block-bumpers-background-music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎵 4. The audio Block (Bumpers &amp; Background Music)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎵 4. The audio Block (Bumpers &amp; Background Music)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-subtitle-timestamp-shifting-audio-mixing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Subtitle Timestamp Shifting &amp; Audio Mixing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-style-block-typography-colors-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎨 5. The style Block (Typography, Colors &amp; Transparency)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎨 5. The style Block (Typography, Colors &amp; Transparency)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-hex-colors-and-alpha-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Hex Colors and Alpha / Transparency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-configurable-background-box-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Configurable Background Box Transparency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-numpad-alignment-grid-margins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Numpad Alignment Grid &amp; Margins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-comprehensive-style-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Comprehensive Style Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-ass-numpad-alignment-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 ASS Numpad Alignment Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-jobs-block-single-chapter-vs-bulk-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📦 6. The jobs Block (Single Chapter vs. Bulk Processing)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📦 6. The jobs Block (Single Chapter vs. Bulk Processing)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-how-usfm-chapter-matching-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 How USFM Chapter Matching Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-single-chapter-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Single Chapter Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-book-level-bulk-processing-eg-gospel-of-mark-116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Book-Level Bulk Processing (e.g., Gospel of Mark 1–16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-multi-book-entire-new-testament-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Multi-Book / Entire New Testament Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-per-job-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Per-Job Overrides
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 Per-Job Overrides">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-bulk-run-with-per-chapter-backgrounds-music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Bulk Run with Per-Chapter Backgrounds &amp; Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-dual-purpose-subtitle-generation-mode-no-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ 7. Dual-Purpose Subtitle Generation Mode (No Video)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ 7. Dual-Purpose Subtitle Generation Mode (No Video)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-enable-via-yaml-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Enable via YAML Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-enable-via-cli-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Enable via CLI Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-copy-paste-production-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📑 8. Copy-Paste Production Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📑 8. Copy-Paste Production Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template-a-standard-169-landscape-widescreen-1080p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template A: Standard 16:9 Landscape Widescreen (1080p)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-b-vertical-mobile-shorts-reels-916-with-ui-safety-margins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template B: Vertical Mobile Shorts / Reels (9:16) with UI Safety Margins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-c-batch-subtitle-extraction-srt-ass-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template C: Batch Subtitle Extraction (SRT + ASS Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-d-whole-book-batch-processing-with-parallel-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template D: Whole-Book Batch Processing with Parallel Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../todo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & TODOs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project_brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Brief & History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview-yaml-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 1. Overview &amp; YAML Anatomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-project-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ 2. The project Block
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ 2. The project Block">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-video-block-canvas-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎬 3. The video Block (Canvas &amp; Media)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎬 3. The video Block (Canvas &amp; Media)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-aspect-ratio-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Aspect Ratio Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-watermark-channel-corner-logo-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖼️ Custom Watermark &amp; Channel Corner Logo Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-background-preprocessing-loop-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Automatic Background Preprocessing &amp; Loop Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-audio-block-bumpers-background-music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎵 4. The audio Block (Bumpers &amp; Background Music)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎵 4. The audio Block (Bumpers &amp; Background Music)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-subtitle-timestamp-shifting-audio-mixing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Subtitle Timestamp Shifting &amp; Audio Mixing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-style-block-typography-colors-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎨 5. The style Block (Typography, Colors &amp; Transparency)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎨 5. The style Block (Typography, Colors &amp; Transparency)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-hex-colors-and-alpha-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Hex Colors and Alpha / Transparency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-configurable-background-box-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Configurable Background Box Transparency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-numpad-alignment-grid-margins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Numpad Alignment Grid &amp; Margins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-comprehensive-style-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Comprehensive Style Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-ass-numpad-alignment-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 ASS Numpad Alignment Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-jobs-block-single-chapter-vs-bulk-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📦 6. The jobs Block (Single Chapter vs. Bulk Processing)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📦 6. The jobs Block (Single Chapter vs. Bulk Processing)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-how-usfm-chapter-matching-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 How USFM Chapter Matching Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-single-chapter-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Single Chapter Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-book-level-bulk-processing-eg-gospel-of-mark-116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Book-Level Bulk Processing (e.g., Gospel of Mark 1–16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-multi-book-entire-new-testament-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Multi-Book / Entire New Testament Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-per-job-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Per-Job Overrides
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 Per-Job Overrides">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-bulk-run-with-per-chapter-backgrounds-music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Bulk Run with Per-Chapter Backgrounds &amp; Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-dual-purpose-subtitle-generation-mode-no-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ 7. Dual-Purpose Subtitle Generation Mode (No Video)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ 7. Dual-Purpose Subtitle Generation Mode (No Video)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-enable-via-yaml-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Enable via YAML Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-enable-via-cli-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Enable via CLI Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-copy-paste-production-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📑 8. Copy-Paste Production Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📑 8. Copy-Paste Production Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template-a-standard-169-landscape-widescreen-1080p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template A: Standard 16:9 Landscape Widescreen (1080p)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-b-vertical-mobile-shorts-reels-916-with-ui-safety-margins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template B: Vertical Mobile Shorts / Reels (9:16) with UI Safety Margins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-c-batch-subtitle-extraction-srt-ass-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template C: Batch Subtitle Extraction (SRT + ASS Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-d-whole-book-batch-processing-with-parallel-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template D: Whole-Book Batch Processing with Parallel Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="vidx-configuration-bulk-processing-guide">VIDX Configuration &amp; Bulk Processing Guide</h1>
+<blockquote>
+<p>Exhaustive reference for configuring VIDX YAML files for single chapters, whole books, entire New Testaments, and dual-purpose subtitle generation.</p>
+</blockquote>
+<hr />
+<h2 id="1-overview-yaml-anatomy">📖 1. Overview &amp; YAML Anatomy</h2>
+<p>VIDX uses human-readable YAML configuration files (<code>project.yaml</code>, <code>mal_16x9.yaml</code>, etc.) to orchestrate multi-media scripture video rendering and subtitle generation. A complete configuration file consists of four primary root blocks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="c1"># Global metadata, output directory, and execution mode</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="c1"># Canvas dimensions, encoding codecs, framerate, and default background media</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="c1"># Typography, colors, transparency, alignment, and margin safety zones</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="c1"># List of chapters or books to process, with optional per-job overrides</span>
+</code></pre></div>
+<hr />
+<h2 id="2-the-project-block">🏗️ 2. The <code>project</code> Block</h2>
+<p>The <code>project</code> block controls project-wide metadata and general execution behaviors.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"VIDX Project"</code></td>
+<td style="text-align: left;">Descriptive title for logs and metadata.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>output_dir</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"output"</code></td>
+<td style="text-align: left;">Root directory where generated MP4 videos and subtitle files will be written.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>generate_only</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;"><code>false</code></td>
+<td style="text-align: left;">When set to <code>true</code>, <strong>skips video rendering completely</strong> and only generates <code>.ass</code> and/or <code>.srt</code> subtitle files.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>subtitle_format</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"ass"</code></td>
+<td style="text-align: left;">Subtitle format to generate when <code>generate_only</code> is active or when keeping intermediate files. Options: <code>"ass"</code>, <code>"srt"</code>, or <code>"both"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>batch_mode</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">Enables batch processing of all items listed under <code>jobs</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Malayalam</span><span class="nv"> </span><span class="s">Philemon</span><span class="nv"> </span><span class="s">Release&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;release/malayalam&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">generate_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">subtitle_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;both&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="3-the-video-block-canvas-media">🎬 3. The <code>video</code> Block (Canvas &amp; Media)</h2>
+<p>The <code>video</code> block defines the visual canvas, background media behaviors, and FFmpeg video encoding parameters.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>resolution</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"1920x1080"</code></td>
+<td style="text-align: left;">Canvas width and height in pixels (e.g., <code>"1920x1080"</code>, <code>"1080x1920"</code>, <code>"3840x2160"</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fps</code></td>
+<td style="text-align: left;">Integer / Float</td>
+<td style="text-align: left;"><code>24</code></td>
+<td style="text-align: left;">Frames per second for the output video (typically <code>24</code>, <code>25</code>, or <code>30</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>codec</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"libx264"</code></td>
+<td style="text-align: left;">FFmpeg video encoder codec. Recommended: <code>"libx264"</code> for maximum device compatibility.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>preset</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"fast"</code></td>
+<td style="text-align: left;">Encoding speed vs. compression efficiency. Options: <code>ultrafast</code>, <code>superfast</code>, <code>veryfast</code>, <code>fast</code>, <code>medium</code>, <code>slow</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>crf</code></td>
+<td style="text-align: left;">Integer</td>
+<td style="text-align: left;"><code>23</code></td>
+<td style="text-align: left;">Constant Rate Factor (quality). Range: <code>0-51</code> (lower is higher quality). Recommended: <code>18-24</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background_media</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>""</code></td>
+<td style="text-align: left;">Default path to background loop (<code>.mp4</code>, <code>.mov</code>) or static image (<code>.jpg</code>, <code>.png</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>loop_background</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">If <code>true</code>, loops video backgrounds that are shorter than the audio duration.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>scaling_mode</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"pad"</code></td>
+<td style="text-align: left;">How background media scales to fit canvas: <code>"pad"</code> (letterbox/pillarbox), <code>"crop"</code> (fill screen without distortion), or <code>"stretch"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gpu</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;"><code>false</code></td>
+<td style="text-align: left;">When set to <code>true</code> (or via CLI <code>--gpu</code>), enables hardware-accelerated GPU encoding (NVIDIA NVENC / Intel QSV) for 3x–10x faster speeds.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>loop_crossfade_sec</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;"><code>0.0</code></td>
+<td style="text-align: left;">Duration in seconds for dissolving loop seams during background preprocessing (e.g. <code>1.0</code>). Eliminates visual jumps when loops repeat!</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>watermark</code></td>
+<td style="text-align: left;">Dictionary</td>
+<td style="text-align: left;"><code>{}</code></td>
+<td style="text-align: left;">Optional corner logo branding overlay (see Watermark Configuration below).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="standard-aspect-ratio-guide">Standard Aspect Ratio Guide</h3>
+<ul>
+<li><strong>16:9 Widescreen Landscape (YouTube, Broadcast, TV):</strong> <code>resolution: "1920x1080"</code> or 4K <code>resolution: "3840x2160"</code>. Use <code>scaling_mode: "pad"</code> or <code>"crop"</code>.</li>
+<li><strong>9:16 Portrait Vertical (YouTube Shorts, Instagram Reels, TikTok):</strong> <code>resolution: "1080x1920"</code>. Always use <code>scaling_mode: "crop"</code> when using standard landscape background loops so they fill the vertical screen cleanly.</li>
+<li><strong>1:1 Square (Instagram / Facebook Feed):</strong> <code>resolution: "1080x1080"</code>.</li>
+</ul>
+<h3 id="custom-watermark-channel-corner-logo-configuration">🖼️ Custom Watermark &amp; Channel Corner Logo Configuration</h3>
+<p>You can overlay a station logo or watermark PNG (with transparency) onto the video canvas using the <code>watermark</code> block inside <code>video</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">watermark</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/logo.png&quot;</span><span class="w">   </span><span class="c1"># Path to watermark image (.png with transparency)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">position</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;top-right&quot;</span><span class="w">      </span><span class="c1"># Options: top-left, top-right, bottom-left, bottom-right, or custom x:y</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">margin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">                 </span><span class="c1"># Distance from video edge in pixels (default: 30)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span><span class="w">                </span><span class="c1"># Relative width percentage of video canvas (e.g. 0.15 = 15% width) or pixel width</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span><span class="w">               </span><span class="c1"># Transparency alpha from 0.0 (transparent) to 1.0 (opaque)</span>
+</code></pre></div></p>
+<h3 id="automatic-background-preprocessing-loop-caching">⚡ Automatic Background Preprocessing &amp; Loop Caching</h3>
+<p>When processing bulk chapter queues, if your background video is high-resolution 4K (&gt; 1080p), VIDX automatically downscales and caches a 1080p version (<code>*_1080p.mp4</code>) in the background before rendering begins. If <code>loop_crossfade_sec</code> is enabled, VIDX pre-calculates and bakes the crossfade transition into the cached loop (<code>*_xf1.0s.mp4</code>). This eliminates multi-worker CPU decoding bottlenecks and ensures zero visual jump cuts when looping indefinitely across chapters!</p>
+<hr />
+<h2 id="4-the-audio-block-bumpers-background-music">🎵 4. The <code>audio</code> Block (Bumpers &amp; Background Music)</h2>
+<p>The <code>audio</code> block specifies encoding parameters as well as introductory/concluding audio bumpers and looped background music (BGM).</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>codec</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"aac"</code></td>
+<td style="text-align: left;">FFmpeg audio encoder codec.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bitrate</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>"192k"</code></td>
+<td style="text-align: left;">Audio encoding bitrate.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sample_rate</code></td>
+<td style="text-align: left;">Integer</td>
+<td style="text-align: left;"><code>48000</code></td>
+<td style="text-align: left;">Sample rate in Hz (<code>44100</code> or <code>48000</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>intro_clip</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>""</code></td>
+<td style="text-align: left;">Optional path to an audio intro bumper (e.g., station jingle or narrator intro).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>outro_clip</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>""</code></td>
+<td style="text-align: left;">Optional path to an audio outro bumper (e.g., closing credits or copyright disclaimer).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background_music</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>""</code></td>
+<td style="text-align: left;">Optional path to background music (BGM) loop played continuously during scripture reading.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background_music_volume</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;"><code>0.15</code></td>
+<td style="text-align: left;">Volume level for background music (<code>0.0</code> to <code>1.0</code>). Recommended range: <code>0.10 - 0.20</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fade_in_sec</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;"><code>0.0</code></td>
+<td style="text-align: left;">Duration in seconds for smooth audio fade-in at the start of the video (e.g., <code>1.5</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fade_out_sec</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;"><code>0.0</code></td>
+<td style="text-align: left;">Duration in seconds for smooth audio fade-out at the end of the video (e.g., <code>2.0</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="automatic-subtitle-timestamp-shifting-audio-mixing">Automatic Subtitle Timestamp Shifting &amp; Audio Mixing</h3>
+<ul>
+<li><strong>Timestamp Shifting:</strong> When an <code>intro_clip</code> is configured, VIDX automatically measures its exact duration and <strong>offsets all subtitle timestamps in generated <code>.ass</code> and <code>.srt</code> files</strong> by that duration. Scripture synchronization remains 100% frame-accurate!</li>
+<li><strong>Looped BGM Blending:</strong> When <code>background_music</code> is configured, VIDX automatically loops the background soundtrack to match the full duration of the scripture reading and blends it using FFmpeg's <code>amix</code> filter (<code>normalize=0</code>) so the narrator's voice volume is never attenuated.</li>
+</ul>
+<hr />
+<h2 id="5-the-style-block-typography-colors-transparency">🎨 5. The <code>style</code> Block (Typography, Colors &amp; Transparency)</h2>
+<p>The <code>style</code> block controls the visual appearance of Scripture verses, section headings (<code>\s1</code>), and inline verse references (<code>1:1</code>).</p>
+<h3 id="51-hex-colors-and-alpha-transparency">5.1 Hex Colors and Alpha / Transparency</h3>
+<p>VIDX supports standard CSS hexadecimal color formatting:
+*   <strong>6-Digit Hex (<code>#RRGGBB</code>):</strong> Standard RGB color (e.g., <code>#FFFFFF</code> for white, <code>#FFD400</code> for gold).
+*   <strong>8-Digit Hex (<code>#RRGGBBAA</code>):</strong> RGB + Alpha opacity channel, where <code>AA</code> ranges from <code>00</code> (fully transparent) to <code>FF</code> (fully opaque). Example: <code>#000000A0</code> creates a dark, semi-transparent black.</p>
+<blockquote>
+<p>[!NOTE]
+Under the hood, VIDX automatically converts standard CSS hex colors and alpha opacity values into Advanced SubStation Alpha (<code>&amp;HAABBGGRR</code>) format, ensuring exact color matching across FFmpeg and standalone media players.</p>
+</blockquote>
+<h3 id="52-configurable-background-box-transparency">5.2 Configurable Background Box Transparency</h3>
+<p>For optimal readability against busy background videos, you can enable a solid or semi-transparent background box behind subtitles using <code>background_box: true</code>. You can fine-tune its transparency using either <code>background_opacity</code> or <code>background_transparency</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">background_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="c1"># Specify opacity as a decimal (0.0 to 1.0) or integer percentage (0 to 100):</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">background_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.65</span><span class="w">       </span><span class="c1"># 65% opaque black box (35% transparent)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="c1"># Alternatively, specify transparency directly:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="c1"># background_transparency: 40  # 40% transparent box (60% opaque)</span>
+</code></pre></div>
+<h3 id="53-numpad-alignment-grid-margins">5.3 Numpad Alignment Grid &amp; Margins</h3>
+<p>Subtitle alignment uses the standard 1-9 numpad grid layout:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>[7] Top-Left       [8] Top-Center       [9] Top-Right
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>[4] Middle-Left    [5] Middle-Center    [6] Middle-Right
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>[1] Bottom-Left    [2] Bottom-Center    [3] Bottom-Right
+</code></pre></div>
+<ul>
+<li><strong>Standard Landscape (<code>alignment: 2</code>):</strong> Position verses at bottom-center with <code>margin_bottom: 60</code> and side margins <code>margin_lr: 60</code>.</li>
+<li><strong>Mobile Reels / Shorts Safety Zone (<code>margin_bottom: 140+</code>):</strong> Vertical videos played on TikTok, YouTube Shorts, or Instagram Reels have UI overlays (captions, like buttons, profile icons) along the bottom and right edges. <strong>Always set <code>margin_bottom: 140</code> (or up to <code>180</code>) and <code>margin_lr: 45</code> on vertical builds</strong> to prevent scripture text from being obscured by app UI elements!</li>
+</ul>
+<h3 id="54-comprehensive-style-parameters">5.4 Comprehensive Style Parameters</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span><span class="w">              </span><span class="c1"># Typography font family name</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w">                    </span><span class="c1"># Font size in points (e.g., 50 for 1080p, 90 for 4K)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span><span class="w">            </span><span class="c1"># Primary lyric text color</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">outline_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span><span class="w">    </span><span class="c1"># Character border outline color</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">outline_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">            </span><span class="c1"># Border thickness in pixels</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">shadow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                   </span><span class="c1"># Drop shadow offset in pixels</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                </span><span class="c1"># Numpad alignment (2 = Bottom-Center)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">margin_bottom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">           </span><span class="c1"># Distance from bottom screen edge</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="nt">margin_lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">               </span><span class="c1"># Left and right lateral safety margins</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Enable background readability box</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nt">background_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span><span class="w"> </span><span class="c1"># Base color for background box</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nt">background_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.60</span><span class="w">    </span><span class="c1"># Opacity level (0.60 = 60% opaque)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="nt">heading</span><span class="p">:</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">                    </span><span class="c1"># Typically 15-20% larger than verse font</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFD400&quot;</span><span class="w">            </span><span class="c1"># Accent color (e.g., Gold/Yellow)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                </span><span class="c1"># Top-Center positioning</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="nt">margin_vertical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w">         </span><span class="c1"># Distance from top edge</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nt">bold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                  </span><span class="c1"># Render headings in bold weight</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="nt">verse_number</span><span class="p">:</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">    </span><span class="nt">show</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                  </span><span class="c1"># Display inline verse references (e.g., &quot;1:1&quot;)</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFC080&quot;</span><span class="w">            </span><span class="c1"># Accent color for verse numbers</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38</span><span class="w">                    </span><span class="c1"># Typically 75% of verse font size</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">    </span><span class="nt">on_every_segment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># If false, only shows reference on first segment (e.g., 1a, not 1b)</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span><span class="nt">overlay</span><span class="p">:</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                 </span><span class="c1"># Automatically derives title from book and chapter (or override per job)</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="nt">title_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span><span class="w">      </span><span class="c1"># Color for chapter heading/title</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="nt">title_position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">           </span><span class="c1"># ASS alignment (5 = Middle-Center, 8 = Top-Center)</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="nt">subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AUDIO</span><span class="nv"> </span><span class="s">BIBLE&quot;</span><span class="w">     </span><span class="c1"># Subtitle text displayed below title</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">    </span><span class="nt">subtitle_position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">        </span><span class="c1"># Alignment for subtitle text</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">    </span><span class="nt">watermark_text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BRAND&quot;</span><span class="w">     </span><span class="c1"># Text watermark rendered onto video</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">    </span><span class="nt">watermark_position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w">       </span><span class="c1"># Alignment (4 = Middle-Left, 7 = Top-Left)</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">    </span><span class="nt">watermark_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.50</span><span class="w">     </span><span class="c1"># Opacity float (0.50 = 50% opacity)</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">    </span><span class="nt">opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.50</span><span class="w">               </span><span class="c1"># General overlay opacity fallback</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">    </span><span class="nt">divider_line</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1"># Draw horizontal divider line between title and subtitle</span>
+</code></pre></div>
+<h3 id="55-ass-numpad-alignment-reference">5.5 ASS Numpad Alignment Reference</h3>
+<p>When configuring positioning (<code>alignment</code>, <code>title_position</code>, <code>watermark_position</code>), VIDX uses standard ASS numeric layout (similar to a keyboard numpad):
+*   <strong>7</strong>: Top-Left | <strong>8</strong>: Top-Center | <strong>9</strong>: Top-Right
+*   <strong>4</strong>: Middle-Left | <strong>5</strong>: Middle-Center | <strong>6</strong>: Middle-Right
+*   <strong>1</strong>: Bottom-Left | <strong>2</strong>: Bottom-Center | <strong>3</strong>: Bottom-Right</p>
+<hr />
+<h2 id="6-the-jobs-block-single-chapter-vs-bulk-processing">📦 6. The <code>jobs</code> Block (Single Chapter vs. Bulk Processing)</h2>
+<p>The <code>jobs</code> block defines the batch queue. Each item in the list represents a single conversion job pairing a USFM Scripture source, a timing map, and an audio soundtrack.</p>
+<h3 id="61-how-usfm-chapter-matching-works">6.1 How USFM Chapter Matching Works</h3>
+<p>VIDX includes an integrated USFM 3.0 parser (<code>vidx.usfm_parser</code>) that <strong>automatically identifies and extracts the target chapter matching the timing file</strong>. </p>
+<p>Because of this intelligent matching, <strong>you do not need to split USFM files by chapter</strong>. You can point dozens or hundreds of chapter jobs to a single book-level USFM file (e.g., <code>42MRKsnd.SFM</code> or <code>58PHMMAL.SFM</code>), and VIDX will automatically extract the correct text for each timing map!</p>
+<h3 id="62-single-chapter-setup">6.2 Single Chapter Setup</h3>
+<p>For simple or one-off renders, list a single job entry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/mal/58PHMMAL10RO.SFM&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/mal/C01-57-PHM-01-timing.txt&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/mal/phm/01.mp3&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/Philemon_Chapter_01.mp4&quot;</span>
+</code></pre></div>
+<h3 id="63-book-level-bulk-processing-eg-gospel-of-mark-116">6.3 Book-Level Bulk Processing (e.g., Gospel of Mark 1–16)</h3>
+<p>To process an entire book in a single unattended batch run, list all chapter timing and audio pairs under <code>jobs</code>, pointing them to the shared book <code>.SFM</code> file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/timings/MRK_01_timing.txt&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/audio/01.mp3&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/Mark/Mark_01.mp4&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/timings/MRK_02_timing.txt&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/audio/02.mp3&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/Mark/Mark_02.mp4&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="c1"># ... continue through Chapter 16 ...</span>
+</code></pre></div>
+<h3 id="64-multi-book-entire-new-testament-processing">6.4 Multi-Book / Entire New Testament Processing</h3>
+<p>When processing massive corpora like an entire New Testament (260 chapters), organize your <code>output</code> paths into clear book subdirectories to maintain clean archives:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="c1"># Gospel of Matthew</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/nt/01MAT.SFM&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/nt/mat/01_timing.txt&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/nt/mat/01.mp3&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/New_Testament/01_Matthew/Matthew_01.mp4&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="c1"># Gospel of Mark</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/nt/02MRK.SFM&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/nt/mrk/01_timing.txt&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/nt/mrk/01.mp3&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/New_Testament/02_Mark/Mark_01.mp4&quot;</span>
+</code></pre></div>
+<h3 id="65-per-job-overrides">6.5 Per-Job Overrides</h3>
+<p>You can override global <code>video</code> settings on a <strong>per-chapter basis</strong> directly inside an individual job entry! Supported overrides include:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Override Key</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>background</code></td>
+<td style="text-align: left;">Overrides the default <code>background_media</code> for this specific chapter.</td>
+<td style="text-align: left;"><code>background: "src/backgrounds/waterfall.mp4"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background_music</code></td>
+<td style="text-align: left;">Overrides default background music track for this specific chapter (<code>"none"</code> disables music).</td>
+<td style="text-align: left;"><code>background_music: "src/audio/piano_ch1.mp3"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background_music_volume</code></td>
+<td style="text-align: left;">Overrides the background music volume level for this chapter.</td>
+<td style="text-align: left;"><code>background_music_volume: 0.15</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>duration</code></td>
+<td style="text-align: left;">Limits rendering to <code>N</code> seconds (useful for quick chapter testing).</td>
+<td style="text-align: left;"><code>duration: 15</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>keep_ass</code></td>
+<td style="text-align: left;">Override intermediate subtitle retention (<code>true</code> / <code>false</code>).</td>
+<td style="text-align: left;"><code>keep_ass: true</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="example-bulk-run-with-per-chapter-backgrounds-music">Example: Bulk Run with Per-Chapter Backgrounds &amp; Music</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/MRK_01_timing.txt&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/01.mp3&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/Mark_01.mp4&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">background</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/backgrounds/desert_sunrise.mp4&quot;</span><span class="w">  </span><span class="c1"># Custom background for Ch 1</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">background_music</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/audio/gentle_piano.mp3&quot;</span><span class="w">    </span><span class="c1"># Custom music track</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nt">background_music_volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.12</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/MRK_02_timing.txt&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/02.mp3&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/Mark_02.mp4&quot;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="nt">background</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/backgrounds/sea_of_galilee.mp4&quot;</span><span class="w">  </span><span class="c1"># Custom background for Ch 2</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="nt">background_music</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="w">                          </span><span class="c1"># Disable background music for Ch 2</span>
+</code></pre></div>
+<hr />
+<h2 id="7-dual-purpose-subtitle-generation-mode-no-video">⚡ 7. Dual-Purpose Subtitle Generation Mode (No Video)</h2>
+<p>VIDX can serve a dual purpose as a high-speed batch subtitle generator. If your field team only needs <code>.srt</code> or <code>.ass</code> subtitle files (for importing into Premiere Pro, DaVinci Resolve, or YouTube closed captions) without rendering MP4 videos, enable <strong>Subtitle Only Mode</strong>.</p>
+<h3 id="option-a-enable-via-yaml-configuration">Option A: Enable via YAML Configuration</h3>
+<p>Set <code>generate_only: true</code> and specify your desired <code>subtitle_format</code> (<code>"srt"</code>, <code>"ass"</code>, or <code>"both"</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Gospel</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">Mark</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">Subtitle</span><span class="nv"> </span><span class="s">Extraction&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/subtitles&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">generate_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1"># Bypasses FFmpeg video rendering</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">subtitle_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;both&quot;</span><span class="w">      </span><span class="c1"># Generates both .srt and .ass files simultaneously</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/MRK_01_timing.txt&quot;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/01.mp3&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/subtitles/Mark_01&quot;</span><span class="w">  </span><span class="c1"># Extensions (.srt / .ass) appended automatically</span>
+</code></pre></div>
+<p>Run the batch:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vidx<span class="w"> </span>-c<span class="w"> </span>subtitles_config.yaml
+</code></pre></div></p>
+<h3 id="option-b-enable-via-cli-flags">Option B: Enable via CLI Flags</h3>
+<p>You can trigger subtitle-only mode on any existing YAML config or single-file command using CLI flags:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Generate both SRT and ASS for an entire batch YAML project without rendering video</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vidx<span class="w"> </span>-c<span class="w"> </span>project_16x9.yaml<span class="w"> </span>--generate-only<span class="w"> </span>--format<span class="w"> </span>both
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Generate an SRT file for a single chapter directly from command line</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vidx<span class="w"> </span>--usfm<span class="w"> </span>src/snd/42MRKsnd.SFM<span class="w"> </span>--timing<span class="w"> </span>src/snd/MRK_01_timing.txt<span class="w"> </span>--generate-only<span class="w"> </span>--format<span class="w"> </span>srt<span class="w"> </span>-o<span class="w"> </span>output/Mark_01.srt
+</code></pre></div>
+<blockquote>
+<p>[!TIP]
+In <code>--generate-only</code> mode, <strong>audio file verification is bypassed</strong>. You can generate perfect SRT and ASS subtitle files even if the audio soundtrack files are missing or haven't been downloaded yet!</p>
+</blockquote>
+<hr />
+<h2 id="8-copy-paste-production-templates">📑 8. Copy-Paste Production Templates</h2>
+<h3 id="template-a-standard-169-landscape-widescreen-1080p">Template A: Standard 16:9 Landscape Widescreen (1080p)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Standard</span><span class="nv"> </span><span class="s">16x9</span><span class="nv"> </span><span class="s">Release&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/16x9&quot;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">generate_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1920x1080&quot;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="nt">fps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span><span class="nt">codec</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;libx264&quot;</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span><span class="nt">preset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fast&quot;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="nt">crf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">  </span><span class="nt">background_media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/backgrounds/landscape_loop.mp4&quot;</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span><span class="nt">loop_background</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span><span class="nt">scaling_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pad&quot;</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">    </span><span class="nt">outline_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">    </span><span class="nt">outline_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">    </span><span class="nt">shadow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">    </span><span class="nt">margin_bottom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">    </span><span class="nt">margin_lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">    </span><span class="nt">background_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">    </span><span class="nt">background_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.60</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="w">  </span><span class="nt">heading</span><span class="p">:</span>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFD400&quot;</span>
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a><span class="w">    </span><span class="nt">margin_vertical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a><span class="w">    </span><span class="nt">bold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="w">  </span><span class="nt">verse_number</span><span class="p">:</span>
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="w">    </span><span class="nt">show</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFC080&quot;</span>
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38</span>
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a><span class="w">    </span><span class="nt">on_every_segment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/book.SFM&quot;</span>
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/chapter_01_timing.txt&quot;</span>
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/chapter_01.mp3&quot;</span>
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/16x9/Chapter_01.mp4&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="template-b-vertical-mobile-shorts-reels-916-with-ui-safety-margins">Template B: Vertical Mobile Shorts / Reels (9:16) with UI Safety Margins</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Vertical</span><span class="nv"> </span><span class="s">Shorts</span><span class="nv"> </span><span class="s">9x16</span><span class="nv"> </span><span class="s">Release&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/9x16&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1080x1920&quot;</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="nt">fps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="nt">codec</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;libx264&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="nt">preset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fast&quot;</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="nt">crf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">  </span><span class="nt">background_media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/backgrounds/vertical_loop.mp4&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span><span class="nt">loop_background</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span><span class="nt">scaling_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;crop&quot;</span><span class="w">          </span><span class="c1"># Crops widescreen background to fill vertical canvas</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">48</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">    </span><span class="nt">outline_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span><span class="nt">outline_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">    </span><span class="nt">shadow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">    </span><span class="nt">margin_bottom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">140</span><span class="w">          </span><span class="c1"># Elevated bottom margin avoids TikTok/Reels UI overlay</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">    </span><span class="nt">margin_lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span><span class="w">               </span><span class="c1"># Narrow lateral margins for vertical screens</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">    </span><span class="nt">background_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#000000&quot;</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">    </span><span class="nt">background_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.70</span><span class="w">    </span><span class="c1"># Slightly darker box for mobile readability</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">  </span><span class="nt">heading</span><span class="p">:</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">56</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFD400&quot;</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">    </span><span class="nt">alignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">    </span><span class="nt">margin_vertical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">    </span><span class="nt">bold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">  </span><span class="nt">verse_number</span><span class="p">:</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="w">    </span><span class="nt">show</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFC080&quot;</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">36</span>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">    </span><span class="nt">on_every_segment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a>
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/book.SFM&quot;</span>
+<a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/chapter_01_timing.txt&quot;</span>
+<a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/chapter_01.mp3&quot;</span>
+<a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/9x16/Chapter_01_Vertical.mp4&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="template-c-batch-subtitle-extraction-srt-ass-only">Template C: Batch Subtitle Extraction (SRT + ASS Only)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Complete</span><span class="nv"> </span><span class="s">Book</span><span class="nv"> </span><span class="s">Subtitle</span><span class="nv"> </span><span class="s">Extraction&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/subtitles&quot;</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nt">generate_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1"># Skip video rendering</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nt">subtitle_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;both&quot;</span><span class="w">       </span><span class="c1"># Output both .srt and .ass</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bailey&quot;</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/MRK_01_timing.txt&quot;</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                   </span><span class="c1"># Audio not required in generate_only mode</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/subtitles/Mark_Chapter_01&quot;</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/MRK_02_timing.txt&quot;</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/subtitles/Mark_Chapter_02&quot;</span>
+</code></pre></div>
+<h3 id="template-d-whole-book-batch-processing-with-parallel-workers">Template D: Whole-Book Batch Processing with Parallel Workers</h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nt">project</span><span class="p">:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Gospel</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">Mark</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">Full</span><span class="nv"> </span><span class="s">Book</span><span class="nv"> </span><span class="s">Batch&quot;</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/mark_video_book&quot;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nt">video</span><span class="p">:</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1920x1080&quot;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="nt">fps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="nt">codec</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;libx264&quot;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span><span class="nt">preset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fast&quot;</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span><span class="nt">crf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">23</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">  </span><span class="nt">background_media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/bg.mp4&quot;</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span><span class="nt">loop_background</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">  </span><span class="nt">title_card</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/title.jpg&quot;</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">  </span><span class="nt">title_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4.0</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="nt">audio</span><span class="p">:</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">  </span><span class="nt">codec</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;aac&quot;</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">  </span><span class="nt">bitrate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;192k&quot;</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="w">  </span><span class="nt">intro_clip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/intro.mp3&quot;</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="w">  </span><span class="nt">outro_clip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/outro.mp3&quot;</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">  </span><span class="nt">background_music</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assets/bgm.mp3&quot;</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="w">  </span><span class="nt">background_music_volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="nt">style</span><span class="p">:</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">  </span><span class="nt">verse</span><span class="p">:</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="w">    </span><span class="nt">font</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nirmala</span><span class="nv"> </span><span class="s">UI&quot;</span>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">48</span>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="w">    </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#FFFFFF&quot;</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">    </span><span class="nt">background_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="w">    </span><span class="nt">background_opacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.50</span>
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/timings/MRK_01_timing.txt&quot;</span>
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/audio/01.mp3&quot;</span>
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/mark_video_book/Mark_01.mp4&quot;</span>
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a>
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">usfm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/42MRKsnd.SFM&quot;</span>
+<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a><span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/timings/MRK_02_timing.txt&quot;</span>
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">    </span><span class="nt">audio</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/snd/audio/02.mp3&quot;</span>
+<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a><span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output/mark_video_book/Mark_02.mp4&quot;</span>
+</code></pre></div>
+<em>Run with 4 parallel CPU workers for maximum speed:</em>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>vidx<span class="w"> </span>--config<span class="w"> </span>book_config.yaml<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span>
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

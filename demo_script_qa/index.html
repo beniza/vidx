@@ -1,0 +1,852 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Scripture video rendering engine for Bible translation teams.">
+      
+      
+        <meta name="author" content="The Free Bible Foundation">
+      
+      
+        <link rel="canonical" href="https://beniza.github.io/vidx/demo_script_qa/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>VIDX Demo Script — Ground Truth Q&A - VIDX — Scripture Video Generator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vidx-demo-script-ground-truth-qa" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-header__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VIDX — Scripture Video Generator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              VIDX Demo Script — Ground Truth Q&amp;A
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide & Tutorials
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../configuration_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../todo/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap & TODOs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../project_brief/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Project Brief & History
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-nav__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    VIDX — Scripture Video Generator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide & Tutorials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../todo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & TODOs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project_brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Brief & History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-you-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What you do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Inputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-happy-path-per-chapter-once-sab-files-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Happy path (per chapter, once SAB files exist)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-time-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Time &amp; reliability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-honest-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Honest limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-easiest-entry-under-10-minutes-first-try" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Easiest entry (under 10 minutes, first try)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-all-you-need-is-___" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. "All you need is ___"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-whats-in-the-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. What's in the pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="vidx-demo-script-ground-truth-qa">VIDX Demo Script — Ground Truth Q&amp;A</h1>
+<p>Prep notes for a 12-minute live demo aimed at Scripture translation/literacy teams who
+have <strong>already built a Scripture App</strong> for their language using <strong>Scripture App
+Builder (SAB)</strong>. Answers are grounded in the actual code and docs (<code>ffmpeg_builder.py</code>,
+<code>usfm_parser.py</code>, <code>youtube.py</code>, <code>getting_started.md</code>, <code>user_guide.md</code>,
+<code>session_summary.md</code>, <code>code_health_report.md</code>, and real SAB-format timing files under
+<code>src/</code>) as of commit <code>6e8dd3f</code> — not marketing copy.</p>
+<h2 id="1-what-you-do">1. What you do</h2>
+<p>VIDX takes the USFM scripture text, audio recording, and <strong>timing file your team
+already generated while building your Scripture App in Scripture App Builder</strong>, and
+turns them into a finished MP4 video with word/verse-synced on-screen subtitles,
+ready to upload to YouTube. <strong>The hard part — aligning scripture text to the audio —
+is work your team has already done for SAB.</strong> VIDX doesn't re-do that alignment; it
+reuses SAB's existing timing output and repurposes it for YouTube, with minimal extra
+effort.</p>
+<h2 id="2-inputs">2. Inputs</h2>
+<p>Three files — all artifacts your team already has (or already knows how to produce)
+from your SAB project, none generated by VIDX itself:</p>
+<ul>
+<li><strong>USFM scripture file</strong> (<code>.SFM</code>/<code>.usfm</code>, plain text with standard markers like <code>\c</code>,
+  <code>\v</code>) — the same text used in your Scripture App. Common mistake: non-standard or
+  missing chapter markers, so VIDX can't detect which chapter it's looking at.</li>
+<li><strong>Timing file</strong> (<code>.txt</code>, tab-separated <code>start_time \t end_time \t segment_id</code>, with
+  header lines <code>\id</code>, <code>\c</code>, <code>\level</code>, <code>\separators</code>) — <strong>this is the exact audio-sync
+  timing file Scripture App Builder produces</strong>, already sitting in your SAB project
+  folder. VIDX does not create or re-align timing; it consumes SAB's output as-is.
+  Common mistake: the file naming convention (SAB exports something like
+  <code>C01-41-MRK-01-timing.txt</code>) not matching what VIDX expects for chapter-number
+  detection, or a timing file from a different chapter than the USFM/audio it's
+  paired with.</li>
+<li><strong>YAML config file</strong> (font, colors, background video/image, resolution, watermark).
+  Most common mistake, per the project's own FAQ: specifying a font (e.g.
+  <code>Nirmala UI</code>, <code>Mangal</code>, <code>Bailey</code>) that isn't actually installed on that machine —
+  produces square "tofu" boxes instead of text, with no advance warning.</li>
+</ul>
+<h2 id="3-happy-path-per-chapter-once-sab-files-exist">3. Happy path (per chapter, once SAB files exist)</h2>
+<ol>
+<li>Open a terminal in the project folder — manual, ~10 sec.</li>
+<li>Optionally edit the <code>.yaml</code> config in Notepad — manual, 0-5 min.</li>
+<li>Run <code>vidx.exe -c yourbook.yaml [--gpu -w 4]</code> — automatic, <strong>~55-75 sec/chapter on
+   GPU</strong> (real production numbers; no hard measured number for CPU-only).</li>
+<li>VIDX writes the <code>.mp4</code>, a title-card thumbnail, and a <code>YouTube_Upload_Package/</code>
+   folder — automatic.</li>
+<li>Publish:</li>
+<li><strong>Manual path</strong>: open YouTube Studio, drag in the <code>.mp4</code>, paste the pre-written
+     title/description from <code>metadata.txt</code>, upload the thumbnail, publish — manual, a
+     few minutes per video, no setup required.</li>
+<li><strong>Automated path</strong>: run <code>vidx --manifest output/publish_manifest.json</code> —
+     automatic upload+thumbnail+playlist assignment, capped by Google at
+     <strong>~5-6 videos/day</strong>; re-run the same command the next day to resume.</li>
+</ol>
+<h2 id="4-prerequisites">4. Prerequisites</h2>
+<ul>
+<li>Windows PC (the packaged <code>vidx.exe</code> is Windows-only right now — no Mac/Linux build
+  exists yet, that's an open, undecided issue).</li>
+<li><strong>FFmpeg 4.3+ installed separately and on PATH</strong>, built with <code>--enable-libass
+  --enable-fontconfig --enable-libharfbuzz</code>. Not bundled inside <code>vidx.exe</code> — a real,
+  separate install step people often miss.</li>
+<li>The fonts you intend to use, installed on that specific machine.</li>
+<li>For automated YouTube upload only: a free Google Cloud project, YouTube Data API v3
+  enabled, an OAuth "Desktop app" client secret downloaded to
+  <code>~/.vidx/client_secrets.json</code>, and your email added to the app's OAuth <strong>Test
+  users</strong> list (miss this and you get <code>Error 403: access_denied</code>). No cost at typical
+  volumes — the real constraint is Google's daily quota, not billing.</li>
+</ul>
+<h2 id="5-output">5. Output</h2>
+<p>An MP4 (16:9 widescreen or 9:16 vertical) with the background video/image looping
+under the narration audio, scripture text burned in as styled subtitles
+(color/outline/position all configurable), an optional logo watermark, and optional
+background music auto-ducked under the voice. Complex scripts — <strong>Devanagari,
+Arabic-derived, Malayalam, Thai</strong> — are supported via HarfBuzz shaping and have been
+used in real production (Sindhi). <strong>Honest gap: true right-to-left layout (Arabic,
+Urdu, Hebrew specifically) has no dedicated test coverage and is an open, unresolved
+issue</strong> — nobody has yet confirmed what, if anything, is actually broken vs. just
+untested.</p>
+<h2 id="6-time-reliability">6. Time &amp; reliability</h2>
+<p>A single chapter is roughly 1 minute of GPU render time; a full book (20-30 chapters)
+with 4 parallel workers took on the order of an hour in real production, though
+4-way parallelism doesn't scale linearly (GPU encoder contention nearly doubles
+per-chapter time). The <strong>YouTube upload step is the flakiest/slowest part on weak
+internet</strong> — though it uses Google's resumable chunked upload, so a dropped
+connection resumes rather than restarts. The <strong>render path itself has zero automated
+end-to-end test coverage</strong> (CI runs unit tests only, no ffmpeg installed in CI) — a
+regression here could ship silently.</p>
+<h2 id="7-honest-limitations">7. Honest limitations</h2>
+<ul>
+<li>VIDX trusts the SAB timing file completely and has <strong>no automated check</strong> for a
+  timing row silently mapped to the wrong verse/segment — a bad SAB export renders
+  silently wrong, with no warning (an outlier-detection feature is an open,
+  unimplemented issue).</li>
+<li>No resume-without-rework: an interrupted batch currently <strong>re-renders every chapter
+  from scratch</strong>, even ones that already succeeded (confirmed to waste ~50-60 min of
+  GPU time in the last production run; fix not yet built).</li>
+<li>YouTube's daily upload quota (~5-6 videos) is a hard external ceiling VIDX cannot
+  lift, and VIDX's own quota counter forgets state between process restarts, so it's
+  possible (if rare) to think you have quota left when you don't. <strong>This is the thing
+  most likely to embarrass a live demo</strong> — pushing more than ~5 real uploads
+  back-to-back will hit Google's wall on stage.</li>
+</ul>
+<h2 id="8-easiest-entry-under-10-minutes-first-try">8. Easiest entry (under 10 minutes, first try)</h2>
+<p>Run one of the provided example configs (a single already-fully-set-up chapter with
+its USFM/timing/background bundled in <code>examples/</code>) with
+<code>vidx.exe -c examples/&lt;sample&gt;.yaml</code> — no new files to prepare, no YouTube account
+needed, and you have a finished, subtitle-synced MP4 in under 2 minutes to play back
+locally.</p>
+<h2 id="9-all-you-need-is-___">9. "All you need is ___"</h2>
+<p><em>"...if you've already built a Scripture App in Scripture App Builder, you've already
+done the hard work — VIDX just takes that same text, audio, and timing file and turns
+it into a YouTube video."</em></p>
+<h2 id="10-whats-in-the-pipeline">10. What's in the pipeline</h2>
+<p>Grounded in the project's open GitHub issue tracker (19 open issues as of this
+writing) — good for answering "what's next?" honestly, without over-promising dates.</p>
+<p><strong>Near-term fixes (scoped, no open design questions):</strong>
+- Skip re-rendering chapters that already succeeded when a batch is restarted —
+  directly addresses a real ~50-60 min GPU-time waste hit in production.
+- Persist YouTube's daily quota usage across restarts, so VIDX's own safety check
+  can't be fooled by a process restart into overrunning Google's real limit.
+- YouTube chapters generated automatically from existing section headings, and
+  verse-level timestamps added to the video description.
+- Small reliability/polish items: clean Ctrl+C cancellation, removing a cosmetic
+  startup warning, hardening the Windows launcher script.</p>
+<p><strong>Being explored (open questions, not yet scoped for build):</strong>
+- <strong>Song videos with karaoke-style word highlighting</strong> — extending VIDX beyond
+  scripture chapters to worship/gospel songs, with a synced translated "meaning"
+  subtitle track (e.g. English/Hindi) alongside the native-language lyrics.
+- A GUI config editor for field teams who'd rather not hand-edit YAML.
+- Right-to-left script rendering (Arabic, Urdu, Hebrew) — no confirmed bug yet, needs
+  real test cases.
+- Vimeo as a second publishing target alongside YouTube.
+- A Linux build, if there's real demand for one.
+- <strong>AI-assisted config generation</strong> — pointing a chat-based AI assistant at an
+  existing scripture folder and having it infer file-naming conventions to generate
+  a first-draft <code>project.yaml</code>, instead of hand-writing it. Still produces a normal,
+  inspectable YAML that runs through VIDX exactly as today — the AI only helps author
+  it, it's not a new runtime dependency. <strong>Not ready to announce publicly yet — do
+  not mention this one in the live demo.</strong></p>
+<p><strong>Honest framing for the demo:</strong> none of the "being explored" items have committed
+timelines — they're documented ideas, not promises. Only claim the near-term items as
+"coming soon," and even those as "in progress," not "next release."</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

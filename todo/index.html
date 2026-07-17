@@ -1,0 +1,1082 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Scripture video rendering engine for Bible translation teams.">
+      
+      
+        <meta name="author" content="The Free Bible Foundation">
+      
+      
+        <link rel="canonical" href="https://beniza.github.io/vidx/todo/">
+      
+      
+        <link rel="prev" href="../configuration_guide/">
+      
+      
+        <link rel="next" href="../project_brief/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Roadmap & TODOs - VIDX — Scripture Video Generator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vidx-project-roadmap-todos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-header__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VIDX — Scripture Video Generator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Roadmap & TODOs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide & Tutorials
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../configuration_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap & TODOs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../project_brief/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Project Brief & History
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="VIDX — Scripture Video Generator" class="md-nav__button md-logo" aria-label="VIDX — Scripture Video Generator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    VIDX — Scripture Video Generator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/beniza/vidx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    beniza/vidx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide & Tutorials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & TODOs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & TODOs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#immediate-priorities-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚨 Immediate Priorities (Next Steps)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-experience-graphical-interface-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖥️ User Experience &amp; Graphical Interface (GUI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multimedia-production-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎬 Multimedia Production Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engineering-methodology-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Engineering &amp; Methodology Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Future Enhancements &amp; Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Future Enhancements &amp; Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-cicd-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. CI/CD &amp; Automation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-video-audio-rendering-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Video &amp; Audio Rendering Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-typography-internationalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Typography &amp; Internationalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-bulk-processing-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Bulk Processing &amp; Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-youtube-publishing-reliability-throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. YouTube Publishing Reliability &amp; Throughput
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-packaging-cli-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Packaging &amp; CLI Robustness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recently-completed-milestones-v020-v032-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Recently Completed Milestones (v0.2.0 → v0.3.2 Evolution)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project_brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Brief & History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#immediate-priorities-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚨 Immediate Priorities (Next Steps)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-experience-graphical-interface-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖥️ User Experience &amp; Graphical Interface (GUI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multimedia-production-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎬 Multimedia Production Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engineering-methodology-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Engineering &amp; Methodology Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Future Enhancements &amp; Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Future Enhancements &amp; Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-cicd-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. CI/CD &amp; Automation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-video-audio-rendering-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Video &amp; Audio Rendering Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-typography-internationalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Typography &amp; Internationalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-bulk-processing-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Bulk Processing &amp; Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-youtube-publishing-reliability-throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. YouTube Publishing Reliability &amp; Throughput
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-packaging-cli-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Packaging &amp; CLI Robustness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recently-completed-milestones-v020-v032-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Recently Completed Milestones (v0.2.0 → v0.3.2 Evolution)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="vidx-project-roadmap-todos">VIDX Project Roadmap &amp; TODOs</h1>
+<blockquote>
+<p>Tracking active milestones, future feature enhancements, and engineering requirements for the VIDX Scripture Video Generator.</p>
+<p><strong>Open work now lives as <a href="https://github.com/beniza/vidx/issues">GitHub Issues</a></strong>, each written with a user story, acceptance criteria, guardrails, and a TDD plan (full template for scoped items, a lighter template for small fixes, or a <code>needs-design</code> placeholder for undesigned ideas — see the issue itself for which tier applies). This file stays as a one-line index plus the history of what's already shipped, so there's a single source of truth per item instead of two drifting copies.</p>
+</blockquote>
+<hr />
+<h2 id="immediate-priorities-next-steps">🚨 Immediate Priorities (Next Steps)</h2>
+<ul>
+<li>[x] <strong>GitHub Pages Documentation Site (<code>gh-pages</code> Deployment)</strong> — <em>live at https://beniza.github.io/vidx/</em></li>
+<li>[x] Set up static documentation deployment (e.g., using MkDocs Material or Jekyll / GitHub Actions) to publish <code>docs/</code> and <code>README.md</code> to GitHub Pages.</li>
+<li>[x] Ensure user guides, configuration references, and tutorials are easily browsable by field coordinators and translation technicians online.</li>
+<li>
+<p>[x] Add site navigation and search functionality for rapid troubleshooting.</p>
+</li>
+<li>
+<p>[x] <strong>Release <code>v0.2.0</code> (Self-Contained &amp; Dual-Purpose Engine)</strong> — <em>superseded by v0.3.2</em></p>
+</li>
+<li>[x] Build standalone Windows executable (<code>vidx.exe</code>) using PyInstaller bundling the newly internalized <code>vidx.usfm_parser</code> and zero external Git dependencies.</li>
+<li>[x] Draft comprehensive GitHub Release notes highlighting:<ul>
+<li><strong>Dual-Purpose Subtitle Mode:</strong> <code>--generate-only --format srt|ass|both</code> (and YAML <code>generate_only: true</code>).</li>
+<li><strong>Self-Contained Architecture:</strong> Internalized USFM 3.0 parser removing external Git requirements.</li>
+<li><strong>Configurable Transparency:</strong> Exact opacity decimals and transparency percentages for background readability boxes.</li>
+<li><strong>Clean Workspace Hierarchy:</strong> Introduction of <code>examples/</code> directory for multi-language templates.</li>
+</ul>
+</li>
+<li>[x] Publish pre-compiled Windows executable and Python wheel artifacts to GitHub Release.</li>
+</ul>
+<hr />
+<h2 id="user-experience-graphical-interface-gui">🖥️ User Experience &amp; Graphical Interface (GUI)</h2>
+<ul>
+<li>[ ] GUI Config Editor for translation field teams — <a href="https://github.com/beniza/vidx/issues/13">#13</a> <em>(needs-design)</em></li>
+</ul>
+<hr />
+<h2 id="multimedia-production-enhancements">🎬 Multimedia Production Enhancements</h2>
+<ul>
+<li>[x] <strong>Title Cards &amp; Video Thumbnail Support</strong></li>
+<li>[x] Enable users to specify a still title image (<code>video.title_card: "assets/title.jpg"</code>, <code>video.title_duration: 4.0</code>) that displays at the beginning of the video before scripture dialogue starts.</li>
+<li>
+<p>[x] Ensure title cards are rendered at the exact target resolution (<code>1920x1080</code>, <code>1080x1920</code>, or <code>1080x1080</code>) so they can serve dual purpose as YouTube, Facebook, and Instagram video thumbnails.</p>
+</li>
+<li>
+<p>[x] <strong>Audio Intro, Outro &amp; Background Music (BGM) Bumpers</strong></p>
+</li>
+<li>[x] Add configuration options for introductory and concluding audio clips (<code>audio.intro_clip: "assets/intro.mp3"</code>, <code>audio.outro_clip: "assets/outro.mp3"</code>).</li>
+<li>[x] Implement automatic FFmpeg audio concatenation: play intro bumper -&gt; play main scripture narration audio -&gt; play outro credits bumper.</li>
+<li>[x] <strong>Looped Background Music Blending:</strong> Allow specifying background music (<code>audio.background_music: "assets/bgm.mp3"</code>) with volume control (<code>audio.background_music_volume: 0.15</code>). Automatically loop the music continuously to match the scripture reading and seamlessly blend without reducing the narrator's volume!</li>
+<li>
+<p>[x] <strong>Automatic Subtitle Timestamp Shifting:</strong> When an intro clip is added, automatically offset all verse start/end timestamps in the <code>.ass</code>/<code>.srt</code> subtitle streams by the duration of the intro clip so scripture synchronization remains perfectly aligned!</p>
+</li>
+<li>
+<p>[x] <strong>Cloud &amp; Streaming Platform Integration (YouTube One-Touch Publishing)</strong> — <em>shipped; validated by publishing the full book of Matthew (Sindhi) to YouTube</em></p>
+</li>
+<li>[x] <strong>API Authentication &amp; YAML Config:</strong> Add optional publishing block (<code>publishing.platform: "youtube"</code>, OAuth client secrets, channel ID) for direct integration with YouTube Data API v3.</li>
+<li>[x] <strong>One-Touch Upload (<code>--publish</code>):</strong> Enable single-command or GUI button publishing that automatically uploads rendered <code>.mp4</code> video files to the designated channel immediately after generation.</li>
+<li>[x] <strong>Automated Metadata &amp; Thumbnails:</strong> Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (<code>#AudioBible</code>, <code>#Scripture</code>), and upload the generated <code>title_card.jpg</code> as the official video thumbnail!</li>
+<li>[x] <strong>Playlist Organization:</strong> Automatically organize uploaded chapter videos into book-level playlists (e.g., <em>"Gospel of Mark — Malayalam Translation"</em>).</li>
+<li>[ ] YouTube Chapters from Section Headings — <a href="https://github.com/beniza/vidx/issues/9">#9</a></li>
+<li>[ ] Verse Timing in Description — <a href="https://github.com/beniza/vidx/issues/10">#10</a></li>
+<li>[ ] Vimeo support — <a href="https://github.com/beniza/vidx/issues/15">#15</a> <em>(needs-design)</em></li>
+</ul>
+<hr />
+<h2 id="engineering-methodology-requirements">🧪 Engineering &amp; Methodology Requirements</h2>
+<ul>
+<li>[ ] Pre-Flight Timing Data Heuristic Check — <a href="https://github.com/beniza/vidx/issues/4">#4</a></li>
+<li>[x] <strong>Comprehensive Automated Test Suite (<code>pytest</code>)</strong></li>
+<li>[x] Built test suites covering <code>Config</code>, <code>USFMParser</code>, <code>ASSGenerator</code>, <code>FFmpegBuilder</code>, <code>BatchRunner</code>, <code>CLI</code>, <code>Manifest</code>, <code>Bumpers</code>, <code>Progress</code>, and <code>YouTube</code> (~54 tests across 10 files).</li>
+<li>[ ] <strong>Test-Driven Development (TDD) Enforcement</strong> <em>(standing process rule, not a GitHub issue — nothing to close)</em></li>
+<li>[ ] <strong>Mandatory Rule:</strong> All future feature developments, bug fixes, and refactoring <strong>must</strong> follow strict TDD workflow:<ol>
+<li>Write a failing test in <code>tests/</code> capturing the desired behavior or bug reproduction.</li>
+<li>Implement minimal production code to pass the test.</li>
+<li>Refactor while ensuring the full suite remains green.</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2 id="future-enhancements-roadmap">🚀 Future Enhancements &amp; Roadmap</h2>
+<h3 id="1-cicd-automation">1. CI/CD &amp; Automation</h3>
+<ul>
+<li>[x] <strong>GitHub Actions CI Pipeline:</strong> (<code>.github/workflows/tests.yml</code>)</li>
+<li>[x] Automatically run <code>pytest</code> across Python 3.10, 3.11, and 3.12 on every push and pull request.</li>
+<li>[x] Automate linting verification via <code>flake8</code>.</li>
+<li>[x] <strong>Automated Release Builder:</strong> (<code>.github/workflows/release.yml</code>)</li>
+<li>[x] Version-tag-triggered (<code>v*</code>) workflow that builds the wheel, sdist, and Windows <code>vidx.exe</code> (PyInstaller) and attaches them to the GitHub Release.</li>
+<li>[ ] Linux executable — <a href="https://github.com/beniza/vidx/issues/12">#12</a></li>
+</ul>
+<h3 id="2-video-audio-rendering-enhancements">2. Video &amp; Audio Rendering Enhancements</h3>
+<ul>
+<li>[x] <strong>GPU Hardware-Accelerated Video Encoding:</strong></li>
+<li>Add optional YAML configuration (<code>video.codec: "h264_nvenc"</code>, <code>video.hwaccel: "auto"</code>) to replace software encoding (<code>libx264</code>) with GPU hardware encoders (NVIDIA NVENC, Intel QuickSync, AMD AMF, Apple VideoToolbox).</li>
+<li>Implement automatic startup detection via <code>ffmpeg -encoders</code> to dynamically select the best available GPU encoder on the user's machine, achieving 3x to 10x faster rendering speeds while falling back seamlessly to CPU encoding if no GPU is present.</li>
+<li>[x] <strong>Audio Fade-in / Fade-out:</strong></li>
+<li>Add optional YAML configuration (<code>audio.fade_in_sec</code>, <code>audio.fade_out_sec</code>) to apply smooth audio transitions at chapter boundaries using FFmpeg <code>afade</code> filter.</li>
+<li>[x] <strong>Video Loop Crossfading:</strong></li>
+<li>Implement smooth video crossfade transitions when looping short background video clips to eliminate visual jumps at loop seam points (<code>video.loop_crossfade_sec</code>).</li>
+<li>[x] <strong>Custom Watermarks &amp; Channel Logos:</strong></li>
+<li>Enable placing station or organization logos (PNG with alpha) in any corner of the video via YAML config (<code>video.watermark</code> / <code>video.logo</code>).</li>
+</ul>
+<h3 id="3-typography-internationalization">3. Typography &amp; Internationalization</h3>
+<ul>
+<li>[ ] Font Fallback Validation — <a href="https://github.com/beniza/vidx/issues/16">#16</a> <em>(needs-design)</em></li>
+<li>[ ] Right-to-Left (RTL) Script Optimization — <a href="https://github.com/beniza/vidx/issues/14">#14</a> <em>(needs-design)</em></li>
+</ul>
+<h3 id="4-bulk-processing-performance">4. Bulk Processing &amp; Performance</h3>
+<ul>
+<li>[ ] Skip-Existing-Output / Resume Support — <a href="https://github.com/beniza/vidx/issues/1">#1</a></li>
+<li>[ ] GPU Worker Count Right-Sizing (benchmark <code>-w 2</code>, document recommendation) — <a href="https://github.com/beniza/vidx/issues/5">#5</a></li>
+<li>[ ] Multi-Worker Memory Profiling — <a href="https://github.com/beniza/vidx/issues/17">#17</a> <em>(needs-design)</em></li>
+<li>[x] <strong>Multi-Worker Live Progress Bars (<code>rich</code> / <code>enlighten</code> / <code>tqdm</code>):</strong></li>
+<li>[x] <strong>Decoupled GUI-Ready Callback Architecture (Observer Pattern):</strong> <strong>MANDATORY ARCHITECTURAL RULE:</strong> Progress reporting must NOT be hardcoded to console prints or terminal UI libraries. Instead, implement an event/callback interface (<code>progress_callback(event: ProgressEvent)</code>) emitted by <code>FFmpegBuilder</code> and <code>BatchRunner</code>. Structured events (<code>job_id</code>, <code>worker_id</code>, <code>book</code>, <code>chapter</code>, <code>status</code>, <code>percent</code>, <code>speed</code>, <code>fps</code>, <code>elapsed</code>, <code>eta</code>) will allow both the CLI terminal observer and the upcoming GUI application to display live progress bars from the exact same backend engine!</li>
+<li>[x] <strong>Dedicated Worker Mapping:</strong> Display a live interactive progress bar for <em>each</em> parallel rendering worker (<code>-w WORKERS</code>), showing the exact scripture book, chapter, and file currently being processed (e.g., <code>[Worker 1] Mark Ch 05: 45% ━━━╸━━━━━━</code>).</li>
+<li>[x] <strong>Live Rendering Metrics:</strong> Report real-time FFmpeg encoding stats on the progress bar: current processing speed (e.g., <code>2.3x</code> real-time), encoded frames per second (<code>fps</code>), elapsed time, and estimated time of arrival (<code>ETA</code>).</li>
+<li>[x] <strong>Global Batch Queue Summary:</strong> Display a master progress bar tracking total completed chapters vs. remaining jobs across the entire New Testament conversion queue (<code>24 / 260 Chapters Completed [9%]</code>).</li>
+<li>[x] <strong>Automatic Background Preprocessing &amp; 1080p Caching:</strong></li>
+<li>[x] Automatically downscale 4K/high-res background video clips to 1080p (<code>*_1080p.mp4</code>) and apply loop crossfades (<code>*_xf1.0s.mp4</code>) in a pre-rendering cache pass to eliminate CPU decoding bottlenecks during parallel batch runs.</li>
+</ul>
+<h3 id="5-youtube-publishing-reliability-throughput">5. YouTube Publishing Reliability &amp; Throughput</h3>
+<ul>
+<li>[ ] Persisted, Date-Scoped Quota Tracking — <a href="https://github.com/beniza/vidx/issues/2">#2</a></li>
+<li>[ ] Parallel Upload Workers (<code>-w</code>-style for <code>--manifest</code>) — <a href="https://github.com/beniza/vidx/issues/3">#3</a> <em>(blocked by #2)</em></li>
+<li>[ ] Automate the Daily Publish Retry — <a href="https://github.com/beniza/vidx/issues/11">#11</a></li>
+<li>[ ] <strong>Request a YouTube API Quota Increase</strong> <em>(an administrative action via Google Cloud Console, not engineering work — no GitHub issue; the real lever for raising the ~5-6 videos/day ceiling if this is ongoing production usage)</em></li>
+</ul>
+<h3 id="6-packaging-cli-robustness">6. Packaging &amp; CLI Robustness</h3>
+<ul>
+<li>[x] <strong>Fix Batch Summary / "Total Elapsed" Reporting Getting Clobbered:</strong> <code>run_all()</code> used to print its Rich summary tables and the "🏁 FINAL RESULTS" panel (including true wall-clock time) <em>while</em> <code>TerminalProgressObserver</code>'s live progress display was still active — Rich's <code>Live</code> redraw loop would clobber that output, so the wall-clock reading never survived for any multi-chapter batch (only ever visible for single-job runs, by coincidence of timing). Fixed by extracting the printing into <code>BatchRunner.print_summary(res)</code>, called from <code>cli.py</code> only <em>after</em> <code>observer.stop()</code>. This is what makes the <code>-w</code> worker-count benchmarking above actually possible to measure directly instead of estimating.</li>
+<li>[ ] Fix the persistent <code>RequestsDependencyWarning</code> — <a href="https://github.com/beniza/vidx/issues/7">#7</a></li>
+<li>[ ] Clean Ctrl+C handling mid-render — <a href="https://github.com/beniza/vidx/issues/8">#8</a></li>
+<li>[ ] <code>run.bat</code> robustness — <a href="https://github.com/beniza/vidx/issues/6">#6</a></li>
+</ul>
+<hr />
+<h2 id="recently-completed-milestones-v020-v032-evolution">✅ Recently Completed Milestones (v0.2.0 → v0.3.2 Evolution)</h2>
+<ul>
+<li>[x] <strong>Multi-Book GPU Production Run (Luke, John, Acts — Sindhi):</strong> rendered and published all three books end-to-end via the packaged <code>vidx.exe</code> with <code>--gpu -w 4</code>; see <code>docs/session_summary.md</code> for the full session log and findings.</li>
+<li>[x] <strong>Background Video Audio Muting Fix:</strong> background clips are now demuxed with <code>-an</code> (<code>vidx/ffmpeg_builder.py</code>) so their own audio track can never bleed into the output regardless of which render branch (watermark/title/outro vs. plain) runs.</li>
+<li>[x] <strong>Per-Manifest YouTube Token Caching:</strong> <code>run_publisher()</code> now defaults the OAuth token cache to <code>&lt;manifest's folder&gt;/youtube_token.json</code> instead of the global <code>~/.vidx/youtube_token.json</code>, so publishing to multiple clients'/channels' projects no longer clobbers each other's login.</li>
+<li>[x] <strong>John Subtitle Position Typo Fix:</strong> <code>john.yaml</code>'s overlay config had <code>fsubtitle_position</code> instead of <code>subtitle_position</code>, silently falling back to the wrong default alignment (top instead of middle).</li>
+<li>[x] <strong>v0.3.2 Release &amp; Standalone Distribution:</strong> Shipped <code>vidx.exe</code> via PyInstaller (bundling the internalized <code>vidx.usfm_parser</code>, Google auth submodules, and discovery schemas) with GitHub Release notes and distribution guides — superseding the original <code>v0.2.0</code> milestone.</li>
+<li>[x] <strong>YouTube One-Touch Publishing:</strong> Direct YouTube Data API v3 integration with OAuth config, <code>--publish</code> upload, automated title/description/tags/thumbnail metadata, and book-level playlist organization — validated end-to-end by publishing the entire book of Matthew (Sindhi) in a single day.</li>
+<li>[x] <strong>GPU Hardware Acceleration &amp; Monitoring:</strong> Autodetect NVIDIA NVENC and Intel QSV encoding with <code>--gpu</code> CLI flag and <code>video.gpu: true</code>, featuring real-time GPU time and usage tracking in live batch progress tables.</li>
+<li>[x] <strong>Automatic Background Media Preprocessing &amp; Loop Caching:</strong> Automatically pre-scales 4K media down to 1080p and bakes seamless loop crossfades (<code>xfade</code>) before batch execution, avoiding multi-worker CPU decoding bottlenecks.</li>
+<li>[x] <strong>Audio Transitions &amp; Branding Overlays:</strong> Implemented smooth audio fade-in/fade-out (<code>afade</code>) and custom corner watermarks/channel logos (<code>overlay</code> + RGBA alpha blending).</li>
+<li>[x] <strong>Title Cards &amp; Video Thumbnail Support:</strong> Enabled still title image display at the beginning of videos (<code>video.title_card</code>, <code>video.title_duration</code>), serving double-duty as social media video thumbnails.</li>
+<li>[x] <strong>Broadcast Audio Bumpers &amp; Looped Background Music (BGM):</strong> Added audio intro/outro jingle concatenation (<code>audio.intro_clip</code>, <code>audio.outro_clip</code>), automatic subtitle timestamp shifting, and continuous looped background music blending (<code>audio.background_music</code>, <code>audio.background_music_volume</code>) via FFmpeg <code>amix</code>.</li>
+<li>[x] <strong>Robust USFM Marker Stripping Fix:</strong> Solved cross-reference and footnote text bleeding into subtitles by upgrading regex rules in <code>usfm_parser</code> and <code>ass_generator</code> to handle word boundaries and extended formatting tags without trailing spaces (<code>\x-</code>, <code>\f+</code>, <code>\ex</code>, <code>\rq</code>).</li>
+<li>[x] <strong>Decoupled GUI-Ready Progress Bar &amp; Callback System:</strong> Architected structured event reporting (<code>ProgressEvent</code>) across <code>FFmpegBuilder</code> and <code>BatchRunner</code> with real-time encoding stats (<code>speed</code>, <code>fps</code>, <code>ETA</code>), complete with a multi-worker terminal UI using <code>rich</code> and zero stdout scraping required for GUI applications.</li>
+<li>[x] <strong>Internalized USFM Parser:</strong> Migrated <code>usfm-converter</code> into <code>vidx.usfm_parser</code> to resolve Git dependency issues and simplify PyInstaller EXE builds.</li>
+<li>[x] <strong>Dual-Purpose Subtitle Generator:</strong> Enabled high-speed standalone subtitle extraction (<code>.srt</code> and <code>.ass</code>) without requiring video rendering or audio soundtrack files.</li>
+<li>[x] <strong>Configurable Background Box Transparency:</strong> Implemented fine-grained opacity and transparency controls (<code>background_opacity</code> / <code>background_transparency</code>).</li>
+<li>[x] <strong>Repository Reorganization:</strong> Overhauled <code>.gitignore</code> to industry standards, removed scratch artifacts, and consolidated multi-language configurations into clean <code>examples/</code> templates.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
