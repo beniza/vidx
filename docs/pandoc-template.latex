@@ -1,0 +1,238 @@
+% Custom Pandoc LaTeX template for docs/vidx_explainer.md - requires
+% Pandoc + a XeTeX distribution (MiKTeX/TeX Live) with the packages
+% referenced below (all resolve automatically via MiKTeX's on-the-fly
+% package install).
+%
+% To rebuild docs/vidx_explainer.pdf from docs/vidx_explainer.md, run
+% from the docs/ directory:
+%
+%   pandoc vidx_explainer.md \
+%     --from=markdown+raw_tex \
+%     --template=pandoc-template.latex \
+%     --pdf-engine=xelatex \
+%     --shift-heading-level-by=-1 \
+%     --syntax-highlighting=tango \
+%     -M title="VIDX -- Turn Your Scripture App Into Videos" \
+%     -o vidx_explainer.tex
+%
+%   xelatex -interaction=nonstopmode vidx_explainer.tex
+%   xelatex -interaction=nonstopmode vidx_explainer.tex   # 2nd pass required:
+%                                                          # TikZ cover page
+%                                                          # position + refs
+%                                                          # only resolve
+%                                                          # after pass 2.
+%
+% Then delete the intermediate vidx_explainer.tex/.aux/.log - only the .md
+% source and the .pdf output are meant to be kept/committed.
+%
+% Fonts used (Windows system fonts - substitute if building elsewhere):
+% Cambria (body), Segoe UI (headings), Consolas (code).
+\documentclass[11pt,a4paper]{scrartcl}
+
+% ============================== FONTS (XeTeX) ===============================
+\usepackage{fontspec}
+% Fix broken copy-paste/text-extraction for ligatures (e.g. "fi" extracting
+% as the wrong Unicode codepoint) - embeds correct PDF ActualText for ligated
+% glyph runs regardless of the drawn glyph shape.
+\XeTeXgenerateactualtext=1
+\setmainfont{Cambria}
+\setsansfont{Segoe UI}
+\setmonofont{Consolas}[Scale=0.9]
+\newfontfamily\headingfont{Segoe UI Semibold}
+\newfontfamily\headingfontbold{Segoe UI}[BoldFont={Segoe UI Bold}]
+
+% ============================== COLORS =======================================
+\usepackage[table]{xcolor}
+\definecolor{vidxnavy}{HTML}{0B1D3A}
+\definecolor{vidxpurple}{HTML}{2A0E3D}
+\definecolor{vidxgold}{HTML}{F2B134}
+\definecolor{vidxgolddark}{HTML}{C98A1B}
+\definecolor{vidxcream}{HTML}{F7F3E7}
+\definecolor{vidxcreamdark}{HTML}{ECE6D6}
+\definecolor{vidxink}{HTML}{1A1A2E}
+\definecolor{vidxgray}{HTML}{6B6B76}
+\definecolor{vidxrule}{HTML}{D8D2E0}
+\definecolor{vidxwarnbg}{HTML}{FDF1E3}
+\definecolor{vidxwarnborder}{HTML}{D9822B}
+\definecolor{vidxinfobg}{HTML}{F5F0FB}
+\definecolor{vidxinfoborder}{HTML}{7A5FA8}
+\definecolor{vidxtablehead}{HTML}{0B1D3A}
+\definecolor{vidxrowalt}{HTML}{E9E1F5}
+
+% ============================== PAGE GEOMETRY =================================
+\usepackage[a4paper,margin=1in,bottom=1.15in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{shadings,calc}
+
+% ============================== TYPOGRAPHY QUALITY ============================
+\usepackage{microtype}
+\emergencystretch=3em
+\tolerance=1200
+\hbadness=2000
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+\usepackage{ragged2e}
+\widowpenalty=10000
+\clubpenalty=10000
+\brokenpenalty=10000
+\raggedbottom
+
+% ============================== HEADINGS (titlesec) ===========================
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\usepackage{needspace}
+
+\titleformat{\section}
+  {\needspace{6\baselineskip}\Large\headingfontbold\bfseries\color{vidxnavy}}
+  {}{0pt}
+  {\colorbox{vidxgold}{\rule{0pt}{0.72em}\rule{3pt}{0pt}}\hspace{8pt}}
+\titlespacing*{\section}{0pt}{28pt}{12pt}
+
+\titleformat{\subsection}
+  {\needspace{5\baselineskip}\large\headingfontbold\bfseries\color{vidxpurple}}
+  {}{0pt}{}
+\titlespacing*{\subsection}{0pt}{20pt}{8pt}
+
+% ============================== HEADER / FOOTER ================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{\small\headingfont\color{vidxgray}VIDX --- Turn Your Scripture App Into Videos}
+\fancyfoot[C]{\small\color{vidxgray}\thepage}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\small\color{vidxgray}\thepage}}
+
+% ============================== LISTS ==========================================
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.4em, itemsep=3pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=1.6em, itemsep=4pt, topsep=4pt}
+
+% ============================== TABLES ==========================================
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\arrayrulecolor{vidxgold}
+\renewcommand{\arraystretch}{1.45}
+\setlength{\aboverulesep}{2pt}
+\setlength{\belowrulesep}{2pt}
+% xcolor's \rowcolors shades using the table's nominal \linewidth, while
+% pandoc's longtable column spec puts @{} at the outer edges so booktabs
+% rules span only the trimmed content width - the gap between those two
+% widths is proportional to \tabcolsep, so shrinking it here shrinks the
+% mismatch. (Tried removing the @{} and tried inserting extra \hline/
+% \midrule between rows instead - both broke compilation on this MiKTeX
+% install, confirmed via isolated minimal tests, so this is a deliberate
+% proportional mitigation rather than a full structural fix.)
+\setlength{\tabcolsep}{2.2pt}
+
+% ============================== BLOCKQUOTE / CALLOUT ============================
+\usepackage[most]{tcolorbox}
+\renewenvironment{quote}{%
+  \begin{tcolorbox}[
+    enhanced, breakable,
+    colback=vidxinfobg, colframe=vidxinfoborder,
+    boxrule=0pt, leftrule=3pt,
+    arc=2pt, outer arc=2pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt,
+    before skip=10pt, after skip=10pt
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+\newtcolorbox{warningbox}{
+  enhanced, breakable,
+  colback=vidxwarnbg, colframe=vidxwarnborder,
+  boxrule=0pt, leftrule=4pt,
+  arc=2pt, outer arc=2pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=10pt, after skip=10pt
+}
+
+% ============================== CODE BLOCKS =====================================
+% Pandoc's highlighting-macros variable (included below) already defines
+% \Highlighting, \VerbBar, \VERB, a default \Shaded, and every *Tok color
+% command - do not redefine those manually, just override \Shaded's box
+% styling afterward.
+\usepackage{fancyvrb}
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+\definecolor{codebg}{HTML}{F4F4F8}
+\definecolor{coderule}{HTML}{D9D6E3}
+\renewenvironment{Shaded}{%
+  \begin{tcolorbox}[
+    enhanced, breakable,
+    colback=codebg, colframe=coderule,
+    boxrule=0.6pt, arc=2pt, outer arc=2pt,
+    left=8pt, right=8pt, top=5pt, bottom=5pt,
+    before skip=8pt, after skip=8pt
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+% ============================== IMAGES / FIGURES ================================
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{caption}
+\captionsetup[figure]{font={small,it,color=vidxgray},labelformat=empty,justification=centering,skip=6pt}
+\usepackage{float}
+
+% ============================== PANDOC COMPATIBILITY MACROS ======================
+\usepackage{calc}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\real}[1]{#1}
+\providecommand{\pandocbounded}[1]{\adjustbox{max width=\linewidth,max height=0.55\textheight,keepaspectratio}{#1}}
+% Workaround: this MiKTeX caption/ltcaption version mishandles pandoc's
+% \LTcaptype{none} convention on uncaptioned longtables ("No counter 'none'
+% defined"). A dummy counter literally named "none" makes the internal
+% \stepcounter/\value calls succeed harmlessly.
+\newcounter{none}
+
+% ============================== LINKS ===========================================
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=vidxpurple,
+  urlcolor=vidxgolddark,
+  citecolor=vidxpurple,
+  pdftitle={$title$},
+  pdfauthor={VIDX}
+}
+
+% ============================== SECTION NUMBERING OFF ===========================
+\setcounter{secnumdepth}{0}
+
+\begin{document}
+
+% -------------------------------- COVER PAGE ------------------------------------
+\begin{titlepage}
+\newgeometry{margin=0in}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture, overlay]
+  \shade[shading angle=115, left color=vidxnavy, right color=vidxpurple]
+    (current page.south west) rectangle (current page.north east);
+
+  % Use the real, approved icon file (ico/vidx-icon-1024.png) rather than
+  % a hand-drawn TikZ recreation, so the cover matches the actual icon set
+  % exactly.
+  \node at ($$(current page.center)+(0,3.3)$$) {\includegraphics[width=4.6cm]{../ico/vidx-icon-1024.png}};
+
+  \node[white, font=\headingfontbold\bfseries\fontsize{56}{56}\selectfont, anchor=north]
+    at ($$(current page.center)+(0,-2.3)$$) {VIDX};
+  \node[vidxgold, font=\headingfontbold\bfseries\fontsize{19}{19}\selectfont, anchor=north]
+    at ($$(current page.center)+(0,-4.3)$$) {Turn Your Scripture App Into Videos};
+  \draw[vidxgold, line width=1pt] ($$(current page.center)+(-2.6,-5.2)$$) -- ($$(current page.center)+(2.6,-5.2)$$);
+  \node[white!78!black, font=\headingfont\fontsize{11.5}{11.5}\selectfont, anchor=north]
+    at ($$(current page.center)+(0,-5.6)$$) {A short explainer for translation and literacy teams};
+\end{tikzpicture}
+\end{titlepage}
+\restoregeometry
+\setcounter{page}{1}
+\rowcolors{2}{white}{vidxrowalt}
+
+$body$
+
+\end{document}

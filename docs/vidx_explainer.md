@@ -1,37 +1,4 @@
-<div style="page-break-after: always; break-after: page; min-height: 92vh; margin: -1in -1in 0 -1in; padding: 1in; background: linear-gradient(160deg, #0b1d3a 0%, #1a1042 55%, #2a0e3d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; font-family: Helvetica, Arial, sans-serif; box-sizing: border-box; text-align: center;">
-  <svg width="300" height="240" viewBox="0 0 400 300">
-    <polygon points="60,230 200,190 200,90 60,130" fill="#ece6d6" opacity="0.96"/>
-    <polygon points="340,230 200,190 200,90 340,130" fill="#f7f3e7" opacity="0.96"/>
-    <line x1="80" y1="150" x2="180" y2="122" stroke="#a39a86" stroke-width="2"/>
-    <line x1="80" y1="170" x2="180" y2="145" stroke="#a39a86" stroke-width="2"/>
-    <line x1="80" y1="190" x2="180" y2="168" stroke="#a39a86" stroke-width="2"/>
-    <line x1="80" y1="210" x2="180" y2="191" stroke="#a39a86" stroke-width="2"/>
-    <line x1="220" y1="122" x2="320" y2="150" stroke="#a39a86" stroke-width="2"/>
-    <line x1="220" y1="145" x2="320" y2="170" stroke="#a39a86" stroke-width="2"/>
-    <line x1="220" y1="168" x2="320" y2="190" stroke="#a39a86" stroke-width="2"/>
-    <line x1="220" y1="191" x2="320" y2="210" stroke="#a39a86" stroke-width="2"/>
-    <line x1="200" y1="90" x2="200" y2="190" stroke="#5a5040" stroke-width="3"/>
-    <circle cx="200" cy="150" r="48" fill="#f2b134" opacity="0.16"/>
-    <circle cx="200" cy="150" r="34" fill="#f2b134"/>
-    <polygon points="190,132 190,168 216,150" fill="#1a1042"/>
-    <rect x="118" y="245" width="9" height="18" rx="2" fill="#f2b134"/>
-    <rect x="137" y="233" width="9" height="30" rx="2" fill="#f2b134"/>
-    <rect x="156" y="218" width="9" height="45" rx="2" fill="#f2b134"/>
-    <rect x="175" y="238" width="9" height="25" rx="2" fill="#f2b134"/>
-    <rect x="194" y="226" width="9" height="37" rx="2" fill="#f2b134"/>
-    <rect x="213" y="236" width="9" height="27" rx="2" fill="#f2b134"/>
-    <rect x="232" y="220" width="9" height="43" rx="2" fill="#f2b134"/>
-    <rect x="251" y="238" width="9" height="25" rx="2" fill="#f2b134"/>
-    <rect x="270" y="247" width="9" height="16" rx="2" fill="#f2b134"/>
-  </svg>
-  <div style="font-size: 54px; font-weight: 700; letter-spacing: 6px; margin-top: 8px;">VIDX</div>
-  <div style="font-size: 21px; color: #f2b134; font-weight: 600; margin-top: 10px;">Turn Your Scripture App Into Videos</div>
-  <div style="font-size: 13px; color: #beb8d6; letter-spacing: 1px; margin-top: 30px;">A short explainer for translation and literacy teams</div>
-</div>
-
-# VIDX — Turn Your Scripture App Into Videos
-
-## 💡 What VIDX does
+## What VIDX does
 
 VIDX turns your Scripture App's own files into a finished, subtitle-synced video
 ready to share on YouTube.
@@ -43,9 +10,7 @@ ready to share on YouTube.
 > re-aligned. Your team is one step away from a video you didn't know you could
 > already make.
 
----
-
-## 🙋 Who this is for
+## Who this is for
 
 VIDX is for teams who have **already built a Scripture App using Scripture App
 Builder**. If that's your team, VIDX is ready and waiting for you.
@@ -54,23 +19,19 @@ If your team hasn't built a Scripture App yet, that's a different step, owned by
 the **software department** — reach out to them directly to get one started.
 Once your app exists, come back to VIDX any time.
 
----
-
-## 📂 What you already have
+## What you already have
 
 Three things came out of building your Scripture App, and VIDX reuses all three
 exactly as they are — no new recording, no new alignment work, no new files to
 prepare:
 
-| | File | What it is |
-|---|---|---|
-| 📖 | **Scripture text** | The translated words themselves |
-| 🎙️ | **Narration audio** | The recorded voice reading those words aloud |
-| ⏱️ | **Timing file** | Created by Scripture App Builder — marks exactly when each verse or phrase is spoken |
+| File | What it is |
+|---|---|
+| **Scripture text** | The translated words themselves |
+| **Narration audio** | The recorded voice reading those words aloud |
+| **Timing file** | Created by Scripture App Builder — marks exactly when each verse or phrase is spoken |
 
----
-
-## 🎬 What you get
+## What you get
 
 A finished video with your background of choice playing behind the narration,
 scripture text appearing on screen in sync with the voice, in your own language
@@ -79,15 +40,11 @@ music underneath. Complex scripts are fully supported and already in real,
 day-to-day use — languages using Devanagari, Malayalam, Thai, and Arabic-derived
 scripts have already had full books produced this way.
 
-![VIDX generating a batch of chapters — live progress for each chapter being rendered](terminal_output_samples.png)
-*VIDX generating a batch of chapters. Each row tracks one chapter's progress as it renders.*
+![VIDX generating a batch of chapters. Each row tracks one chapter's progress as it renders.](terminal_output_samples_cropped.png)
 
-![A real, published YouTube playlist of VIDX-generated chapter videos](youtube-playlist.png)
-*A real, public YouTube playlist — every chapter generated by VIDX and published as its own video, each with its own thumbnail and title.*
+![A real, public YouTube playlist — every chapter generated by VIDX and published as its own video, each with its own thumbnail and title.](youtube-playlist_cropped.png)
 
----
-
-## ⚙️ How it works, simply
+## How it works, simply
 
 1. **Bring your files** — the scripture text, audio, and timing file from your
    Scripture App project.
@@ -103,9 +60,7 @@ the same way — it just renders each chapter on the computer's processor
 instead, which takes noticeably longer per chapter. Either way produces the
 same finished video; a graphics card only changes how long the wait is.
 
----
-
-## 🛠️ What it takes to get set up
+## What it takes to get set up
 
 There's a one-time technical setup involved — getting VIDX installed and
 configured on a Windows computer. This isn't something your team needs to
@@ -114,9 +69,7 @@ start to finish.
 
 Once it's set up, generating videos going forward is simple and repeatable.
 
----
-
-## 🚧 What's next for VIDX
+## What's next for VIDX
 
 VIDX is actively being improved. A few things currently in progress:
 
@@ -131,9 +84,7 @@ VIDX is actively being improved. A few things currently in progress:
 These are in progress, not promises with a date attached — but they show VIDX
 is actively maintained and getting better.
 
----
-
-## ✅ How to start
+## How to start
 
 If this sounds like something your team wants, **register your interest on
 this session's form.** That's all that's needed for now — you're only letting
@@ -145,9 +96,7 @@ the proper channels once your interest is registered.
 If your team wants help getting started, training and setup support are
 available — just let us know on the form.
 
----
-
-## 📊 Appendix: A Real Run, Unedited Numbers
+## Appendix: A Real Run, Unedited Numbers
 
 Everything above is described in plain terms. This page is the opposite — the
 literal, unedited output from one real VIDX run, included so the results above
@@ -161,36 +110,34 @@ specific book has been measured.
 
 | Chapter | Render Time | Result |
 |---|---|---|
-| 1  | 0:55.04 | ✅ Success |
-| 2  | 0:34.01 | ✅ Success |
-| 3  | 0:48.74 | ✅ Success |
-| 4  | 0:57.13 | ✅ Success |
-| 5  | 0:51.11 | ✅ Success |
-| 6  | 1:07.10 | ✅ Success |
-| 7  | 0:55.40 | ✅ Success |
-| 8  | 0:58.49 | ✅ Success |
-| 9  | 0:45.89 | ✅ Success |
-| 10 | 0:51.00 | ✅ Success |
-| 11 | 1:03.90 | ✅ Success |
-| 12 | 1:10.00 | ✅ Success |
-| 13 | 0:47.20 | ✅ Success |
-| 14 | 0:43.99 | ✅ Success |
-| 15 | 0:40.45 | ✅ Success |
-| 16 | 0:47.50 | ✅ Success |
-| 17 | 0:34.25 | ✅ Success |
-| 18 | 0:58.27 | ✅ Success |
-| 19 | 1:01.20 | ✅ Success |
-| 20 | 0:39.94 | ✅ Success |
-| 21 | 0:35.90 | ✅ Success |
+| 1  | 0:55.04 | Success |
+| 2  | 0:34.01 | Success |
+| 3  | 0:48.74 | Success |
+| 4  | 0:57.13 | Success |
+| 5  | 0:51.11 | Success |
+| 6  | 1:07.10 | Success |
+| 7  | 0:55.40 | Success |
+| 8  | 0:58.49 | Success |
+| 9  | 0:45.89 | Success |
+| 10 | 0:51.00 | Success |
+| 11 | 1:03.90 | Success |
+| 12 | 1:10.00 | Success |
+| 13 | 0:47.20 | Success |
+| 14 | 0:43.99 | Success |
+| 15 | 0:40.45 | Success |
+| 16 | 0:47.50 | Success |
+| 17 | 0:34.25 | Success |
+| 18 | 0:58.27 | Success |
+| 19 | 1:01.20 | Success |
+| 20 | 0:39.94 | Success |
+| 21 | 0:35.90 | Success |
 
 **Totals from this run:** 21 of 21 chapters succeeded, 0 failed. Total time
 17:46.6, averaging 0:50.79 per chapter. Every chapter listed above rendered
 successfully — nothing here has been rounded up, cherry-picked, or cleaned
 up beyond formatting the same numbers into a table.
 
----
-
-## 💻 Appendix: Installing VIDX (and FFmpeg)
+## Appendix: Installing VIDX (and FFmpeg)
 
 This page is for whoever is doing the one-time technical setup — normally
 walked through directly by the Media Fellowship Team, included here for
@@ -200,7 +147,7 @@ reference.
 
 Download the program directly:
 
-**[⬇ Download vidx.exe](https://github.com/beniza/vidx/releases/download/v0.3.4/vidx.exe)**
+**[Download vidx.exe](https://github.com/beniza/vidx/releases/download/v0.3.4/vidx.exe)**
 
 This is a self-contained Windows program — no Python installation required
 to run it. Your project coordinator will also provide your project folder
@@ -208,10 +155,14 @@ to run it. Your project coordinator will also provide your project folder
 
 ### Step 2 — Install FFmpeg (read this one carefully)
 
-> ⚠️ **This is the single most common setup failure.** VIDX relies on FFmpeg
-> to actually build the video, but does not include it inside `vidx.exe` —
-> it's a real, separate install. Skipping this step, or forgetting to add
-> FFmpeg to your PATH, is the #1 reason a first run fails.
+```{=latex}
+\begin{warningbox}
+\textbf{This is the single most common setup failure.} VIDX relies on FFmpeg
+to actually build the video, but does not include it inside \texttt{vidx.exe} ---
+it's a real, separate install. Skipping this step, or forgetting to add
+FFmpeg to your PATH, is the \#1 reason a first run fails.
+\end{warningbox}
+```
 
 Install FFmpeg **version 4.3 or newer** using whichever of these your
 computer already has available — pick one:
@@ -220,12 +171,12 @@ computer already has available — pick one:
 |---|---|
 | **Winget** (built into Windows 10/11) | `winget install -e --id Gyan.FFmpeg` |
 | **Chocolatey** | `choco install ffmpeg` |
-| **Scoop** | `irm get.scoop.sh \| iex` *(one-time, installs Scoop itself)*, then `scoop install ffmpeg` |
+| **Scoop** | `irm get.scoop.sh \| iex` (one-time, installs Scoop itself), then `scoop install ffmpeg` |
 
 No package manager? Download it manually from the official page:
-**[ffmpeg.org/download.html](https://ffmpeg.org/download.html)** → under
-Windows, choose the **gyan.dev** builds → download the **"essentials"**
-build (`ffmpeg-release-essentials.zip`) → extract it anywhere on your
+**[ffmpeg.org/download.html](https://ffmpeg.org/download.html)** — under
+Windows, choose the **gyan.dev** builds, download the **"essentials"**
+build (`ffmpeg-release-essentials.zip`), and extract it anywhere on your
 computer (e.g. `C:\ffmpeg`).
 
 ### Step 3 — Add FFmpeg to your PATH (do not skip this)
@@ -238,18 +189,23 @@ be told where to find it:
    **"Edit the system environment variables."**
 2. Click the **Environment Variables...** button.
 3. Under **"User variables,"** select **Path**, then click **Edit...**.
-4. Click **New**, and paste the path to FFmpeg's `bin` folder — for
-   example, `C:\ffmpeg\ffmpeg-release-essentials\bin` (the exact folder
-   name depends on the version you downloaded).
+4. Click **New**, and paste the path to FFmpeg's `bin` folder (the exact
+   folder name depends on the version you downloaded), for example:
+
+   ```
+   C:\ffmpeg\ffmpeg-release-essentials\bin
+   ```
 5. Click **OK** on every window to save.
 
 ### Step 4 — Verify it actually worked
 
 **Open a brand-new terminal window** (PATH changes don't apply to terminals
 that were already open) and type:
+
 ```
 ffmpeg -version
 ```
+
 You should see version details printed immediately. If you instead see
 something like `'ffmpeg' is not recognized as an internal or external
 command`, FFmpeg is not correctly on your PATH — go back to Step 3.
@@ -263,9 +219,7 @@ characters.
 
 That's the entire one-time setup.
 
----
-
-## 🚦 Appendix: Getting Started (First Run)
+## Appendix: Getting Started (First Run)
 
 1. Open your project folder in Windows File Explorer, click the address
    bar, type `powershell` (or `cmd`), and press **Enter** — this opens a
@@ -274,16 +228,16 @@ That's the entire one-time setup.
    to review fonts, colors, or background settings. Everything is
    normally already set up for you by your coordinator.
 3. Run your video generator:
+
    ```
    .\dist\vidx.exe -c your_project.yaml
    ```
+
 4. Watch the live progress display while VIDX renders each chapter. When
    it finishes, your videos are waiting in the `output` folder, ready to
    view or publish.
 
----
-
-## 📋 Appendix: Command Reference
+## Appendix: Command Reference
 
 VIDX is controlled with one program and a set of flags added after it. This
 is every flag `vidx.exe` currently understands, in plain terms, for anyone
@@ -333,9 +287,7 @@ who wants to go beyond the default command.
 | `-h`, `--help` | Show this same list from the command line. |
 | `-v`, `--version` | Show which version of VIDX is installed. |
 
----
-
-## 🔧 Appendix: Configuration File Reference
+## Appendix: Configuration File Reference
 
 Every VIDX project has a `.yaml` "recipe" file controlling everything about
 how the video looks and behaves. This appendix documents every key it
@@ -373,10 +325,13 @@ A config file has up to six top-level sections: `project`, `video`, `audio`,
 | `title_card` | A still image shown before scripture narration starts. | `"assets/title.jpg"` |
 | `title_duration` | How many seconds the title card displays. | `4.0` |
 
-**`video.watermark` sub-keys:** `image` (path to a transparent PNG),
-`position` (`top-left`/`top-right`/`bottom-left`/`bottom-right`), `margin`
-(distance from the edge, in pixels), `scale` (size as a fraction of video
-width, e.g. `0.15` = 15%), `opacity` (`0.0`-`1.0`).
+**`video.watermark` sub-keys:**
+
+- `image` — path to a transparent PNG.
+- `position` — `top-left`, `top-right`, `bottom-left`, or `bottom-right`.
+- `margin` — distance from the edge, in pixels.
+- `scale` — size as a fraction of video width (e.g. `0.15` = 15%).
+- `opacity` — `0.0` to `1.0`.
 
 ### `audio` — narration, bumpers, and background music
 
@@ -459,9 +414,7 @@ drag-and-drop method. Most fields already have sensible defaults.
 | `title_template` / `description_template` | Text patterns for the video title/description, with placeholders like `{book}` and `{chapter}` filled in automatically. |
 | `tags` | YouTube tags applied to every upload. |
 
----
-
-## 📝 Appendix: Sample Configuration Templates
+## Appendix: Sample Configuration Templates
 
 Three ready-to-copy starting points, fully commented. Save any of these as
 a `.yaml` file, update the file paths to match your own project, and run
@@ -590,6 +543,7 @@ jobs:
 ```
 
 Run this one with multiple chapters rendering at once:
+
 ```
 vidx.exe -c mark_book.yaml --gpu -w 4
 ```
