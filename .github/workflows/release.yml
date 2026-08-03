@@ -39,30 +39,48 @@ jobs:
         run: |
           python -m build --no-isolation --outdir dist/
 
+      # Guards the failure mode that shipped empty wheels on v0.4.0-v0.4.2:
+      # setuptools auto-discovery silently produced a metadata-only wheel, and
+      # nothing downstream noticed until someone tried to install it.
+      - name: Verify the wheel actually contains the package
+        run: |
+          $whl = (Get-ChildItem dist/*.whl | Select-Object -First 1).FullName
+          $n = [int](python -c "import zipfile,sys; print(sum(1 for x in zipfile.ZipFile(sys.argv[1]).namelist() if x.startswith('vidx/') and x.endswith('.py')))" $whl)
+          if ($n -lt 5) { throw "Wheel has only $n vidx/*.py files - packaging is broken, refusing to publish" }
+          Write-Host "[+] Wheel OK: $n modules"
+
       - name: Build Windows Executable (.exe) with PyInstaller
         run: |
           pyinstaller --onefile --name vidx --clean vidx_entry.py
 
+      # This runner is windows-latest, so `run:` is PowerShell. The previous
+      # version of this step used bash idioms (${VAR#prefix}, \` escapes) which
+      # PowerShell does not honour, producing notes headed "VIDX Release " with
+      # no version and body text reading "**\idx.exe\**". Single-quoted lines
+      # keep backticks literal for markdown; only the heading interpolates.
       - name: Generate Release Notes Summary
         id: release_notes
         run: |
-          echo "## 🚀 VIDX Release ${GITHUB_REF#refs/tags/}" > release_notes.md
-          echo "" >> release_notes.md
-          echo "Scripture video rendering engine for Bible translation teams." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "For full release history and feature details, see [CHANGELOG.md](https://github.com/beniza/vidx/blob/main/CHANGELOG.md) and our live documentation at **[https://beniza.github.io/vidx/](https://beniza.github.io/vidx/)**." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "### 🖥️ Standalone Windows Executable (.exe)" >> release_notes.md
-          echo "For Windows users without Python installed, download **\`vidx.exe\`** attached below and run directly from Command Prompt or PowerShell:" >> release_notes.md
-          echo '```powershell' >> release_notes.md
-          echo ".\vidx.exe -c project.yaml" >> release_notes.md
-          echo '```' >> release_notes.md
-          echo "" >> release_notes.md
-          echo "### 📦 Installation from Wheel" >> release_notes.md
-          echo "You can also download the \`.whl\` file attached below and install it via pip:" >> release_notes.md
-          echo '```bash' >> release_notes.md
-          echo "pip install vidx-*.whl" >> release_notes.md
-          echo '```' >> release_notes.md
+          $notes = @(
+            "## 🚀 VIDX Release $env:GITHUB_REF_NAME"
+            ''
+            'Scripture video rendering engine for Bible translation teams.'
+            ''
+            'For full release history and feature details, see [CHANGELOG.md](https://github.com/beniza/vidx/blob/main/CHANGELOG.md) and our live documentation at **[https://beniza.github.io/vidx/](https://beniza.github.io/vidx/)**.'
+            ''
+            '### 🖥️ Standalone Windows Executable (.exe)'
+            'For Windows users without Python installed, download **`vidx.exe`** attached below and run directly from Command Prompt or PowerShell:'
+            '```powershell'
+            '.\vidx.exe -c project.yaml'
+            '```'
+            ''
+            '### 📦 Installation from Wheel'
+            'You can also download the `.whl` file attached below and install it via pip:'
+            '```bash'
+            'pip install vidx-*.whl'
+            '```'
+          )
+          Set-Content -Path release_notes.md -Value $notes -Encoding utf8
 
       - name: Create GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v2
