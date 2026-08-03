@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2026-08-03
+
+### Fixed
+- **uroman Data Bundling in Executable:** Updated `vidx.spec` to include `uroman` submodules and data files in PyInstaller builds. Without this, the distributed `.exe` would fail with "Cannot open file" errors when attempting to romanize text for alignment, causing `--align` to crash with "No alignable text after romanization." This affected timing file generation on end-user computers.
+
 ## [0.4.1] - 2026-08-03
 
 ### Fixed

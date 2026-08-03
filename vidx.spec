@@ -17,6 +17,7 @@ hidden_imports = (
     + collect_submodules('pyasn1_modules')
     + collect_submodules('rsa')
     + collect_submodules('cachetools')
+    + collect_submodules('uroman')
     + ['chardet']
 )
 
@@ -27,6 +28,7 @@ datas_list = (
     + collect_data_files('googleapiclient')
     + collect_data_files('google_auth_oauthlib')
     + collect_data_files('google.auth')
+    + collect_data_files('uroman')
 )
 
 a = Analysis(
