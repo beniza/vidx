@@ -33,6 +33,26 @@ Before you begin publishing, decide which of the two upload methods works best f
 
 To let VIDX talk to your YouTube channel automatically, Google requires you to create a free secure "digital key" (called an OAuth Client ID). You only need to do this setup **once**!
 
+#### Step 0: Install the YouTube Extra (don't skip this!)
+
+The uploading machinery is an **optional add-on**, so it is not present in a plain VIDX install. Install it first:
+
+```powershell
+pip install -e ".[youtube]"
+```
+
+*(If you installed VIDX from a package rather than a clone of the repository, use `pip install "vidx[youtube]"` instead.)*
+
+Check it worked before going any further:
+
+```powershell
+python -c "import google.oauth2, googleapiclient; print('youtube extra OK')"
+```
+
+> **⚠️ This is the most common publishing setup failure.** If you skip this step, everything in Steps 1–3 below will appear to go perfectly — you'll create your Google key and place the file correctly — and then `vidx --manifest ...` will fail with `No module named 'google'`. The Google Cloud setup and this Python install are two **separate** requirements, and the credentials file cannot fix a missing module.
+
+> **📦 Using the standalone `vidx.exe`?** Then skip this step entirely — the uploading machinery is already baked inside the executable. But note the reverse trap: if *you* are the person building the `.exe`, you must have the `youtube` extra installed in the environment you build from, or PyInstaller will quietly produce an executable without it. Build with `pip install -e ".[youtube]"` active, then test the result with `vidx.exe --manifest ...` before distributing it to your team.
+
 #### Step 1: Create your Google Cloud Key (Updated for 2026 Console)
 1. Open your web browser and go to the **[Google Cloud Console](https://console.cloud.google.com/)**. Sign in with your Google account.
 2. At the top of the page, click **Select a project** -> **New Project**. Give it a simple name like `VIDX Scripture Uploader` and click **Create**.
@@ -75,6 +95,100 @@ vidx --manifest output\matthew_sindhi\publish_manifest.json
 
 ---
 
+### 🔑 Step 4: Choosing Which YouTube Channel You Upload To
+
+This is the step teams most often get wrong, so it is worth understanding clearly.
+
+There are **two separate credentials** involved, and they do different jobs:
+
+| File | What it identifies | Where it lives |
+| :--- | :--- | :--- |
+| **`client_secrets.json`** | Your *application* — the "VIDX Uploader" app you registered with Google. Shared across all your projects and channels. | `~/.vidx/client_secrets.json` (i.e. `C:\Users\YourUsername\.vidx\`) |
+| **`youtube_token.json`** | The *channel you logged into*. Created automatically the first time you authorise. **This is what decides where videos land.** | Next to your project's `publish_manifest.json` |
+
+**You never download a "channel credential" from YouTube.** The channel is chosen by *which account
+you pick in the browser consent screen*, and VIDX then remembers that choice in `youtube_token.json`.
+
+#### Uploading to a Brand Account (a shared ministry channel)
+
+Most translation teams publish to a **Brand Account** channel rather than someone's personal
+channel. When the browser consent window opens:
+
+1. Sign in with the Google account that **manages** the channel.
+2. Google will then show a list: *"Choose an account to continue to VIDX Uploader"* followed by the
+   channels that account can act for.
+3. **Select the ministry/Brand channel — not your personal name.** If you pick the wrong one, your
+   videos will upload to the wrong channel.
+
+If you don't see your Brand Account in the list, your Google account is not yet a **Manager or
+Owner** of it. Fix that first at [YouTube > Settings > Permissions](https://studio.youtube.com/).
+
+#### Publishing to more than one channel
+
+Because VIDX stores the token **next to each project's manifest**, every project keeps its own
+channel login. A Sindhi project and a Malayalam project can publish to two different channels with
+no interference:
+
+```
+output/matthew_sindhi/publish_manifest.json
+output/matthew_sindhi/youtube_token.json      <- Sindhi channel login
+output/mark_malayalam/publish_manifest.json
+output/mark_malayalam/youtube_token.json      <- Malayalam channel login
+```
+
+#### I logged into the wrong channel — how do I switch?
+
+Delete the token and run the publish command again. VIDX will re-open the consent screen and let you
+choose properly. **Deleting the token never affects already-uploaded videos.**
+
+```powershell
+Remove-Item output\matthew_sindhi\youtube_token.json
+vidx --manifest output\matthew_sindhi\publish_manifest.json
+```
+
+#### Which permissions is VIDX asking for?
+
+VIDX requests exactly two Google scopes, and nothing else:
+
+- `youtube.upload` — to upload video files.
+- `youtube` — to set thumbnails and add videos to playlists.
+
+It cannot read your email, your Drive, or your personal data.
+
+---
+
+### ⚙️ Publishing Settings in Your Config File
+
+These keys go under `publishing:` in your project YAML. Only `platform` and `enabled` are required —
+everything else has a sensible default.
+
+| Key | Default | What it does |
+| :--- | :--- | :--- |
+| `enabled` | `false` | Turn the publishing pipeline on. |
+| `generate_offline_package` | `false` | Also build the drag-and-drop `YouTube_Upload_Package/` folders (Method 2). |
+| `client_secrets_file` | `~/.vidx/client_secrets.json` | Path to your Google app key. Change only if you keep it elsewhere. |
+| `token_file` | `<manifest folder>/youtube_token.json` | Where the channel login is cached. Point two projects at the same file to deliberately share one channel login. |
+| `privacy_status` | `private` | `private`, `unlisted`, or `public`. Use `unlisted` while reviewing, then flip to `public`. |
+| `category_id` | `22` | YouTube category. `22` = People & Blogs, `27` = Education. |
+| `playlist_name` | *(none)* | Playlist title. VIDX finds it by name, or creates it (unlisted) if it doesn't exist yet. |
+| `title_template` | — | Supports `{book}`, `{chapter}`, `{language}`. e.g. `"{book} Chapter {chapter:02d} — {language}"`. |
+| `description_template` | — | Multi-line description, same placeholders. |
+| `tags` | — | List of hashtags; placeholders are substituted here too. |
+
+```yaml
+publishing:
+  platform: "youtube"
+  enabled: true
+  generate_offline_package: true
+  client_secrets_file: "~/.vidx/client_secrets.json"
+  # token_file: "~/.vidx/sindhi_channel_token.json"   # optional: pin a specific channel
+  privacy_status: "unlisted"
+  category_id: "22"
+  playlist_name: "Gospel of Mark — Sindhi Audio Bible"
+```
+
+---
+
 ### 📁 Method 2: Easy Drag-and-Drop (No Google Setup Needed)
 
 If you are sharing VIDX with field translators or team members who do not want to set up Google Cloud keys, they can use our built-in **"YouTube Studio Ready"** offline folders!
@@ -114,6 +228,24 @@ Each chapter folder contains exactly 3 files:
 
 ## ❓ Common Questions & Troubleshooting
 
+### Q: I get `[-] Error: YouTube API dependencies failed to load: No module named 'google'`
+**Answer:** The `youtube` extra is not installed — see [Step 0](#step-0-install-the-youtube-extra-dont-skip-this) above. Run `pip install -e ".[youtube]"` (or `pip install "vidx[youtube]"`). This has nothing to do with your `client_secrets.json`; that file is the *Google* half of the setup, and this error is the *Python* half.
+
+If pip reports "Requirement already satisfied" but the error persists, you almost certainly have two Python installations and pip installed into the wrong one. Compare them:
+
+```powershell
+where.exe vidx      # which vidx is actually running
+pip -V              # which Python that pip belongs to
+```
+
+Fix it by installing through the same interpreter that runs VIDX:
+
+```powershell
+python -m pip install -e ".[youtube]"
+```
+
+And if you are running the standalone `dist\vidx.exe`, `pip` cannot help at all — the executable carries its own bundled copies. Get an `.exe` built from an environment that had the `youtube` extra installed.
+
 ### Q: Why did my upload fail with "Error 403: access_denied" when logging in?
 **Answer:** The Google account you are trying to sign in with has not been added to the **Test Users** list in Google Cloud Console. Go back to Step 1 (OAuth Consent Screen / Audience), click **+ Add Users**, add that exact email address, and try again!
 
@@ -121,4 +253,10 @@ Each chapter folder contains exactly 3 files:
 **Answer:** No! Video generation and uploading are completely separate. Furthermore, VIDX uses Google's *resumable chunked upload protocol*. If an internet drop disconnects an upload at 75%, running `vidx --manifest` again will resume uploading from byte 75% without wasting bandwidth or CPU!
 
 ### Q: Where can I learn more about the technical design of this system?
-**Answer:** For software developers and systems architects who want to understand the underlying Python API code, quota management algorithms, and architectural trade-offs, read our technical specification: **[VIDX YouTube Integration Plan](file:///C:/Users/BCS_Support/Documents/dev/nlci/usfm2vdo/docs/yt_integration_plan.md)**.
+**Answer:** For software developers and systems architects who want to understand the underlying Python API code, quota management algorithms, and architectural trade-offs, read our technical specification: **[VIDX YouTube Integration Plan](yt_integration_plan.md)**.
+
+### Q: My videos uploaded to the wrong YouTube channel!
+**Answer:** The channel is decided by which account you selected in the browser consent screen, and remembered in `youtube_token.json`. Delete that file and re-run the publish command to choose again — see [Step 4](#step-4-choosing-which-youtube-channel-you-upload-to) above. Videos already uploaded are unaffected; move or delete those in YouTube Studio.
+
+### Q: Do I need a separate Google Cloud project for each channel?
+**Answer:** No. One `client_secrets.json` works for every channel and every project. Only the *token* is per-channel. Note that the daily upload quota belongs to the **Google Cloud project**, though — so several channels sharing one key also share the ~5–6 videos/day budget.

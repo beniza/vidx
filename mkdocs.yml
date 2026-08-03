@@ -50,7 +50,10 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Getting Started: getting_started.md
   - User Guide & Tutorials: user_guide.md
+  - Creating Timing Files: alignment_guide.md
+  - Publishing to YouTube: publishing_guide.md
   - Configuration Reference: configuration_guide.md
   - Roadmap & TODOs: todo.md
   - Project Brief & History: project_brief.md

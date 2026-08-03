@@ -195,6 +195,7 @@ jobs:
 - **[🌟 Complete Getting Started & Distribution Guide](getting_started.md):** Plain-language onboarding guide explaining the entire VIDX application, generating videos, and YouTube publishing.
 - **[Configuration & Bulk Processing Guide](configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
 - **[User Guide & Tutorials](user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
-- **[YouTube & Video Publishing Guide](publishing_guide.md):** Plain-language instructions for sharing videos online, setting up Google Cloud keys, and using offline Studio packages.
+- **[Timing File Guide](alignment_guide.md):** How to generate verse timing maps from your audio with `--align`, and fine-tune them in Audacity.
+- **[YouTube & Video Publishing Guide](publishing_guide.md):** Plain-language instructions for sharing videos online, setting up Google Cloud keys, choosing which YouTube channel you upload to, and using offline Studio packages.
 - **[Project Brief & Advisory Council Decisions](project_brief.md):** Historical background and engineering decisions.
 - **[Project Roadmap & TODOs](todo.md):** Active milestones, Test-Driven Development (TDD) rules, CI/CD pipelines, and future feature enhancements.

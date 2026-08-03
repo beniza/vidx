@@ -13,7 +13,9 @@ publishing:
   platform: "youtube"
   enabled: true                     # Set true to generate manifest/packages or publish automatically with --publish
   generate_offline_package: true    # Create Option 4 'YouTube_Upload_Package/' folders with copy-paste metadata
-  client_secrets_file: "~/.vidx/client_secrets.json"
+  client_secrets_file: "~/.vidx/client_secrets.json"  # Your Google app key (identifies VIDX, shared across projects)
+  # token_file: "~/.vidx/sindhi_channel_token.json"   # Cached channel login. Defaults to <manifest folder>/youtube_token.json,
+                                                      # so each project remembers its own YouTube channel. See docs/publishing_guide.md
   privacy_status: "unlisted"        # 'private' (default), 'unlisted', or 'public'
   category_id: "22"                 # 22 = People & Blogs, 27 = Education
   playlist_name: "Gospel of Mark — Sindhi Audio Bible"

@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-08-03
+
+### Added
+- **Timing File Generation via Forced Alignment (`--align`):** VIDX can now produce SAB-compatible timing files directly from audio + USFM, removing the hard dependency on Scripture App Builder (or aeneas) for teams that don't already have timing data. Uses Meta's MMS-300M-1130 aligner (Wav2Vec2 CTC, 1130+ languages) via ONNX Runtime — no PyTorch — with `uroman` romanization so it is script-agnostic. Ships as the optional `vidx[align]` extra; the ~340MB INT8 model is fetched at runtime to `~/.vidx/mms-aligner/` and is never bundled (it is CC-BY-NC 4.0, unlike VIDX's MIT licence).
+- **Phrase-Level Alignment (`--level phrase`):** splits verses at punctuation into `1a`/`1b`/`1c` segments matching SAB's phrase-level timing convention.
+- **Section Heading Timings:** `\s` headings are emitted as `s1`/`s2`/... segments (SAB convention) since narrators read them aloud; measured on Sindhi Mark 5 this moved p90 error from 1.13s to 0.52s. Disable with `--no-headings`.
+- **Audacity Label Round-Trip (`--to-labels` / `--from-labels`):** a timing file body is already an Audacity label track, so fine-tuning needs no bespoke editor — export, drag boundaries against the waveform, merge back.
+- **`docs/alignment_guide.md`:** end-user walkthrough for timing generation, including the Audacity fine-tuning loop, accuracy figures, and troubleshooting.
+- **`docs/build-explainer.ps1`:** records the previously-undocumented pandoc/XeLaTeX invocation for the explainer PDF. The build requires `--shift-heading-level-by=-1`; without it `###` becomes `\subsubsection`, which the template has no format for, and the build fails.
+
+### Documentation
+- **Optional extras were never documented.** Neither `pip install vidx[youtube]` nor the `align` extra appeared anywhere in the docs, so following the publishing guide end-to-end produced `No module named 'google'` at the final step. Added an "Optional Extras" table to the README and a mandatory **Step 0** to the publishing guide, plus a troubleshooting entry covering the split-interpreter case.
+- **YouTube channel credentials:** documented the distinction between `client_secrets.json` (identifies the app) and `youtube_token.json` (identifies the channel), Brand Account selection, publishing to multiple channels, and how to switch channels. Added a full `publishing:` config key reference — `token_file` was implemented but undocumented.
+- **`vidx.spec` bundling trap:** `collect_submodules('google.auth')` returns an empty list without error when the extra is absent, silently producing an `.exe` that fails at runtime. Documented the need to build with the extra installed and to test the artifact before distribution.
+- **Explainer PDF** rewritten to reflect that a Scripture App is no longer a prerequisite, with new sections on generating timing files and publishing to YouTube.
+- Added `getting_started.md`, `alignment_guide.md`, and `publishing_guide.md` to the MkDocs nav — the publishing guide was previously absent from the docs site entirely.
+
+### Fixed
+- **Explainer PDF running header** printed `VIDX --- Turn Your...` as three literal hyphens; fontspec/XeTeX does not apply TeX dash ligatures, so the template now uses a real em dash.
+
 ## [0.3.4] - 2026-07-14
 
 ### Added

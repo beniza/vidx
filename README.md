@@ -76,17 +76,51 @@ Verify the CLI installation:
 vidx --help
 ```
 
+#### Optional Extras
+
+Rendering and subtitle generation need nothing beyond the base install. Two features
+ship as **optional extras** because they pull in large dependencies — install them
+only if you need them:
+
+| Extra | Command | Needed for |
+| :--- | :--- | :--- |
+| **YouTube publishing** | `pip install -e ".[youtube]"` | `--publish` and `--manifest` (Google API client + OAuth) |
+| **Timing generation** | `pip install -e ".[align]"` | `--align` (ONNX Runtime speech model) |
+| Both | `pip install -e ".[youtube,align]"` | |
+
+> ⚠️ **If you plan to upload to YouTube, install the `youtube` extra now.** Without it,
+> `vidx --manifest ...` fails with `No module named 'google'` — the Google Cloud
+> credentials setup is entirely separate and will not fix this. Verify with:
+> ```bash
+> python -c "import google.oauth2, googleapiclient; print('youtube extra OK')"
+> ```
+
+Quote the brackets (`".[youtube]"`) — some shells, notably zsh, treat `[` and `]` as
+glob characters and will otherwise report "no matches found".
+
 ### 3. Building Standalone Executable (.exe)
 To compile a portable, self-contained executable for distribution to team members without requiring Python:
 
 ```bash
-# Install PyInstaller (if not already installed)
+# Install PyInstaller and the extras you want baked into the .exe
 pip install pyinstaller
+pip install -e ".[youtube]"
 
 # Compile standalone binary using the project specification
 pyinstaller --clean vidx.spec
 ```
 The compiled binary will be generated at `dist/vidx.exe`. You can distribute this single file along with your project assets to any Windows machine.
+
+> ⚠️ **Install the `youtube` extra before building.** `vidx.spec` pulls the Google API
+> modules in via `collect_submodules('google.auth')` and friends, which return an
+> **empty list without error** if those packages aren't present in the build
+> environment. The build succeeds, and the resulting `.exe` then fails at runtime with
+> `No module named 'google'`. Always test the artifact before distributing it:
+> ```bash
+> dist/vidx.exe --manifest path/to/publish_manifest.json
+> ```
+> The `align` extra is deliberately **not** bundled — the speech model is downloaded at
+> runtime, so use the Python install for `--align`.
 
 ---
 
@@ -155,6 +189,57 @@ vidx --manifest output/mark_video_book/publish_manifest.json
 Re-running the exact same command resumes from wherever it left off, without re-uploading or
 re-rendering anything already done. See [docs/publishing_guide.md](docs/publishing_guide.md) for
 the full OAuth setup walkthrough.
+
+### Mode 5: Generate Timing Files from Audio (Forced Alignment)
+
+If you don't already have timing files from Scripture App Builder, VIDX can generate them directly
+from your audio and USFM text. This is an optional extra because it downloads a speech model:
+
+```bash
+pip install vidx[align]
+```
+
+```bash
+vidx --align --usfm src/mal/42MRKMAL10RO.SFM --audio src/mal/mrk/audio/01.mp3 \
+     --lang mal --book MRK -o timing/
+```
+
+The chapter number is inferred from the audio filename when possible; pass `--chapter` to be
+explicit. Use `--level phrase` to split verses at punctuation into `1a`/`1b`/`1c` segments the way
+SAB's phrase-level timings do. The output is an ordinary SAB-compatible timing file, so everything
+downstream of it is unchanged.
+
+`\s` section headings are timed as `s1`/`s2`/... segments, matching SAB, because narrators normally
+read them aloud — leaving them out makes the following verse absorb the heading audio. If your
+recording skips them, pass `--no-headings`.
+
+Under the hood this uses Meta's **MMS-300M-1130** forced aligner (Wav2Vec2 CTC, **1130+ languages**)
+through ONNX Runtime — no PyTorch. Text is romanized with `uroman` first, which is why it works on
+Malayalam, Sindhi, Devanagari and Arabic scripts alike rather than being limited to a fixed language
+list. The model (~340MB, INT8) downloads once to `~/.vidx/mms-aligner/`.
+
+> **Note:** the MMS model is licensed **CC-BY-NC 4.0** (non-commercial), unlike VIDX itself (MIT).
+> It is downloaded at runtime rather than bundled, so nothing NC-licensed ships inside VIDX.
+
+#### Fine-tuning timings in Audacity
+
+A timing file's body is byte-for-byte an Audacity **label track**, so no special editor is needed —
+export, drag the boundaries against the waveform, and merge back:
+
+```bash
+vidx --timing timing/MRK-01-timing.txt --to-labels labels.txt
+#   Audacity: File > Import > Labels ... drag ... File > Export > Export Labels
+vidx --timing timing/MRK-01-timing.txt --from-labels labels.txt
+```
+
+Editing a boundary moves the end of one segment and the start of the next together, so the file
+stays contiguous.
+
+Generated timing files are saved **inside your project, beside the audio they describe** — if your
+audio lives in `audio/`, the timing file goes to a sibling `timing/` folder, matching the SAB layout.
+Existing files are never overwritten without asking (`-y` to skip the prompt). See
+[docs/alignment_guide.md](docs/alignment_guide.md) for the full walkthrough, accuracy figures, and
+troubleshooting.
 
 ---
 
@@ -231,5 +316,7 @@ jobs:
 ## 📚 Further Documentation
 - **[Configuration & Bulk Processing Guide](docs/configuration_guide.md):** Exhaustive reference for YAML configuration, typography, transparency, bulk book/NT jobs, and dual-purpose subtitle generation.
 - **[User Guide & Tutorials](docs/user_guide.md):** Step-by-step walkthroughs for field coordinators and technicians.
+- **[Timing File Guide](docs/alignment_guide.md):** How to generate verse timing maps from your audio with `--align`, and fine-tune them in Audacity.
+- **[YouTube & Video Publishing Guide](docs/publishing_guide.md):** Google Cloud key setup, choosing which YouTube channel you upload to, quota handling, and offline Studio packages.
 - **[Project Brief & Advisory Council Decisions](docs/project_brief.md):** Historical background and engineering decisions.
 - **[Project Roadmap & TODOs](docs/todo.md):** Active milestones, Test-Driven Development (TDD) rules, CI/CD pipelines, and future feature enhancements.
