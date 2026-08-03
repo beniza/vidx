@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-08-03
+
+### Fixed
+- **GitHub Actions Release Workflow:** Updated to install both optional extras (`youtube` and `align`) before building the Windows executable, ensuring the distributed `.exe` includes full support for timing generation and YouTube publishing without requiring a separate Python environment.
+
 ## [0.4.0] - 2026-08-03
 
 ### Added

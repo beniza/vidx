@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vidx"
-version = "0.4.0"
+version = "0.4.1"
 description = "Scripture video rendering engine for Bible translation teams (combines USFM files, timing maps, audio, and FFmpeg)."
 authors = [
     {name = "benVar"}

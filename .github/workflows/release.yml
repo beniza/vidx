@@ -33,6 +33,7 @@ jobs:
           pip install build wheel pyinstaller
           pip install -r requirements.txt
           pip install -e .
+          pip install -e ".[youtube,align]"
 
       - name: Build Python Distribution (Wheel & sdist)
         run: |
