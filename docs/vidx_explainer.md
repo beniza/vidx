@@ -133,25 +133,160 @@ and description already written for you. You then drag each video into YouTube
 Studio in your browser and paste the text across. No Google developer setup at
 all. This is often the right choice for teams on slower or metered connections.
 
-### Two things worth knowing before you start
+### Step 0: Install the YouTube Extra (don't skip this!)
 
-**YouTube limits how many videos a tool may upload per day** — usually around
-five or six. This is a Google rule, not a VIDX limitation. VIDX handles it
-gracefully: when the day's allowance runs out, it stops cleanly and remembers
-exactly where it stopped. Run the same command the next morning and it carries on
-from that point. A full Gospel therefore takes a handful of days to publish, and
-that's normal and expected.
+The uploading machinery is an **optional add-on**, so it is not present in a
+plain VIDX install. Install it first:
 
-**Make sure you're uploading to the right channel.** Most teams publish to a
-shared ministry channel rather than someone's personal one. When the browser asks
-you to sign in, it will list the channels your account can act for — choose the
-ministry channel deliberately, not your own name. VIDX then remembers that choice
-for that project. If you realise later that videos went to the wrong place, the
-choice can be reset; the full instructions are in the publishing guide.
+```powershell
+pip install -e ".[youtube]"
+```
 
-The complete walkthrough — creating the Google key, enabling the YouTube API,
-choosing your channel, and the drag-and-drop alternative — is in the **YouTube &
-Video Publishing Guide** that ships with VIDX (`docs/publishing_guide.md`).
+*(If you installed VIDX from a package rather than a clone of the repository, use `pip install "vidx[youtube]"` instead.)*
+
+Check it worked before going any further:
+
+```powershell
+python -c "import google.oauth2, googleapiclient; print('youtube extra OK')"
+```
+
+> **⚠️ This is the most common publishing setup failure.** If you skip this step,
+> everything in Steps 1–3 below will appear to go perfectly — you'll create your
+> Google key and place the file correctly — and then `vidx --manifest ...` will
+> fail with `No module named 'google'`. The Google Cloud setup and this Python
+> install are two **separate** requirements, and the credentials file cannot fix
+> a missing module.
+
+### Step 1: Create your Google Cloud Key
+
+1. Open your web browser and go to the **[Google Cloud Console](https://console.cloud.google.com/)**. Sign in with your Google account.
+2. At the top of the page, click **Select a project** → **New Project**. Give it a simple name like `VIDX Scripture Uploader` and click **Create**.
+3. In the left search bar or under **APIs & Services > Library**, search for **"YouTube Data API v3"** and click **Enable**.
+4. Go to **APIs & Services > OAuth consent screen**:
+   - Choose **External** and click **Create**.
+   - Type an App Name (e.g., `VIDX Uploader`) and select your email address for developer contact.
+   - **⚠️ CRITICAL:** On the **Test users** step, click **"+ ADD USERS"**. Add your own email and the emails of any teammates who will upload videos. *Google blocks any email not explicitly added to this list.*
+   - Save and finish.
+5. Go to **APIs & Services > Credentials**:
+   - Click **+ CREATE CREDENTIALS** → **OAuth client ID**.
+   - Select **Desktop app** and name it `VIDX Desktop`. Click **Create**.
+   - Click **DOWNLOAD JSON** to download your key file.
+
+### Step 2: Put Your Key File in Place
+
+1. Open File Explorer and navigate to your Windows home folder (usually `C:\Users\YourUsername\`).
+2. Create a new folder named `.vidx` (with the period).
+3. Copy the JSON file you downloaded and rename it to **`client_secrets.json`**.
+
+### Step 3: Launch the Upload
+
+Once your video batch has finished generating:
+
+```powershell
+vidx --manifest output\matthew_sindhi\publish_manifest.json
+```
+
+**What happens next:**
+1. Your web browser pops up asking you to choose your Google account.
+2. Select your whitelisted email address.
+3. If Google shows a warning, don't panic — this is normal for private software.
+   - Click **Advanced**.
+   - Click **"Go to VIDX Uploader (unsafe)"**.
+   - Check the boxes and click **Continue**.
+4. You'll see a success message. Check your terminal — VIDX is uploading!
+
+> **💡 Daily Quota Tip:** When VIDX uploads 5 or 6 chapters, Google's daily limit
+> pauses the upload. VIDX saves its progress. Tomorrow, run the same command
+> again and it resumes instantly!
+
+### Step 4: Choosing Which YouTube Channel You Upload To
+
+There are **two separate credentials**:
+
+| File | What it identifies | Where it lives |
+| :--- | :--- | :--- |
+| **`client_secrets.json`** | Your *application* — shared across all projects | `~/.vidx/client_secrets.json` |
+| **`youtube_token.json`** | The *channel you logged into* — **decides where videos land** | Next to your project's `publish_manifest.json` |
+
+**You never download a "channel credential."** The channel is chosen by *which account
+you pick in the browser*, and VIDX remembers that choice in `youtube_token.json`.
+
+### Publishing to a Brand Account
+
+Most teams publish to a **Brand Account** (shared ministry channel). When the
+consent window opens:
+
+1. Sign in with the account that **manages** the channel.
+2. Google shows a list of channels that account can act for.
+3. **Select the ministry channel — not your personal name.**
+
+### Publishing to more than one channel
+
+Every project keeps its own channel login:
+
+```
+output/matthew_sindhi/publish_manifest.json
+output/matthew_sindhi/youtube_token.json      ← Sindhi channel
+output/mark_malayalam/publish_manifest.json
+output/mark_malayalam/youtube_token.json      ← Malayalam channel
+```
+
+### I logged into the wrong channel — how do I switch?
+
+Delete the token and run the publish command again:
+
+```powershell
+Remove-Item output\matthew_sindhi\youtube_token.json
+vidx --manifest output\matthew_sindhi\publish_manifest.json
+```
+
+### Method 2: Easy Drag-and-Drop (No Google Setup Needed)
+
+If team members don't want to set up Google Cloud keys, they can use the offline
+folders. In your project config:
+
+```yaml
+publishing:
+  platform: "youtube"
+  enabled: false                 # Skip Google login
+  generate_offline_package: true # Create drag-and-drop folders
+```
+
+Run your normal batch command. When done, you'll see a **`YouTube_Upload_Package`**
+folder with one subfolder per chapter. Each chapter folder has:
+
+1. **The Video (`.mp4`)**
+2. **The Thumbnail (`title_card.jpg`)**
+3. **The Metadata (`metadata.txt`)** — pre-written title, description, tags
+
+**To publish:** Open [YouTube Studio](https://studio.youtube.com/) → **Create → Upload Videos** → drag the `.mp4` → copy-paste the metadata → upload the thumbnail → publish!
+
+### Common Publishing Issues
+
+**Q: I get `No module named 'google'` when running `vidx --manifest`**
+
+The `youtube` extra is not installed — see [Step 0](#step-0-install-the-youtube-extra-dont-skip-this) above. Run `pip install -e ".[youtube]"`.
+
+If pip says "Requirement already satisfied" but the error persists, you have two
+Python installations and pip installed into the wrong one:
+
+```powershell
+python -m pip install -e ".[youtube]"
+```
+
+**Q: Why did my upload fail with "Error 403: access_denied"?**
+
+The Google account you're signing in with is not on the **Test Users** list in
+Google Cloud Console. Go back to Step 1 and add that email address.
+
+**Q: If my computer restarts during upload, do I have to re-render everything?**
+
+No! Video generation and uploading are separate. VIDX uses resumable uploads, so
+it picks up from where it stopped.
+
+**Q: My videos uploaded to the wrong YouTube channel!**
+
+Delete the `youtube_token.json` file and run the publish command again — see [Step 4](#step-4-choosing-which-youtube-channel-you-upload-to) above.
 
 ## What it takes to get set up
 
