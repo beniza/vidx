@@ -118,7 +118,7 @@ jobs:
     background_music_volume: 0.40
 
   - usfm: "src/snd/41MATsnd.SFM"
-    timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-02-timing.txt"
+    timing: "src/snd/sindhi-audio-bible-artifacts/Timing files/Mathew/C01-01-MAT-02-timing.txt"c
     audio: "src/snd/sindhi-audio-bible-artifacts/Audio bible/Matthew/002 Matthew.mp3"
     output: "output/matthew_sindhi/Matthew_Chapter_02.mp4"
     background: "src/snd/sindhi-audio-bible-artifacts/Background video/bg_snd.mp4"
