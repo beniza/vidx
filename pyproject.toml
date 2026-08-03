@@ -37,6 +37,14 @@ youtube = [
 [project.scripts]
 vidx = "vidx.cli:main"
 
+# Declare the package explicitly. Without this, setuptools' auto-discovery sees
+# the src/ directory (scripture data, not code), assumes a src-layout project,
+# finds no packages under it, and silently builds a wheel containing nothing but
+# metadata -- so `pip install vidx-*.whl` and `pip install -e .` both yield
+# "ModuleNotFoundError: No module named 'vidx'" from the console script.
+[tool.setuptools]
+packages = ["vidx"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
