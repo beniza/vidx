@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2026-08-03
+
+### Fixed
+- **Last Verse Ran to the End of the Audio File:** `--align` set the final segment's end time to the audio duration, so any trailing silence, closing announcement, or outro music held the last verse's subtitle on screen. Measured on Philemon 1 this overshot by 7.0s and on Malayalam Mark 16 by 11.3s. The end now comes from the last aligned character's frame, i.e. where the narration of the text actually stops. Cross-checked against the narrator's measured speaking rate on Mark 16 (128 characters at ~11 chars/s predicts a 213.4s end): the new value lands at 214.5s, within 1.1s, while the old value was 12.4s late. Note that SAB's own timing files *do* pad the last verse over closing audio (218.8s for the same verse), so a VIDX-generated file will legitimately end earlier than the SAB equivalent.
+
 ## [0.4.2] - 2026-08-03
 
 ### Fixed

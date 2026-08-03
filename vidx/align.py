@@ -254,6 +254,30 @@ def forced_align(log_probs, targets, blank_id=0):
 # ---------------------------------------------------------------------------
 
 
+def _rows_from_frames(first_frame, last_frame, seg_starts, kept, start_sec=0.0):
+    """Turn per-character frame spans into (start, end, seg_id) rows."""
+    # CTC fires late -- a character's peak sits inside the word, not at its onset.
+    # Put each boundary in the middle of the silence before the segment's first
+    # character instead, which is where a human (and aeneas) would cut.
+    def boundary(char_idx):
+        f = first_frame[char_idx]
+        if char_idx == 0:
+            return f
+        gap_start = last_frame[char_idx - 1] + 1
+        return (gap_start + f) / 2.0 if f > gap_start else f
+
+    starts = [start_sec + boundary(i) * SEC_PER_FRAME for i in seg_starts]
+    # End the last segment where the narrator stops, not where the file stops:
+    # trailing silence or outro music would otherwise hold the final verse on
+    # screen for several seconds. SAB's own timing files stop at the speech too.
+    speech_end = start_sec + (int(last_frame[-1]) + 1) * SEC_PER_FRAME
+    ends = starts[1:] + [speech_end]
+    return [
+        (round(s, 3), round(e, 3), seg.seg_id)
+        for s, e, seg in zip(starts, ends, kept)
+    ]
+
+
 def align_segments(audio_path, segments, lang=None, model_dir=None,
                    start_sec=0.0, end_sec=None, progress=None):
     """Align `segments` against `audio_path`. Returns [(start, end, seg_id), ...]."""
@@ -276,24 +300,7 @@ def align_segments(audio_path, segments, lang=None, model_dir=None,
     )
     log_probs = compute_log_probs(session, audio, progress)
     first_frame, last_frame = forced_align(log_probs, targets, blank_id)
-
-    # CTC fires late -- a character's peak sits inside the word, not at its onset.
-    # Put each boundary in the middle of the silence before the segment's first
-    # character instead, which is where a human (and aeneas) would cut.
-    def boundary(char_idx):
-        f = first_frame[char_idx]
-        if char_idx == 0:
-            return f
-        gap_start = last_frame[char_idx - 1] + 1
-        return (gap_start + f) / 2.0 if f > gap_start else f
-
-    starts = [start_sec + boundary(i) * SEC_PER_FRAME for i in seg_starts]
-    span_end = start_sec + log_probs.shape[0] * SEC_PER_FRAME
-    ends = starts[1:] + [end_sec if end_sec is not None else span_end]
-    return [
-        (round(s, 3), round(e, 3), seg.seg_id)
-        for s, e, seg in zip(starts, ends, kept)
-    ]
+    return _rows_from_frames(first_frame, last_frame, seg_starts, kept, start_sec)
 
 
 DEFAULT_SEPARATORS = [".", "?", "؟", "!", ",", "،", ";", "؛", ":", "।"]

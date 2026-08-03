@@ -5,7 +5,9 @@ import pytest
 np = pytest.importorskip("numpy", reason="requires the optional 'align' extra")
 
 from vidx.align import (
+    SEC_PER_FRAME,
     Segment,
+    _rows_from_frames,
     forced_align,
     from_audacity_labels,
     segments_from_usfm,
@@ -55,6 +57,19 @@ def test_viterbi_rejects_audio_shorter_than_text():
     lp = _log_probs([A, B])
     with pytest.raises(ValueError):
         forced_align(lp, [A, B, A, B, A], blank_id=BLANK)
+
+
+def test_rows_end_at_last_speech_frame_not_end_of_audio():
+    # Two segments. Speech stops at frame 5; the audio itself may run far longer,
+    # and _rows_from_frames must not know or care -- it only sees the frames.
+    first = np.array([0, 4])
+    last = np.array([1, 5])
+    segs = [Segment("1", "a"), Segment("2", "b")]
+    rows = _rows_from_frames(first, last, [0, 1], segs)
+    assert rows[-1][1] == pytest.approx(6 * SEC_PER_FRAME)
+    # the interior boundary sits mid-pause: last[0]+1=2 .. first[1]=4 -> frame 3
+    assert rows[1][0] == pytest.approx(3 * SEC_PER_FRAME)
+    assert rows[0][1] == rows[1][0]  # contiguous, no gap
 
 
 def test_audacity_round_trip_preserves_rows():

@@ -184,6 +184,13 @@ Many recordings begin with a spoken chapter announcement ("The Gospel of Mark, c
 isn't part of any verse. VIDX doesn't detect this yet, so verse 1 may be placed late. Nudge verse 1
 in Audacity — the rest of the chapter is usually unaffected.
 
+### Q: My last verse ends before the audio does — is that a bug?
+No, that's deliberate. The last verse ends where the narration of its text stops, so closing music
+or a spoken sign-off isn't covered by a subtitle. Note that SAB's own timing files usually *do*
+stretch the last verse over that closing audio, so a VIDX file will legitimately end earlier than
+the SAB equivalent for the same chapter. If you would rather hold the last verse to the end, drag
+its boundary out in Audacity.
+
 ### Q: Every verse is late by roughly the same amount.
 Check whether your narrator reads the section headings. If they do and you passed `--no-headings`
 (or vice versa), the mismatch pushes everything along. Try flipping that option.
