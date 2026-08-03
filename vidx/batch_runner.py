@@ -11,7 +11,7 @@ import subprocess
 import re
 from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional, List, Union, Any
+from typing import Optional, List, Union
 
 from .ass_generator import convert_to_ass
 from .ffmpeg_builder import FFmpegBuilder
