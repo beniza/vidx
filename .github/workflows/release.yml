@@ -49,9 +49,28 @@ jobs:
           if ($n -lt 5) { throw "Wheel has only $n vidx/*.py files - packaging is broken, refusing to publish" }
           Write-Host "[+] Wheel OK: $n modules"
 
+      # Must build from vidx.spec, not from vidx_entry.py directly: the spec
+      # carries the hidden imports and data files (uroman's romanization tables,
+      # the google API discovery documents) that PyInstaller cannot infer. Building
+      # with --onefile vidx_entry.py ignores the spec and produced the v0.4.0-v0.4.3
+      # exes, whose --align crashed at runtime.
       - name: Build Windows Executable (.exe) with PyInstaller
         run: |
-          pyinstaller --onefile --name vidx --clean vidx_entry.py
+          pyinstaller --clean vidx.spec
+
+      # The uroman tables are the ones that actually went missing, so assert on them.
+      - name: Verify the exe bundled the aligner data
+        run: |
+          $exe = "dist/vidx.exe"
+          if (-not (Test-Path $exe)) { throw "no exe produced" }
+          $bytes = [System.IO.File]::ReadAllBytes($exe)
+          $text = [System.Text.Encoding]::ASCII.GetString($bytes)
+          foreach ($needle in @("romanization-table.txt", "UnicodeDataProps.txt")) {
+            if ($text -notmatch [regex]::Escape($needle)) {
+              throw "exe is missing uroman data ($needle) - --align would fail at runtime"
+            }
+          }
+          Write-Host "[+] Aligner data present in exe"
 
       # This runner is windows-latest, so `run:` is PowerShell. The previous
       # version of this step used bash idioms (${VAR#prefix}, \` escapes) which

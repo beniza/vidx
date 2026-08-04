@@ -1,6 +1,20 @@
+# Build with:  pyinstaller --clean vidx.spec
+#
+# Do NOT build with `pyinstaller --onefile vidx_entry.py` -- that ignores this
+# file, so none of the hiddenimports or datas below are bundled. The v0.4.0-v0.4.3
+# releases were built that way and shipped an exe whose --align crashed on the
+# missing uroman data tables.
 import os
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
-import uroman
+
+try:
+    import uroman
+except ImportError:  # fail loudly rather than silently omitting the aligner
+    raise SystemExit(
+        "vidx.spec requires the optional extras at build time.\n"
+        '    pip install -e ".[align,youtube]"\n'
+        "Without them PyInstaller produces an exe that fails at runtime."
+    )
 
 hidden_imports = (
     collect_submodules('charset_normalizer')

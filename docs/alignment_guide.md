@@ -180,9 +180,12 @@ error of 1.84 s — visibly out of sync, and requiring nearly every verse to be 
 ## ❓ Common Questions & Troubleshooting
 
 ### Q: It says "Alignment dependencies missing".
-Run `pip install vidx[align]`. This applies to Python installs only — from v0.4.1 the standalone
-`vidx.exe` has the aligner built in, so there is nothing to install. If you see this message when
-running the `.exe`, you have a build older than v0.4.1; download a newer one.
+Run `pip install vidx[align]`. This applies to Python installs only — the standalone `vidx.exe`
+has the aligner built in from **v0.4.4** onward, so there is nothing to install.
+
+If you see this (or `No alignable text after romanization`) while running the `.exe`, you have a
+build from **v0.4.3 or earlier**. Those were built without the aligner's language data through a
+release-workflow bug, and `--align` cannot work in them. Download v0.4.4 or later.
 
 ### Q: My whole chapter is offset by a second or two at the start.
 Many recordings begin with a spoken chapter announcement ("The Gospel of Mark, chapter one") that

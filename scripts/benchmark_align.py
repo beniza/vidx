@@ -26,8 +26,8 @@ from rich.table import Table
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from vidx.align import (  # noqa: E402
-    align_segments, audio_duration, from_audacity_labels, segments_from_usfm,
-    write_timing_file,
+    DEFAULT_SEPARATORS, align_segments, audio_duration, from_audacity_labels,
+    segments_from_usfm, write_timing_file,
 )
 from vidx.usfm_parser import USFMParser  # noqa: E402
 
@@ -123,7 +123,8 @@ def main():
             prog.remove_task(sub)
 
             out = out_dir / f"{args.book}-{ch:02d}-timing.txt"
-            write_timing_file(out, rows, args.book, ch, level=args.level)
+            write_timing_file(out, rows, args.book, ch, level=args.level,
+                              separators=DEFAULT_SEPARATORS)
             results.append({"ch": ch, "rows": rows, "dur": dur, "sec": elapsed})
             prog.advance(book_task)
 
