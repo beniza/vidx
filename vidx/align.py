@@ -254,17 +254,32 @@ def forced_align(log_probs, targets, blank_id=0):
 # ---------------------------------------------------------------------------
 
 
+# Cut this far ahead of the pause midpoint. Measured against the SAB/aeneas
+# references for Malayalam Mark (662 boundaries), the bare midpoint runs late on
+# 84% of verses, mean +0.23s; a 0.15s lead cuts median error 0.22s -> 0.15s and
+# lifts within-0.5s agreement from 83% to 92%. It also fails safer: a subtitle
+# appearing during the pause reads as correct, one appearing after the first
+# syllable reads as broken.
+LEAD_SEC = 0.15
+
+
 def _rows_from_frames(first_frame, last_frame, seg_starts, kept, start_sec=0.0):
     """Turn per-character frame spans into (start, end, seg_id) rows."""
     # CTC fires late -- a character's peak sits inside the word, not at its onset.
-    # Put each boundary in the middle of the silence before the segment's first
-    # character instead, which is where a human (and aeneas) would cut.
+    # Put each boundary in the silence before the segment's first character
+    # instead, which is where a human (and aeneas) would cut.
+    lead = LEAD_SEC / SEC_PER_FRAME
+
     def boundary(char_idx):
         f = first_frame[char_idx]
         if char_idx == 0:
             return f
         gap_start = last_frame[char_idx - 1] + 1
-        return (gap_start + f) / 2.0 if f > gap_start else f
+        if f <= gap_start:          # no measurable pause; nothing to place inside
+            return f
+        # Clamp to gap_start so a short pause can never drag the boundary back
+        # over the tail of the previous verse.
+        return max(float(gap_start), (gap_start + f) / 2.0 - lead)
 
     starts = [start_sec + boundary(i) * SEC_PER_FRAME for i in seg_starts]
     # End the last segment where the narrator stops, not where the file stops:

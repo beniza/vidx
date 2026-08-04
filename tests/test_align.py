@@ -67,9 +67,28 @@ def test_rows_end_at_last_speech_frame_not_end_of_audio():
     segs = [Segment("1", "a"), Segment("2", "b")]
     rows = _rows_from_frames(first, last, [0, 1], segs)
     assert rows[-1][1] == pytest.approx(6 * SEC_PER_FRAME)
-    # the interior boundary sits mid-pause: last[0]+1=2 .. first[1]=4 -> frame 3
-    assert rows[1][0] == pytest.approx(3 * SEC_PER_FRAME)
     assert rows[0][1] == rows[1][0]  # contiguous, no gap
+
+
+def test_boundary_leads_the_pause_midpoint():
+    # Pause runs from frame 2 (first silent) to frame 60 (next verse's onset), so
+    # the midpoint is 31 and the 0.15s (7.5-frame) lead pulls the cut back to 23.5.
+    first = np.array([0, 60])
+    last = np.array([1, 61])
+    segs = [Segment("1", "a"), Segment("2", "b")]
+    rows = _rows_from_frames(first, last, [0, 1], segs)
+    assert rows[1][0] == pytest.approx(23.5 * SEC_PER_FRAME)
+
+
+def test_short_pause_never_backs_into_the_previous_verse():
+    # Pause is only 2 frames (0.04s), far shorter than the lead. The boundary must
+    # clamp to the first silent frame rather than landing inside verse 1's audio.
+    first = np.array([0, 4])
+    last = np.array([1, 5])
+    segs = [Segment("1", "a"), Segment("2", "b")]
+    rows = _rows_from_frames(first, last, [0, 1], segs)
+    assert rows[1][0] == pytest.approx(2 * SEC_PER_FRAME)
+    assert rows[1][0] > last[0] * SEC_PER_FRAME  # after verse 1's last frame
 
 
 def test_audacity_round_trip_preserves_rows():

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.3] - 2026-08-03
 
+### Changed
+- **Verse boundaries now lead the pause midpoint by 0.15s.** Scoring all 662 verse starts in Malayalam Mark against the SAB/aeneas references showed the bare midpoint running late on 84% of verses (signed mean +0.23s) — a systematic offset, not scatter. Cutting 0.15s earlier moves the median error from 0.22s to 0.15s, p90 from 0.58s to 0.45s, and within-half-a-second agreement from 83% to 92%. It also fails safer: a subtitle appearing during the pause reads as correct, one appearing after the first syllable reads as broken. The lead is clamped to the start of the pause so a short gap can never drag a boundary back over the previous verse's audio (this fired on 2 of 662 boundaries).
+
 ### Added
 - **`scripts/benchmark_align.py`:** aligns a whole book chapter by chapter with a progress bar, then reports per-chapter speed and scores verse boundaries against the SAB reference timings. Previously this was done by hand one chapter at a time; run it after any change to `vidx/align.py`.
 

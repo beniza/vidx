@@ -162,8 +162,12 @@ Measured against this project's existing SAB/aeneas timing files:
 
 | Corpus | Boundaries | Median error | Within 1 second |
 | :--- | :--- | :--- | :--- |
-| Malayalam Mark, all 16 chapters | 678 | **0.23 s** | **99.1 %** |
+| Malayalam Mark, all 16 chapters | 662 | **0.15 s** | **99.8 %** |
 | Sindhi Mark 5 (Arabic script) | 43 | **0.14 s** | 95 % |
+
+Across the Malayalam Mark run, 92 % of verse starts land within half a second and 67 % within a
+quarter second. Verse 1 of each chapter is excluded from those figures and reported below, because
+a spoken chapter announcement shifts it by a predictable amount.
 
 Speed is roughly **8× realtime on CPU** — about a minute for a 7-minute chapter, or ~13 minutes for
 a whole 16-chapter Gospel. No GPU needed.
