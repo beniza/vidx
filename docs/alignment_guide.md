@@ -176,8 +176,9 @@ error of 1.84 s — visibly out of sync, and requiring nearly every verse to be 
 ## ❓ Common Questions & Troubleshooting
 
 ### Q: It says "Alignment dependencies missing".
-Run `pip install vidx[align]`. If you use the standalone `.exe`, the aligner is not bundled into it
-— use the Python install for generating timings, then the `.exe` for rendering if you prefer.
+Run `pip install vidx[align]`. This applies to Python installs only — from v0.4.1 the standalone
+`vidx.exe` has the aligner built in, so there is nothing to install. If you see this message when
+running the `.exe`, you have a build older than v0.4.1; download a newer one.
 
 ### Q: My whole chapter is offset by a second or two at the start.
 Many recordings begin with a spoken chapter announcement ("The Gospel of Mark, chapter one") that

@@ -1,4 +1,6 @@
+import os
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+import uroman
 
 hidden_imports = (
     collect_submodules('charset_normalizer')
@@ -21,6 +23,7 @@ hidden_imports = (
     + ['chardet']
 )
 
+uroman_data_dir = os.path.join(os.path.dirname(uroman.__file__), 'data')
 datas_list = (
     collect_data_files('charset_normalizer')
     + collect_data_files('certifi')
@@ -28,7 +31,7 @@ datas_list = (
     + collect_data_files('googleapiclient')
     + collect_data_files('google_auth_oauthlib')
     + collect_data_files('google.auth')
-    + collect_data_files('uroman')
+    + [(uroman_data_dir, 'uroman/data')]
 )
 
 a = Analysis(
