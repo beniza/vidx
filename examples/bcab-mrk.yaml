@@ -29,7 +29,7 @@ video:
   scaling_mode: "crop"
   
   # Optional: Title card image displayed before scripture reading starts
-  title_card: "assets/bcab-mrk.png" # Displays at start; doubles as YouTube/social media video thumbnail!
+  title_image: "assets/bcab-mrk.png" # Displays at start; doubles as YouTube/social media video thumbnail!
   title_duration: 4.0            # Duration in seconds for title card display
 
 audio:
@@ -38,8 +38,10 @@ audio:
   sample_rate: 48000
   
   # Optional: Audio Intro & Outro Bumpers (automatically concatenated with scripture audio)
-  # intro_clip: "assets/intro.mp3"  # Plays before scripture (subtitles automatically shift!)
-  # outro_clip: "assets/outro.mp3"  # Plays after scripture concludes
+  # Intro/outro bumpers live under a top-level `bumpers:` block, not here:
+  #   bumpers:
+  #     intro_audio: "assets/intro.mp3"   # plays before scripture; subtitles shift automatically
+  #     outro_audio: "assets/outro.mp3"   # plays after scripture concludes
   
   # Optional: Looped Background Music (BGM)
   # background_music: "assets/soft_worship_bgm.mp3"

@@ -5,7 +5,7 @@
 
 ## 📖 1. Overview & YAML Anatomy
 
-VIDX uses human-readable YAML configuration files (`project.yaml`, `mal_16x9.yaml`, etc.) to orchestrate multi-media scripture video rendering and subtitle generation. A complete configuration file consists of four primary root blocks:
+VIDX uses human-readable YAML configuration files (`project.yaml`, `mal_16x9.yaml`, etc.) to orchestrate multi-media scripture video rendering and subtitle generation. A complete configuration file consists of these root blocks:
 
 ```yaml
 project:
@@ -14,6 +14,12 @@ video:
   # Canvas dimensions, encoding codecs, framerate, and default background media
 style:
   # Typography, colors, transparency, alignment, and margin safety zones
+audio:
+  # Encoding settings and background music
+bumpers:
+  # Optional intro/outro audio played around the narration
+publishing:
+  # YouTube upload settings and metadata templates
 jobs:
   # List of chapters or books to process, with optional per-job overrides
 ```
@@ -30,7 +36,6 @@ The `project` block controls project-wide metadata and general execution behavio
 | `output_dir` | String | `"output"` | Root directory where generated MP4 videos and subtitle files will be written. |
 | `generate_only` | Boolean | `false` | When set to `true`, **skips video rendering completely** and only generates `.ass` and/or `.srt` subtitle files. |
 | `subtitle_format` | String | `"ass"` | Subtitle format to generate when `generate_only` is active or when keeping intermediate files. Options: `"ass"`, `"srt"`, or `"both"`. |
-| `batch_mode` | Boolean | `true` | Enables batch processing of all items listed under `jobs`. |
 
 ### Example
 ```yaml
@@ -57,7 +62,7 @@ The `video` block defines the visual canvas, background media behaviors, and FFm
 | `background_media`| String | `""` | Default path to background loop (`.mp4`, `.mov`) or static image (`.jpg`, `.png`). |
 | `loop_background` | Boolean | `true` | If `true`, loops video backgrounds that are shorter than the audio duration. |
 | `scaling_mode` | String | `"pad"` | How background media scales to fit canvas: `"pad"` (letterbox/pillarbox), `"crop"` (fill screen without distortion), or `"stretch"`. |
-| `gpu` | Boolean | `false` | When set to `true` (or via CLI `--gpu`), enables hardware-accelerated GPU encoding (NVIDIA NVENC / Intel QSV) for 3x–10x faster speeds. |
+| `codec` | String | `"libx264"` | Set to `"auto"` for GPU encoding: VIDX probes NVENC → QSV → AMF → VideoToolbox and falls back to `libx264`. **There is no `gpu:` key** — the CLI `--gpu` flag is the other way to request this. |
 | `loop_crossfade_sec`| Float | `0.0` | Duration in seconds for dissolving loop seams during background preprocessing (e.g. `1.0`). Eliminates visual jumps when loops repeat! |
 | `watermark` | Dictionary | `{}` | Optional corner logo branding overlay (see Watermark Configuration below). |
 
@@ -92,16 +97,96 @@ The `audio` block specifies encoding parameters as well as introductory/concludi
 | `codec` | String | `"aac"` | FFmpeg audio encoder codec. |
 | `bitrate` | String | `"192k"` | Audio encoding bitrate. |
 | `sample_rate` | Integer | `48000` | Sample rate in Hz (`44100` or `48000`). |
-| `intro_clip` | String | `""` | Optional path to an audio intro bumper (e.g., station jingle or narrator intro). |
-| `outro_clip` | String | `""` | Optional path to an audio outro bumper (e.g., closing credits or copyright disclaimer). |
 | `background_music` | String | `""` | Optional path to background music (BGM) loop played continuously during scripture reading. |
 | `background_music_volume` | Float | `0.15` | Volume level for background music (`0.0` to `1.0`). Recommended range: `0.10 - 0.20`. |
 | `fade_in_sec` | Float | `0.0` | Duration in seconds for smooth audio fade-in at the start of the video (e.g., `1.5`). |
 | `fade_out_sec`| Float | `0.0` | Duration in seconds for smooth audio fade-out at the end of the video (e.g., `2.0`). |
 
 ### Automatic Subtitle Timestamp Shifting & Audio Mixing
-*   **Timestamp Shifting:** When an `intro_clip` is configured, VIDX automatically measures its exact duration and **offsets all subtitle timestamps in generated `.ass` and `.srt` files** by that duration. Scripture synchronization remains 100% frame-accurate!
+*   **Timestamp Shifting:** When `bumpers.intro_audio` is configured, VIDX automatically measures its exact duration and **offsets all subtitle timestamps in generated `.ass` and `.srt` files** by that duration. Scripture synchronization remains 100% frame-accurate!
 *   **Looped BGM Blending:** When `background_music` is configured, VIDX automatically loops the background soundtrack to match the full duration of the scripture reading and blends it using FFmpeg's `amix` filter (`normalize=0`) so the narrator's voice volume is never attenuated.
+
+---
+
+## 🔔 4b. The `bumpers` Block (Intro & Outro Audio)
+
+Intro and outro audio are configured in their **own top-level block**, not under `audio`.
+Getting this wrong is silent: a misplaced key is simply ignored and no bumper is added.
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `intro_audio` | String | *(unset)* | Audio played **before** the narration. VIDX measures its real duration and shifts every subtitle timestamp forward to match, so sync stays frame-accurate. |
+| `outro_audio` | String | *(unset)* | Audio played **after** the narration concludes. |
+| `title_image` | String | *(unset)* | Fallback location for `video.title_image`. |
+| `title_duration` | Float | `3.0` | Fallback location for `video.title_duration`. |
+| `outro_image` | String | *(unset)* | Fallback location for `video.outro_image`. |
+| `outro_start` | Float | `0.0` | Fallback location for `video.outro_start`. |
+
+```yaml
+bumpers:
+  intro_audio: "assets/intro.mp3"   # subtitles shift automatically by its duration
+  outro_audio: "assets/outro.mp3"
+```
+
+> [!NOTE]
+> Background music is **not** a bumper — it lives at `audio.background_music`. The
+> bumper stage only runs if at least one of these files actually exists on disk.
+
+---
+
+## 📺 4c. The `publishing` Block (YouTube Upload & Metadata)
+
+Controls both automated uploading and the offline drag-and-drop package. Full setup
+instructions are in the **[Publishing Guide](publishing_guide.md)**.
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `platform` | String | `"youtube"` | Target platform. Only `youtube` is implemented. |
+| `enabled` | Boolean | `false` | Turns on automated uploading. Requires a Google key file. |
+| `generate_offline_package` | Boolean | `true` | Builds `YouTube_Upload_Package/` folders containing the video, thumbnail and a ready-to-paste `metadata.txt`. |
+| `client_secrets_file` | String | `"~/.vidx/client_secrets.json"` | Your Google application key. Identifies the *app*, not the channel. |
+| `token_file` | String | `<manifest folder>/youtube_token.json` | Cached channel login. Identifies **which channel receives the videos**. Point two projects at one file to deliberately share a channel. |
+| `privacy_status` | String | `"unlisted"` | `private`, `unlisted`, or `public`. Not validated — a typo uploads with YouTube's own default. |
+| `category_id` | String | `"22"` | YouTube category. `22` = People & Blogs, `27` = Education. |
+| `playlist_name` | String | `""` | Playlist to file videos into. Found by name, or created if absent. |
+| `title_template` | String | `"{book} Chapter {chapter:02d} — {language} Audio Bible"` | Video title. See placeholders below. |
+| `description_template` | String | *(multi-line default)* | Video description. Accepts the same placeholders. |
+| `tags` | List | `["AudioBible", "Scripture", "{language}", "{book}"]` | Each tag is resolved individually. |
+
+### Template Placeholders
+
+`{book}`, `{chapter}`, `{language}`, `{text_copyright}`, `{audio_copyright}`.
+
+`{chapter}` is a real integer, so `{chapter:02d}` gives `01`, `02`. Unknown placeholders
+are left as literal text rather than raising an error, which makes typos easy to miss —
+check your first rendered title.
+
+The last three come from the `project` block, **not** from `publishing`:
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `project.language` | String | `"Language"` | Fills `{language}`. Set this or every title says "Language". |
+| `project.text_copyright` | String | `""` | Fills `{text_copyright}`. |
+| `project.audio_copyright` | String | `""` | Fills `{audio_copyright}`. |
+
+```yaml
+project:
+  language: "Sindhi"
+  text_copyright: "© 2024 Bible Society"
+  audio_copyright: "© 2024 Recording Ministry"
+
+publishing:
+  platform: "youtube"
+  enabled: true
+  privacy_status: "unlisted"
+  playlist_name: "Gospel of Mark — Sindhi Audio Bible"
+  title_template: "{book} Chapter {chapter:02d} — {language} Audio Bible"
+```
+
+> [!NOTE]
+> `publish_manifest.json` is written whenever **either** `enabled` **or**
+> `generate_offline_package` is true — and the latter defaults to `true`. To produce
+> no publishing artifacts at all, set both to `false`.
 
 ---
 
@@ -165,15 +250,23 @@ style:
     font: "Bailey"
     size: 60                    # Typically 15-20% larger than verse font
     color: "#FFD400"            # Accent color (e.g., Gold/Yellow)
+    outline_color: "#000000"    # Border outline color
+    outline_width: 3            # Border thickness; defaults to the verse value
+    shadow: 1                   # Drop shadow offset; defaults to the verse value
     alignment: 8                # Top-Center positioning
     margin_vertical: 80         # Distance from top edge
     bold: true                  # Render headings in bold weight
+    background_box: true        # Headings support the same readability box as verses
+    background_color: "#000000"
+    background_opacity: 0.60
 
   verse_number:
     show: true                  # Display inline verse references (e.g., "1:1")
     color: "#FFC080"            # Accent color for verse numbers
     size: 38                    # Typically 75% of verse font size
     on_every_segment: false     # If false, only shows reference on first segment (e.g., 1a, not 1b)
+    # Note: verse numbers have no font/alignment/margin keys of their own -- they are
+    # drawn inline with the verse text and inherit its style and position.
 
   overlay:
     enabled: true
@@ -187,7 +280,17 @@ style:
     watermark_opacity: 0.50     # Opacity float (0.50 = 50% opacity)
     opacity: 0.50               # General overlay opacity fallback
     divider_line: true          # Draw horizontal divider line between title and subtitle
+    branding_text: "MINISTRY"   # Third text line, for a ministry or channel name
+    duration: "full"            # Seconds to display, or "full" for the whole video
 ```
+
+> [!NOTE]
+> The `overlay` block accepts far more than the common keys above. Every text element
+> — `title`, `subtitle`, `branding`, `watermark`, `divider` — takes its own
+> `_font`, `_size`, `_color`, `_opacity`, `_transparency`, `_alignment` (or `_position`)
+> and `_margin_v` suffix, e.g. `subtitle_font`, `branding_margin_v`, `watermark_size`.
+> Anything you leave out is derived from the verse and heading styles. `overlay` may
+> also be written as a **top-level block** instead of under `style`.
 
 ### 5.5 ASS Numpad Alignment Reference
 When configuring positioning (`alignment`, `title_position`, `watermark_position`), VIDX uses standard ASS numeric layout (similar to a keyboard numpad):
@@ -263,6 +366,16 @@ You can override global `video` settings on a **per-chapter basis** directly ins
 | `background_music_volume` | Overrides the background music volume level for this chapter. | `background_music_volume: 0.15` |
 | `duration` | Limits rendering to `N` seconds (useful for quick chapter testing). | `duration: 15` |
 | `keep_ass` | Override intermediate subtitle retention (`true` / `false`). | `keep_ass: true` |
+| `watermark` | Per-chapter watermark. An **image path** (`.png`/`.jpg`/`.jpeg`/`.bmp`/`.gif`/`.svg`) is burned in by FFmpeg; any other string becomes overlay *text*. | `watermark: "src/logo.png"` |
+| `title` | Overrides `overlay.title` for this chapter only. | `title: "The Passion Narrative"` |
+| `book` | USFM book code. Normally auto-detected from the timing file's `\id`, then the USFM. Set it when detection fails. | `book: MRK` |
+| `chapter` | Chapter number. Auto-detected from `\c`, then from the output/timing/audio filename. | `chapter: 5` |
+| `output` | Output video path. Defaults to `<project.output_dir>/<audio filename>.mp4`. | `output: "output/Mark_01.mp4"` |
+
+> [!NOTE]
+> `usfm`, `timing` and `audio` are **required** in every job. If any one of them is
+> missing the job is skipped silently, which usually looks like "VIDX rendered fewer
+> chapters than I listed".
 
 #### Example: Bulk Run with Per-Chapter Backgrounds & Music
 ```yaml
@@ -485,8 +598,6 @@ video:
 audio:
   codec: "aac"
   bitrate: "192k"
-  intro_clip: "assets/intro.mp3"
-  outro_clip: "assets/outro.mp3"
   background_music: "assets/bgm.mp3"
   background_music_volume: 0.15
 

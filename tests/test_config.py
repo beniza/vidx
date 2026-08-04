@@ -56,3 +56,16 @@ def test_config_save(tmp_path):
     # Reload and verify
     reloaded = Config(config_path=out_file)
     assert reloaded.project["name"] == "Saved Project"
+
+
+def test_every_shipped_config_loads():
+    """A broken example is a broken quickstart -- examples/sindhi_matthew_batch.yaml
+    once shipped with a stray character that made it unparseable, and the guide
+    told users to run it."""
+    root = Path(__file__).resolve().parent.parent
+    shipped = sorted(root.glob("examples/*.yaml")) + [root / "config.sample.yaml"]
+    assert shipped, "no shipped configs found"
+    for path in shipped:
+        if not path.exists():
+            continue
+        Config(config_path=path)  # raises on malformed YAML
