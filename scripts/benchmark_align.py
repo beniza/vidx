@@ -60,6 +60,10 @@ def main():
     ap.add_argument("--lang", default="mal")
     ap.add_argument("--chapters", default="1-16", help="e.g. 1-16 or 1,5,9")
     ap.add_argument("--level", default="verse", choices=["verse", "phrase"])
+    ap.add_argument("--compare-only", metavar="DIR", nargs="?", const="",
+                    help="Skip alignment and score timing files that already exist. "
+                         "Defaults to --ref-dir, where VIDX writes BOOK-NN-timing.txt "
+                         "alongside SAB's C##-##-BOOK-NN-timing.txt.")
     args = ap.parse_args()
 
     if "-" in args.chapters:
@@ -68,11 +72,27 @@ def main():
     else:
         chapters = [int(c) for c in args.chapters.split(",")]
 
-    usfm_text = Path(args.usfm).read_text(encoding="utf-8-sig")
     out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-
     results = []
+
+    if args.compare_only is not None:
+        # Score timing files that are already on disk. No model, no audio, no ffmpeg.
+        src = Path(args.compare_only or args.ref_dir)
+        for ch in chapters:
+            f = src / f"{args.book}-{ch:02d}-timing.txt"
+            if not f.exists():
+                console.print(f"[yellow]skip ch {ch}: no {f.name}")
+                continue
+            rows = from_audacity_labels(f.read_text(encoding="utf-8-sig"))
+            results.append({"ch": ch, "rows": rows, "dur": None, "sec": None})
+        if not results:
+            console.print(f"[red]no {args.book}-NN-timing.txt files found in {src}")
+            return 1
+        console.print(f"[dim]Scoring {len(results)} existing timing files from {src}[/dim]\n")
+        return report(args, results)
+
+    usfm_text = Path(args.usfm).read_text(encoding="utf-8-sig")
+    out_dir.mkdir(parents=True, exist_ok=True)
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -107,25 +127,31 @@ def main():
             results.append({"ch": ch, "rows": rows, "dur": dur, "sec": elapsed})
             prog.advance(book_task)
 
+    return report(args, results)
+
+
+def report(args, results):
+    """Print the speed and accuracy tables. Speed is skipped in compare-only mode."""
     if not results:
         console.print("[red]nothing aligned")
         return 1
 
     # ---------------- speed ----------------
-    t = Table(title="Alignment speed", title_style="bold cyan")
-    for c, j in [("Ch", "right"), ("Segments", "right"), ("Audio", "right"),
-                 ("Align time", "right"), ("Speed", "right")]:
-        t.add_column(c, justify=j)
-    for r in results:
-        t.add_row(f"{r['ch']:02d}", str(len(r["rows"])), f"{r['dur']:.0f}s",
-                  f"{r['sec']:.1f}s", f"{r['dur'] / r['sec']:.1f}x")
-    tot_a = sum(r["dur"] for r in results)
-    tot_s = sum(r["sec"] for r in results)
-    t.add_section()
-    t.add_row("[bold]All", f"[bold]{sum(len(r['rows']) for r in results)}",
-              f"[bold]{tot_a / 60:.1f}m", f"[bold]{tot_s / 60:.1f}m",
-              f"[bold]{tot_a / tot_s:.1f}x")
-    console.print(t)
+    if all(r["sec"] for r in results):
+        t = Table(title="Alignment speed", title_style="bold cyan")
+        for c, j in [("Ch", "right"), ("Segments", "right"), ("Audio", "right"),
+                     ("Align time", "right"), ("Speed", "right")]:
+            t.add_column(c, justify=j)
+        for r in results:
+            t.add_row(f"{r['ch']:02d}", str(len(r["rows"])), f"{r['dur']:.0f}s",
+                      f"{r['sec']:.1f}s", f"{r['dur'] / r['sec']:.1f}x")
+        tot_a = sum(r["dur"] for r in results)
+        tot_s = sum(r["sec"] for r in results)
+        t.add_section()
+        t.add_row("[bold]All", f"[bold]{sum(len(r['rows']) for r in results)}",
+                  f"[bold]{tot_a / 60:.1f}m", f"[bold]{tot_s / 60:.1f}m",
+                  f"[bold]{tot_a / tot_s:.1f}x")
+        console.print(t)
 
     # ---------------- accuracy vs reference ----------------
     a = Table(title="Verse-start error vs SAB reference", title_style="bold cyan")
@@ -192,7 +218,8 @@ def main():
                       f"differs per chapter and is expected.")
     if unmatched:
         console.print(f"[yellow]{unmatched} verse ids had no reference match")
-    console.print(f"\nTimings written to [cyan]{out_dir}")
+    if all(r["sec"] for r in results):
+        console.print(f"\nTimings written to [cyan]{args.out_dir}")
     return 0
 
 
