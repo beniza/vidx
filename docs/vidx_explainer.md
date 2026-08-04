@@ -90,9 +90,10 @@ timing file for you — in about a minute per chapter.
 > books have already been produced this way in Malayalam and Sindhi.
 
 **How close does it get?** Measured against the timing files a real Scripture App
-project already had, across all 16 chapters of Mark in Malayalam — 678 verse
-boundaries in total — VIDX placed verses within a quarter of a second of the
-existing timings on average, and within one second more than 99% of the time.
+project already had, across all 16 chapters of Mark in Malayalam — 662 verse
+boundaries in total — VIDX placed the typical verse within **a sixth of a
+second** of the existing timings. Nine in ten land within half a second, and
+99.8% within one second.
 That is close enough to watch without noticing.
 
 **And you can correct it.** Where a verse does need nudging, you don't need
@@ -135,8 +136,13 @@ all. This is often the right choice for teams on slower or metered connections.
 
 ### Step 0: Install the YouTube Extra (don't skip this!)
 
+> **Using the standalone `vidx.exe`? Skip straight to Step 1.** The uploading
+> machinery and the timing aligner are both built into the executable, so there is
+> nothing to install and no Python needed. This step is only for teams running
+> VIDX from a Python installation.
+
 The uploading machinery is an **optional add-on**, so it is not present in a
-plain VIDX install. Install it first:
+plain Python VIDX install. Install it first:
 
 ```powershell
 pip install -e ".[youtube]"
@@ -375,7 +381,7 @@ reference.
 
 Download the program directly:
 
-**[Download vidx.exe](https://github.com/beniza/vidx/releases/download/v0.4.0/vidx.exe)**
+**[Download vidx.exe](https://github.com/beniza/vidx/releases/latest/download/vidx.exe)**
 
 This is a self-contained Windows program — no Python installation required
 to run it. Your project coordinator will also provide your project folder
