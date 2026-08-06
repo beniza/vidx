@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 import sys
 from unittest.mock import patch
 from vidx.cli import main
@@ -151,3 +152,22 @@ def test_run_publisher_honors_config_token_file_override(tmp_path):
 
     _, kwargs = mock_pub_cls.call_args
     assert kwargs["token_file"] == "~/.vidx/custom_token.json"
+
+
+def test_tag_test_duration_marks_test_renders():
+    """A -t render must be distinguishable from a final by filename alone."""
+    from vidx.cli import tag_test_duration
+
+    # whole seconds lose the .0
+    assert tag_test_duration("out/Mark_01.mp4", 25.0) == str(
+        Path("out/Mark_01_25s.mp4")
+    )
+    # fractional durations keep their decimal
+    assert tag_test_duration("out/Mark_01.mp4", 7.5) == str(
+        Path("out/Mark_01_7.5s.mp4")
+    )
+    # idempotent: re-running the same -t never stacks a second suffix
+    once = tag_test_duration("out/Mark_01.mp4", 25)
+    assert tag_test_duration(once, 25) == once
+    # a different -t value on an already-tagged name is still distinguishable
+    assert tag_test_duration(once, 15).endswith("_25s_15s.mp4")

@@ -17,6 +17,20 @@ from .youtube import YouTubePublisher, QuotaExceededError, YOUTUBE_AVAILABLE, _Y
 from . import __version__
 
 
+def tag_test_duration(output_file: str, duration: float) -> str:
+    """Tag a -t test render in its own filename so it can't be shipped as a final.
+
+    25.0 -> "_25s", 7.5 -> "_7.5s". Idempotent: re-running the same -t value
+    never stacks a second suffix.
+    """
+    d = int(duration) if float(duration).is_integer() else duration
+    p = Path(output_file)
+    suffix = f"_{d}s"
+    if p.stem.endswith(suffix):
+        return output_file
+    return str(p.with_name(f"{p.stem}{suffix}{p.suffix}"))
+
+
 def run_publisher(manifest_path: str, config: Optional[Config] = None):
     """Execute outbox publishing loop against YouTube Data API."""
     if not YOUTUBE_AVAILABLE:
@@ -362,7 +376,11 @@ def main():
             usfm_file=args.usfm,
             timing_file=args.timing,
             audio_file=audio_f,
-            output_file=out_f,
+            output_file=(
+                tag_test_duration(out_f, args.duration)
+                if args.duration is not None
+                else out_f
+            ),
             background_media=args.bg,
             duration=args.duration,
             keep_ass=keep_ass,
@@ -394,6 +412,7 @@ def main():
         if args.duration is not None:
             for job in runner.jobs:
                 job.duration = args.duration
+                job.output_file = tag_test_duration(job.output_file, args.duration)
         observer = TerminalProgressObserver(total_jobs=len(runner.jobs), use_rich=True)
         runner.progress_reporter.subscribe(observer.on_progress)
         observer.start()

@@ -1,0 +1,262 @@
+# ==============================================================================
+# Mavilan Tulu (Malayalam script) — Gospel of Mark, FHD 16:9
+# ==============================================================================
+#   vidx -c examples/tcy_mav_mark_16x9.yaml --generate-only --format ass  # check text
+#   vidx -c examples/tcy_mav_mark_16x9.yaml -t 15 -y                     # check styling
+#   vidx -c examples/tcy_mav_mark_16x9.yaml --gpu -y -w 4                # full run
+#
+# Timings are VIDX's own (MRK-NN-timing.txt), phrase level, from --align.
+# Chosen over SAB's C01-01-MRK-NN-timing.txt because SAB timed no \s heading
+# segments: the narrator reads them, so SAB's contiguous verse rows absorb
+# ~2s of heading audio at ~7 points per chapter and the heading style never
+# fires. Verse starts agree with SAB to 0.16s median / 89% within 0.5s.
+#
+# Backgrounds and music are assigned per chapter by shuffled round-robin
+# (seed 20260804): random order, but balanced coverage — bgvideo 6/5/5 and
+# bgmusic 4/3/3/3/3 — and no clip repeats in consecutive chapters. Pure random
+# would likely have left one clip on 9 chapters and another on 2.
+# ==============================================================================
+
+project:
+  name: "Mavilan Tulu — Gospel of Mark"
+  output_dir: "output/tcy_mav_mrk"
+  generate_only: false
+  subtitle_format: "ass"
+
+video:
+  resolution: "1920x1080"           # FHD 16:9
+  fps: 24
+  codec: "auto"
+  preset: "fast"
+  crf: 23
+
+  # Per-chapter `background:` overrides this; kept as the fallback default.
+  # All three clips are natively 16:9 (bgvideo-1 is 4K, -2 and -3 are FHD), so
+  # `crop` is a clean downscale with nothing trimmed off the sides.
+  background_media: "src/tcy-mav/bg-video/bgvideo-1.mp4"
+  scaling_mode: "crop"
+
+  # The clips run 12-22s against 8-minute chapters, so each loops 20-40 times.
+  # loop_crossfade_sec dissolves the loop seam; VIDX bakes it into a cached
+  # copy up front, so even the already-FHD clips get preprocessed (a hard cut
+  # every 12s is very visible otherwise).
+  loop_background: true
+  loop_crossfade_sec: 1.0
+
+  # EGM Media branding. logo.png is the EGM Media logo (globe + wordmark),
+  # 500x500 RGBA; 0.08 of canvas width puts it at ~154px in the top-right.
+  watermark:
+    image: "src/tcy-mav/logo.png"
+    position: "top-right"
+    margin: 40
+    scale: 0.08
+    opacity: 0.75
+
+audio:
+  codec: "aac"
+  bitrate: "192k"
+  sample_rate: 48000
+  background_music_volume: 0.15     # 15%; per-job music inherits this
+
+style:
+  verse:
+    font: "Manjari"                 # must be installed on every rendering machine
+    size: 48
+    color: "#FFFFFF"
+    outline_color: "#000000"
+    outline_width: 3
+    shadow: 1
+    alignment: 2                    # bottom-centre
+    margin_bottom: 60
+    margin_lr: 60
+    background_box: false
+    background_color: "#000000"
+    background_opacity: 0.50
+
+  heading:
+    font: "Manjari"
+    size: 56
+    color: "#FFD400"
+    alignment: 8                    # top-centre
+    margin_vertical: 80
+    bold: true
+    background_box: false
+    background_color: "#000000"
+    background_opacity: 0.50
+
+  verse_number:
+    show: true
+    color: "#FFC080"
+    size: 36
+    on_every_segment: false         # reference on the 'a' fragment only
+
+  # ---------------------------------------------------------------------------
+  # Persistent title, subtitle and text watermark.
+  #
+  # No background box is configured because none is possible: every Overlay*
+  # style is emitted with ASS BorderStyle 1 (outline only) and a transparent
+  # BackColour, hardcoded in ass_generator.py. Only `verse` and `heading` read
+  # `background_box`. Contrast therefore comes from the outlines below.
+  #
+  # Sizes are 50% above the generator's derived defaults (title 72 -> 108,
+  # subtitle 36 -> 54, watermark 31 -> 47). Those defaults come off the verse
+  # size, which is unchanged at 48.
+  # ---------------------------------------------------------------------------
+  overlay:
+    enabled: true
+    duration: "full"                # held to the last verse + 10s, i.e. whole chapter
+
+    title: true                     # auto-derived from \h + chapter, e.g. "മർക്കോച്ച് 1"
+    title_position: 5               # middle-centre
+    title_size: 108
+    title_color: "#FFFFFF"
+    title_outline_color: "#000000"
+    title_outline_width: 4          # also drives the subtitle outline (shared in the generator)
+
+    # A gold rule above the wordmark. The built-in `divider_line` can't do this:
+    # its style hardcodes size 24 and takes its colour from title_color, so it
+    # can be neither thick nor gold-while-the-title-stays-white.
+    #
+    # Instead the rule is an ASS vector drawing carried in the subtitle text.
+    # The subtitle is the one overlay field written into the .ass verbatim
+    # (ass_generator.py:402) rather than through clean_subtitle_text, so
+    # override tags survive. PlayRes is 1920x1080, so the coordinates below are
+    # literal pixels: a 460x12 gold bar. \bord0 stops the style's 4px black
+    # outline from boxing it in; {\r} resets to the style for the wordmark line.
+    # Being a drawing rather than a glyph (─, ▬) it needs no font support.
+    subtitle: '{\c&H00D4FF&\bord0\shad0\p1}m 0 0 l 460 0 l 460 12 l 0 12{\p0}\N{\r}Mavilan Tulu Bible'
+    subtitle_alignment: 2           # bottom-centre, above the verse block
+    # MarginV is honoured for bottom alignments (unlike 4/5/6), so this is what
+    # keeps the subtitle clear of the verse block. Measured across all 1767
+    # segments in this book: 78% wrap to 1 line, 21% to 2, and 12 segments
+    # (0.7%) to 3 -- the longest being Mark 14:57-58 at 267 characters. Three
+    # lines plus the verse-number line and margin_bottom 60 comes to ~277px.
+    # Raised to 390 to close the title/subtitle gap. Calibrated by rendering:
+    # at margin_v 315 the rule landed at y~705, i.e. rule_y = (1080 - M) - 60,
+    # so 390 puts it at ~630 -- roughly 50px under the title. Still 113px clear
+    # of the tallest possible verse block (277px), so no collision risk.
+    subtitle_margin_v: 390
+    subtitle_size: 54
+    subtitle_color: "#FFFFFF"
+
+    watermark_text: "EGM MEDIA"
+    watermark_position: 4           # middle-left
+    watermark_size: 47
+    watermark_opacity: 0.60
+    # watermark outline is fixed at 1px black, shadow 0, in the generator —
+    # there is no watermark_outline_* key to widen it.
+
+    divider_line: false             # defaults to true whenever a title or subtitle exists
+
+jobs:
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-01-timing.txt"
+    audio: "src/tcy-mav/audio/B02___01_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_01.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-2.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-2.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-02-timing.txt"
+    audio: "src/tcy-mav/audio/B02___02_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_02.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-3.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-3.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-03-timing.txt"
+    audio: "src/tcy-mav/audio/B02___03_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_03.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-1.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-1.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-04-timing.txt"
+    audio: "src/tcy-mav/audio/B02___04_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_04.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-2.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-4.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-05-timing.txt"
+    audio: "src/tcy-mav/audio/B02___05_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_05.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-1.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-5.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-06-timing.txt"
+    audio: "src/tcy-mav/audio/B02___06_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_06.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-3.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-4.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-07-timing.txt"
+    audio: "src/tcy-mav/audio/B02___07_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_07.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-2.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-3.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-08-timing.txt"
+    audio: "src/tcy-mav/audio/B02___08_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_08.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-3.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-2.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-09-timing.txt"
+    audio: "src/tcy-mav/audio/B02___09_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_09.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-1.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-5.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-10-timing.txt"
+    audio: "src/tcy-mav/audio/B02___10_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_10.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-3.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-1.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-11-timing.txt"
+    audio: "src/tcy-mav/audio/B02___11_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_11.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-2.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-2.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-12-timing.txt"
+    audio: "src/tcy-mav/audio/B02___12_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_12.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-1.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-5.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-13-timing.txt"
+    audio: "src/tcy-mav/audio/B02___13_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_13.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-2.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-3.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-14-timing.txt"
+    audio: "src/tcy-mav/audio/B02___14_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_14.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-3.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-4.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-15-timing.txt"
+    audio: "src/tcy-mav/audio/B02___15_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_15.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-1.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-1.mp3"
+
+  - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
+    timing: "src/tcy-mav/timing/MRK-16-timing.txt"
+    audio: "src/tcy-mav/audio/B02___16_Mark________TCYNLCP1DA.mp3"
+    output: "output/tcy_mav_mrk/Mark_Chapter_16.mp4"
+    background: "src/tcy-mav/bg-video/bgvideo-2.mp4"
+    background_music: "src/tcy-mav/bg-music/bgmusic-2.mp3"
