@@ -23,6 +23,11 @@ project:
   generate_only: false
   subtitle_format: "ass"
 
+  # Feeds {language} in the publishing title/description/tag templates. Without
+  # it batch_runner falls back to the literal string "Language", which is how
+  # "MRK Chapter 01 — Language Audio Bible" ends up in publish_manifest.json.
+  language: "Mavilan Tulu"
+
 video:
   resolution: "1920x1080"           # FHD 16:9
   fps: 24
