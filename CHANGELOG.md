@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **YouTube Chapters from Section Headings (`{chapters}`)** — issue #9. Put `{chapters}` in `description_template` and VIDX emits a timestamped chapter list built from the `\s` headings and their existing timings, i.e. the same headings the viewer sees on screen. No new config key: the placeholder's presence is the switch, so projects that don't use it pay nothing and behave exactly as before. It reaches both the API upload and the copy-paste `metadata.txt` because both take the resolved description verbatim.
+  - YouTube shows **no** chapters at all unless the list starts at `0:00`, has ≥3 markers, and every chapter runs ≥10s. All three are enforced: the first heading collapses to `0:00` when it starts within 10s, otherwise a synthetic marker labelled `<book> <ch>:1` is inserted (the Mark 9 case, where verse 1 precedes the first heading); markers closer than 10s are dropped; and if fewer than 3 survive the block is left empty with a warning naming the timing file, since a two-heading chapter is ordinary translation data rather than a misconfiguration.
+  - Labels carry the verse range, e.g. `0:00 <heading> (1:1-8)`. The range uses numeric endpoints rather than joined segment ids, because a merged verse id is itself `3-4` and joining would read `3-4-5` for a section spanning 3-4 through 5.
+  - Measured on the 16-chapter Mavilan Tulu Mark: every chapter yields a valid list, 3 to 9 markers each.
+- **`{h}` and `{ch}` placeholders.** `{book}` is the USFM `\id` code, so titles read "MRK Chapter 01"; `{h}` is the book's own name from `\h` ("മർക്കോച്ച്"), which was already parsed for on-screen verse references but never reached publishing. `{ch}` is a short alias for `{chapter}`.
+- **`bumpers.intro_offset_seconds(config)`** — the intro-duration resolution chain (`_calc_intro_duration` → `intro_audio` duration → title-image duration → 0) as one function. Chapter markers shift by the same offset the subtitles do; without this, any project using a `bumpers` intro would get a chapter list pointing at the wrong moments.
+
+### Fixed
+- **`docs/publishing_guide.md` documented two defaults incorrectly:** `generate_offline_package` as `false` when `config.py` sets `True` (so a manifest is written even with `enabled: false`), and `privacy_status` as `private` when the default is `unlisted`. Both are the kind of error that only shows up when a run does something unexpected.
+
 ## [0.4.5] - 2026-08-10
 
 ### Added

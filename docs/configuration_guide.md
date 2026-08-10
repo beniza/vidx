@@ -155,11 +155,20 @@ instructions are in the **[Publishing Guide](publishing_guide.md)**.
 
 ### Template Placeholders
 
-`{book}`, `{chapter}`, `{language}`, `{text_copyright}`, `{audio_copyright}`.
+`{book}`, `{h}`, `{chapter}`, `{ch}`, `{language}`, `{text_copyright}`, `{audio_copyright}`,
+and `{chapters}` — the last one in `description_template` only.
 
-`{chapter}` is a real integer, so `{chapter:02d}` gives `01`, `02`. Unknown placeholders
-are left as literal text rather than raising an error, which makes typos easy to miss —
-check your first rendered title.
+`{book}` is the USFM `\id` code (`MRK`); **`{h}` is the book's own name from `\h`**
+(`മർക്കോച്ച്`), which is usually what belongs in a title. `{ch}` is a short alias for
+`{chapter}`; both are real integers, so `{chapter:02d}` gives `01`, `02`.
+
+`{chapters}` expands to a timestamped YouTube chapter list built from the `\s` headings —
+see the [Publishing Guide](publishing_guide.md) for the rules YouTube imposes on it. It is
+deliberately not passed to `title_template` or `tags`, where a multi-line value makes no
+sense.
+
+Unknown placeholders are left as literal text rather than raising an error, which makes typos
+easy to miss — check your first rendered title.
 
 The last three come from the `project` block, **not** from `publishing`:
 

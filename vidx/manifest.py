@@ -10,6 +10,13 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, asdict
 
+from .usfm_parser import USFMParser, TimingParser, parse_segment_id
+
+# YouTube ignores the whole chapter list unless it starts at 0:00, has at least
+# three markers, and every chapter runs 10s or more.
+YT_MIN_MARKERS = 3
+YT_MIN_CHAPTER_SEC = 10.0
+
 
 class SafeDict(dict):
     """Dictionary that returns format placeholders unchanged if key is missing."""
@@ -43,6 +50,102 @@ def resolve_metadata_template(
     except Exception:
         # Fallback to standard string formatting if format_map fails on complex syntax
         return template_str
+
+
+def _read(path):
+    # utf-8-sig: a BOM'd \id line otherwise fails every marker regex (cli.py does the same)
+    with open(path, "r", encoding="utf-8-sig") as f:
+        return f.read()
+
+
+def usfm_book_name(usfm_file) -> str:
+    """The book's own name from \\h, e.g. 'മർക്കോച്ച്'. Empty if absent.
+
+    `{book}` is the \\id code (MRK); this is what a reader would recognise.
+    """
+    for line in _read(usfm_file).split("\n"):
+        if line.startswith("\\h "):
+            return line[3:].strip()
+    return ""
+
+
+def _timestamp(seconds: float) -> str:
+    """YouTube chapter timestamp: M:SS, or H:MM:SS past the hour."""
+    total = int(seconds)  # floor, so a marker never rounds past its own boundary
+    h, m, s = total // 3600, (total % 3600) // 60, total % 60
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def build_chapter_markers(
+    usfm_file,
+    timing_file,
+    chapter=None,
+    offset_seconds: float = 0.0,
+    intro_label: str = "Introduction",
+) -> str:
+    """Build a YouTube chapter block from the \\s headings and their timings.
+
+    Returns lines like ``0:00 Heading (1:1-8)``, or "" (with a printed warning)
+    when the data cannot satisfy YouTube's rules -- a chapter with two headings
+    is ordinary translation data, not a misconfiguration, so this never raises.
+    """
+    tp = TimingParser(_read(timing_file), filepath=str(timing_file))
+    tp.shift_timestamps(offset_seconds)  # keep bumper intros in step
+    if not tp.entries:
+        return ""
+
+    # Prefer the timing file's own \c: the single-job CLI path may not know the
+    # chapter, and batch_runner falls back to 1, which would caption a video
+    # with some other chapter's headings.
+    up = USFMParser(_read(usfm_file), target_chapter=str(tp.chapter or chapter or 1))
+
+    # Walk the rows once, pairing each heading with the verses that follow it.
+    rows = []  # [start, heading_text, [verse ids...]]
+    for e in tp.entries:
+        vid, marker = parse_segment_id(e["segment"])
+        if vid == "section":
+            text = up.get_section_heading(marker)
+            if text:
+                rows.append([float(e["start"]), text, []])
+        elif vid and rows and vid not in rows[-1][2]:
+            rows[-1][2].append(vid)
+    if not rows:
+        return ""
+
+    if rows[0][0] < YT_MIN_CHAPTER_SEC:
+        rows[0][0] = 0.0                       # first heading owns 0:00
+    else:
+        rows.insert(0, [0.0, intro_label, []])  # verse 1 precedes the heading
+
+    chap = up.chapter or tp.chapter or ""
+    end = float(tp.entries[-1]["end"])
+
+    kept = []
+    for start, text, verses in rows:
+        # One rule enforces the 10s minimum, strict ascending order, and (since
+        # timestamps are floored to whole seconds) no two identical labels.
+        if kept and start < kept[-1][0] + YT_MIN_CHAPTER_SEC:
+            continue
+        label = text
+        if verses:
+            # Endpoints, not raw ids: a merged verse is itself "3-4", so joining
+            # ids would read "3-4-5" for a section spanning 3-4 through 5.
+            first = verses[0].split("-")[0]
+            last = verses[-1].split("-")[-1]
+            span = first if first == last else f"{first}-{last}"
+            label = f"{text} ({chap}:{span})" if chap else f"{text} ({span})"
+        kept.append((start, label))
+    # the final chapter must also run 10s or more
+    if len(kept) > 1 and end - kept[-1][0] < YT_MIN_CHAPTER_SEC:
+        kept.pop()
+
+    if len(kept) < YT_MIN_MARKERS:
+        print(
+            f"[!] Chapter markers skipped for {Path(timing_file).name}: only "
+            f"{len(kept)} usable section heading(s); YouTube needs {YT_MIN_MARKERS}."
+        )
+        return ""
+    return "\n".join(f"{_timestamp(s)} {label}" for s, label in kept)
 
 
 @dataclass

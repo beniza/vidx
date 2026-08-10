@@ -165,15 +165,54 @@ everything else has a sensible default.
 | Key | Default | What it does |
 | :--- | :--- | :--- |
 | `enabled` | `false` | Turn the publishing pipeline on. |
-| `generate_offline_package` | `false` | Also build the drag-and-drop `YouTube_Upload_Package/` folders (Method 2). |
+| `generate_offline_package` | `true` | Also build the drag-and-drop `YouTube_Upload_Package/` folders (Method 2). On by default, so a manifest is written even with `enabled: false` — set both to `false` for no publishing artifacts at all. |
 | `client_secrets_file` | `~/.vidx/client_secrets.json` | Path to your Google app key. Change only if you keep it elsewhere. |
 | `token_file` | `<manifest folder>/youtube_token.json` | Where the channel login is cached. Point two projects at the same file to deliberately share one channel login. |
-| `privacy_status` | `private` | `private`, `unlisted`, or `public`. Use `unlisted` while reviewing, then flip to `public`. |
+| `privacy_status` | `unlisted` | `private`, `unlisted`, or `public`. Not validated — a typo uploads with YouTube's own default. |
 | `category_id` | `22` | YouTube category. `22` = People & Blogs, `27` = Education. |
 | `playlist_name` | *(none)* | Playlist title. VIDX finds it by name, or creates it (unlisted) if it doesn't exist yet. |
-| `title_template` | — | Supports `{book}`, `{chapter}`, `{language}`. e.g. `"{book} Chapter {chapter:02d} — {language}"`. |
-| `description_template` | — | Multi-line description, same placeholders. |
+| `title_template` | — | e.g. `"{h} {ch} — {language} Audio Bible"`. Placeholders below. |
+| `description_template` | — | Multi-line description. Same placeholders, plus `{chapters}`. |
 | `tags` | — | List of hashtags; placeholders are substituted here too. |
+
+**Placeholders:** `{book}` (the `\id` code, e.g. `MRK`), `{h}` (the book's own name from
+`\h`, e.g. `മർക്കോച്ച്` — usually what you want in a title), `{chapter}` / `{ch}`,
+`{language}`, `{text_copyright}`, `{audio_copyright}`, and `{chapters}` (description only).
+Unknown placeholders are left as literal text rather than raising, so a typo uploads as
+`{chpater}` — check your first entry in `publish_manifest.json`.
+
+### YouTube Chapters from Section Headings
+
+Put `{chapters}` anywhere in `description_template` and VIDX builds a timestamped chapter
+list from the `\s` headings and their timings — the same headings the viewer sees on screen:
+
+```
+0:00 യേച്ചു പർക്ക്നദെക്ക് യോഗന്നയ് മെൻച്ചെമ്മാർനി ഒരിക്ക്ഗ്‌ന് (1:1-8)
+1:48 യോഗന്നയ് യേച്ചുനി ജോർദ്ദാൻ പുയെറ്റ് നോറ്റ് കുളി പെക്ക്ന് (1:9-13)
+```
+
+No config key turns this on: the placeholder's presence is the switch, and it costs nothing
+for projects that don't use it. It works for both the API upload and the copy-paste
+`metadata.txt`, since both take the resolved description verbatim.
+
+YouTube silently shows **no** chapters at all unless the list starts at `0:00`, has at least
+3 markers, and every chapter runs 10s or more. VIDX enforces all three:
+
+- The first heading becomes `0:00` if it starts within 10s. Otherwise a synthetic first
+  marker is inserted, labelled `<book> <ch>:1` — which happens when verse 1 precedes the
+  first heading, as in Mark 9.
+- Markers closer than 10s apart are dropped.
+- If fewer than 3 markers survive, the block is left **empty** and a warning is printed
+  naming the timing file. A chapter with two headings is ordinary translation data, not a
+  configuration error, so this never fails the run.
+- With a `bumpers` intro the timestamps shift by the intro duration automatically. An intro
+  longer than ~10s therefore gets its own `0:00` marker rather than folding into the first
+  heading.
+
+> [!TIP]
+> Verify the chapter list on the first video before uploading the rest. VIDX has no
+> `videos().update()` path, so metadata cannot be patched after upload — a mistake means
+> editing every video by hand in Studio.
 
 ```yaml
 publishing:

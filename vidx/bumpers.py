@@ -23,6 +23,30 @@ class BumperConfig:
     background_music_volume: float = 0.15
 
 
+def intro_offset_seconds(config) -> float:
+    """Seconds of intro prepended before verse 1, so timestamps can be shifted.
+
+    Anything derived from timing data -- subtitles, YouTube chapter markers --
+    must apply the same offset or it points at the wrong moment. `config` is the
+    raw config dict.
+    """
+    if not config:
+        return 0.0
+    bumpers_cfg = config.get("bumpers", {}) or {}
+    video_cfg = config.get("video", {}) or {}
+    # written by the render path once the real intro audio has been built
+    if "_calc_intro_duration" in bumpers_cfg:
+        return float(bumpers_cfg["_calc_intro_duration"])
+    intro = bumpers_cfg.get("intro_audio")
+    if intro and Path(intro).exists():
+        return get_media_duration(intro)
+    if video_cfg.get("title_image") or bumpers_cfg.get("title_image"):
+        return float(
+            video_cfg.get("title_duration") or bumpers_cfg.get("title_duration") or 3.0
+        )
+    return 0.0
+
+
 def get_media_duration(file_path: str) -> float:
     """Get duration of audio or video media file in seconds."""
     path = Path(file_path)

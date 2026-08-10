@@ -22,6 +22,8 @@ from .manifest import (
     ManifestEntry,
     resolve_metadata_template,
     generate_offline_package,
+    build_chapter_markers,
+    usfm_book_name,
 )
 
 
@@ -997,6 +999,13 @@ class BatchRunner:
         t_copy = self.config.project.get("text_copyright", "")
         a_copy = self.config.project.get("audio_copyright", "")
 
+        # Same intro offset the subtitles were shifted by. Safe to read here:
+        # _generate_publishing_manifests runs on the main thread after every
+        # render future has joined, so _calc_intro_duration is already written.
+        from .bumpers import intro_offset_seconds
+
+        offset = intro_offset_seconds(self.config.raw_config)
+
         added_count = 0
         for job in self.jobs:
             if job.status != "SUCCESS" or not job.output_file:
@@ -1006,24 +1015,49 @@ class BatchRunner:
             ch = job.chapter if isinstance(job.chapter, int) else 1
             entry_id = f"{book}_Ch{ch:02d}"
 
+            # {h} is the book's own name from \h ("മർക്കോച്ച്"); {book} is the
+            # \id code ("MRK"). {ch} is a short alias for {chapter}.
+            h_name = ""
+            if job.usfm_file:
+                try:
+                    h_name = usfm_book_name(job.usfm_file)
+                except Exception:
+                    pass
+            common = dict(
+                book=book,
+                chapter=ch,
+                ch=ch,
+                h=h_name or book,
+                language=lang,
+                text_copyright=t_copy,
+                audio_copyright=a_copy,
+            )
+
             title = resolve_metadata_template(
-                pub_cfg.get("title_template", ""),
-                book=book,
-                chapter=ch,
-                language=lang,
-                text_copyright=t_copy,
-                audio_copyright=a_copy,
+                pub_cfg.get("title_template", ""), **common
             )
-            desc = resolve_metadata_template(
-                pub_cfg.get("description_template", ""),
-                book=book,
-                chapter=ch,
-                language=lang,
-                text_copyright=t_copy,
-                audio_copyright=a_copy,
-            )
+
+            # Only built when asked for, and always passed once the placeholder
+            # is present: leaving it out would upload the literal "{chapters}".
+            desc_tmpl = pub_cfg.get("description_template", "")
+            chapters = ""
+            if "{chapters}" in desc_tmpl and job.usfm_file and job.timing_file:
+                try:
+                    chapters = build_chapter_markers(
+                        job.usfm_file,
+                        job.timing_file,
+                        chapter=ch,
+                        offset_seconds=offset,
+                        intro_label=f"{h_name or book} {ch}:1",
+                    )
+                except Exception as e:
+                    print(f"[!] Warning: chapter markers failed for {entry_id}: {e}")
+            desc = resolve_metadata_template(desc_tmpl, chapters=chapters, **common)
+
+            # Deliberately no chapters= here: a multi-line title or tag is
+            # nonsense, and format_map would happily substitute one.
             tags = [
-                resolve_metadata_template(t, book=book, chapter=ch, language=lang)
+                resolve_metadata_template(t, **common)
                 for t in pub_cfg.get("tags", [])
             ]
 

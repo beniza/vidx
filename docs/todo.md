@@ -46,7 +46,7 @@
   - [x] **One-Touch Upload (`--publish`):** Enable single-command or GUI button publishing that automatically uploads rendered `.mp4` video files to the designated channel immediately after generation.
   - [x] **Automated Metadata & Thumbnails:** Automatically set video Title to scripture book and chapter, populate the video Description with verse ranges and translation copyright, attach tags (`#AudioBible`, `#Scripture`), and upload the generated `title_card.jpg` as the official video thumbnail!
   - [x] **Playlist Organization:** Automatically organize uploaded chapter videos into book-level playlists (e.g., *"Gospel of Mark — Malayalam Translation"*).
-  - [ ] YouTube Chapters from Section Headings — [#9](https://github.com/beniza/vidx/issues/9)
+  - [x] YouTube Chapters from Section Headings — [#9](https://github.com/beniza/vidx/issues/9)
   - [ ] Verse Timing in Description — [#10](https://github.com/beniza/vidx/issues/10)
   - [ ] Vimeo support — [#15](https://github.com/beniza/vidx/issues/15) *(needs-design)*
 
