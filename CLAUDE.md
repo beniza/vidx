@@ -82,6 +82,14 @@ scorer reports near-zero matches rather than raising.
 `01.mp3`; wrong for SAB exports like `B02___01_Mark...` (yields `02` for every
 chapter). Pass `--chapter` unless the stem starts with the number.
 
+**Merged verses are dash-normalised.** `\v 7-8` and `\v 7–8` (en-dash, what
+Paratext-style editors emit) both become the single verse key `7-8`, via
+`normalize_verse_id`. Segment ids accept the same range form. Before v0.4.5 the
+en-dash form wasn't recognised as a verse at all and its text was appended to the
+previous verse — 12 blocks in 9 of Mark's 16 chapters. When adding a new
+translation, assert per chapter that the `\v` token count equals
+`len(parser.verses)`; that one equality catches the whole class.
+
 **Section headings.** `\s` headings are timed as `s1`,`s2`,… by default because
 narrators normally read them aloud. Many SAB timing files omit them entirely; when
 they do, the heading audio gets absorbed by the straddling verse rows and the

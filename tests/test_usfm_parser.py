@@ -1,4 +1,24 @@
-from vidx.usfm_parser import USFMParser, TimingParser, TextSegmenter, SRTGenerator
+from vidx.usfm_parser import (
+    USFMParser,
+    TimingParser,
+    TextSegmenter,
+    SRTGenerator,
+    normalize_verse_id,
+    parse_segment_id,
+)
+
+# Real shape from src/tcy-mav/42MRKTCYMAV.SFM: merged verses written with an
+# EN-DASH (U+2013), and a heading anchored to one of them.
+MERGED_USFM = """\\id MRK
+\\c 3
+\\s Healing on the sabbath
+\\v 5 He looked around at them.
+\\v 6 The Pharisees went out.
+\\s By the sea
+\\v 7–8 Jesus departed to the sea.
+\\v 9–10 He told his disciples.
+\\v 11 The unclean spirits fell down.
+"""
 
 SAMPLE_USFM = """\\id MRK
 \\c 1
@@ -46,6 +66,50 @@ def test_usfm_parsing():
     assert "good news" in parser.verses["1"]
     assert "Isaiah:" in parser.verses["2"]
     assert parser.get_section_heading("s1") == "The Proclamation of John the Baptist"
+
+
+def test_merged_verse_with_en_dash_is_its_own_verse():
+    # Regression: the \v regex used to accept an ASCII hyphen only, so "\v 7–8"
+    # was not recognised as a verse start and its text was appended to verse 6,
+    # swallowing 7-10 and leaving the dash tokens visible in the subtitle.
+    parser = USFMParser(MERGED_USFM, target_chapter="3")
+    assert list(parser.verses) == ["5", "6", "7-8", "9-10", "11"]
+    assert parser.verses["6"] == "The Pharisees went out."
+    assert "7–8" not in parser.verses["6"]
+    assert parser.verses["7-8"] == "Jesus departed to the sea."
+    assert parser.verses["9-10"] == "He told his disciples."
+
+
+def test_merged_verse_dash_variants_normalise_to_one_key():
+    for dash in "-‐‑‒–—―":
+        usfm = f"\\id MRK\n\\c 1\n\\v 7{dash}8 Merged text.\n"
+        parser = USFMParser(usfm, target_chapter="1")
+        assert list(parser.verses) == ["7-8"], f"failed for U+{ord(dash):04X}"
+    assert normalize_verse_id("7–8") == "7-8"
+    assert normalize_verse_id("7") == "7"
+
+
+def test_headings_stay_aligned_across_a_merged_verse():
+    # The heading anchored to "\v 7–8" used to be dropped, which slid every
+    # later s-number out of step with the USFM order.
+    parser = USFMParser(MERGED_USFM, target_chapter="3")
+    assert parser.get_section_heading("s1") == "Healing on the sabbath"
+    assert parser.get_section_heading("s2") == "By the sea"
+
+
+def test_parse_segment_id():
+    assert parse_segment_id("7") == ("7", None)
+    assert parse_segment_id("7a") == ("7", "a")
+    assert parse_segment_id("7-8") == ("7-8", None)
+    assert parse_segment_id("7-8b") == ("7-8", "b")
+    assert parse_segment_id("s1") == ("section", "s1")
+    assert parse_segment_id("junk") == (None, None)
+
+
+def test_sections_are_scoped_to_the_target_chapter():
+    two = "\\id MRK\n\\c 1\n\\s First\n\\v 1 A.\n\\c 2\n\\s Second\n\\v 1 B.\n"
+    assert USFMParser(two, target_chapter="1").get_section_heading("s1") == "First"
+    assert USFMParser(two, target_chapter="2").get_section_heading("s1") == "Second"
 
 
 def test_timing_parser():

@@ -21,6 +21,33 @@ except ImportError:
 
 from . import __version__
 
+# Merged verses (\v 7-8) are written with whatever dash the translation team's
+# editor produced -- the Mavilan Tulu Mark uses an EN-DASH in 12 places. Treat
+# every variant as the same verse and store one canonical ASCII form, so verse
+# keys and timing-file segment ids always agree.
+VERSE_DASHES = "-‐‑‒–—―"
+_DASH_CLASS = f"[{VERSE_DASHES}]"
+
+
+def normalize_verse_id(token):
+    """Canonicalise a verse token: any dash variant becomes an ASCII hyphen."""
+    return re.sub(_DASH_CLASS, "-", token)
+
+
+def parse_segment_id(segment_id):
+    """
+    Parse a timing-file segment id like '2a', '15c', 's1', '9', '7-8', '7-8b'.
+    Returns: (verse_num or "section", segment_letter or section_marker or None)
+    """
+    if segment_id.startswith("s"):
+        return ("section", segment_id)
+
+    match = re.match(rf"^(\d+(?:{_DASH_CLASS}\d+)?)([a-z])?$", segment_id)
+    if match:
+        return (normalize_verse_id(match.group(1)), match.group(2))
+
+    return (None, None)
+
 
 class USFMParser:
     """Parse USFM files and extract verse text"""
@@ -144,7 +171,9 @@ class USFMParser:
                 continue
 
             # Extract verse number and text
-            verse_match = re.match(r"^\\v\s+(\d+(?:-\d+)?)\s+(.*)$", line)
+            verse_match = re.match(
+                rf"^\\v\s+(\d+(?:{_DASH_CLASS}\d+)?)\s+(.*)$", line
+            )
             if verse_match:
                 # Save previous verse if exists
                 if current_verse is not None and current_verse_text:
@@ -152,7 +181,7 @@ class USFMParser:
                     self.verses[current_verse] = self._clean_text(full_text)
 
                 # Start new verse
-                current_verse = verse_match.group(1)
+                current_verse = normalize_verse_id(verse_match.group(1))
                 current_verse_text = [verse_match.group(2)]
                 continue
 
@@ -328,22 +357,7 @@ class SRTGenerator:
         return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
 
     def _parse_segment_id(self, segment_id):
-        """
-        Parse segment ID like '2a', '15c', 's1', '9'
-        Returns: (verse_num or section_marker, segment_letter or None)
-        """
-        # Check if it's a section marker (s1, s2, etc.)
-        if segment_id.startswith("s"):
-            return ("section", segment_id)
-
-        # Parse verse number with optional segment letter
-        match = re.match(r"^(\d+)([a-z])?$", segment_id)
-        if match:
-            verse_num = match.group(1)
-            segment_letter = match.group(2)
-            return (verse_num, segment_letter)
-
-        return (None, None)
+        return parse_segment_id(segment_id)
 
     def _get_text_for_segment(self, verse_num, segment_letter, verse_segments):
         """Get text for a specific segment"""

@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+from .usfm_parser import normalize_verse_id
+
 try:
     import numpy as np
     import onnxruntime as ort
@@ -349,7 +351,11 @@ def _heading_before_verse(parser):
                 pending.append(text)
         elif re.match(r"\\v\s+(\S+)", line):
             if pending:
-                headings[re.match(r"\\v\s+(\S+)", line).group(1)] = pending
+                # Normalise, or a merged verse written "\v 7–8" keys the heading
+                # under the raw en-dash token and never matches parser.verses --
+                # the heading is then dropped and s-numbering slides by one.
+                anchor = normalize_verse_id(re.match(r"\\v\s+(\S+)", line).group(1))
+                headings[anchor] = pending
                 pending = []
     return headings
 

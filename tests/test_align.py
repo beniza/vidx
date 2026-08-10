@@ -134,6 +134,28 @@ def test_headings_are_emitted_in_order_before_their_verse():
     assert all("Matt" not in s.text for s in segs)
 
 
+MERGED_USFM = "\n".join([
+    "\\c 3",
+    "\\s Healing on the sabbath",
+    "\\v 6 The Pharisees went out.",
+    "\\s By the sea",
+    "\\v 7–8 Jesus departed to the sea.",   # EN-DASH, as the real Mark data has
+    "\\v 9 He told his disciples.",
+])
+
+
+def test_heading_anchored_to_a_merged_verse_is_still_emitted():
+    # The anchor key came off the raw \v token ("7–8"), so it never matched the
+    # parser's verse keys; the verse was skipped and s-numbering slid by one.
+    p = _FakeParser({"6": "The Pharisees went out.",
+                     "7-8": "Jesus departed to the sea.",
+                     "9": "He told his disciples."},
+                    content=MERGED_USFM, target_chapter="3")
+    segs = segments_from_usfm(p, level="verse")
+    assert [s.seg_id for s in segs] == ["s1", "6", "s2", "7-8", "9"]
+    assert segs[2].text == "By the sea"
+
+
 def test_headings_respect_target_chapter():
     p = _FakeParser({"1": "First verse."}, content=USFM, target_chapter="5")
     ids = [s.seg_id for s in segments_from_usfm(p, level="verse")]

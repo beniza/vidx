@@ -153,6 +153,20 @@ def test_heading_hold_seconds_full_holds_to_the_next_heading():
     assert starts_ends == [["0:00:00.00", "0:00:08.00"], ["0:00:08.00", "0:00:40.00"]]
 
 
+def test_merged_verse_renders_with_a_ranged_reference():
+    # A "7-8" timing row used to parse to (None, None) and render nothing at all,
+    # for ASCII hyphens as well as en-dashes.
+    usfm = ("\\id MRK\n\\h Mark\n\\c 3\n\\s By the sea\n"
+            "\\v 6 The Pharisees went out.\n\\v 7–8 Jesus departed to the sea.\n")
+    timing = "\\c 3\n\\level verse\n0.0\t2.0\ts1\n2.0\t5.0\t6\n5.0\t9.0\t7-8"
+    gen = ASSGenerator(USFMParser(usfm, target_chapter="3"), TimingParser(timing),
+                       config={"style": {"verse_number": {"show": True}}})
+    out = gen.generate()
+    assert "Jesus departed to the sea." in out
+    assert "3:7-8" in out          # the reference keeps the range, not just "7"
+    assert "By the sea" in out
+
+
 def test_heading_hold_seconds_never_shortens_a_heading():
     # 1s is less than s1's natural 2s read; the timing row wins.
     starts_ends = [ln.split(",")[1:3] for ln in _heading_events(1)]

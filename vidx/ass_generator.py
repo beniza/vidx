@@ -6,7 +6,7 @@ Supports rich styling, section titles, verse numbers, and responsive positioning
 
 import re
 from pathlib import Path
-from .usfm_parser import TextSegmenter
+from .usfm_parser import TextSegmenter, parse_segment_id
 
 
 def hex_to_ass(color_str, default_alpha="00", opacity=None, transparency=None):
@@ -146,20 +146,7 @@ class ASSGenerator:
         return f"{hours}:{minutes:02d}:{secs:02d}.{centis:02d}"
 
     def _parse_segment_id(self, segment_id):
-        """
-        Parse segment ID like '2a', '15c', 's1', '9'
-        Returns: (verse_num or section_marker, segment_letter or None)
-        """
-        if segment_id.startswith("s"):
-            return ("section", segment_id)
-
-        match = re.match(r"^(\d+)([a-z])?$", segment_id)
-        if match:
-            verse_num = match.group(1)
-            segment_letter = match.group(2)
-            return (verse_num, segment_letter)
-
-        return (None, None)
+        return parse_segment_id(segment_id)
 
     def _heading_hold_ends(self):
         """
