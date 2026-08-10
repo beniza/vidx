@@ -110,3 +110,51 @@ def test_ass_overlay_generation():
     assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlayWatermark,,0,0,0,,PARMESHWERJOPYAAR" in ass_content
     assert "Dialogue: 0,0:00:00.00,0:00:15.00,OverlayDivider,,0,0,0,,────────────────────────────" in ass_content
 
+
+# Two headings, so the second one's start is available as a cap for the first.
+HOLD_USFM = (
+    "\\id MRK\n\\c 1\n\\s John Baptizes\n\\v 1 First verse.\n\\v 2 Second verse.\n"
+    "\\s In Galilee\n\\v 3 Third verse."
+)
+HOLD_TIMING = (
+    "\\c 1\n\\level phrase\n"
+    "0.0\t2.0\ts1\n2.0\t5.0\t1a\n5.0\t8.0\t2a\n8.0\t9.0\ts2\n9.0\t40.0\t3a"
+)
+
+
+def _heading_events(hold_seconds):
+    up = USFMParser(HOLD_USFM, target_chapter="1")
+    tp = TimingParser(HOLD_TIMING)
+    heading = {"font": "Bailey", "size": 60}
+    if hold_seconds is not None:
+        heading["hold_seconds"] = hold_seconds
+    gen = ASSGenerator(up, tp, config={"style": {"heading": heading}})
+    return [ln for ln in gen.generate().split("\n") if ",Heading," in ln]
+
+
+def test_heading_hold_seconds_defaults_to_the_timing_row():
+    starts_ends = [ln.split(",")[1:3] for ln in _heading_events(None)]
+    assert starts_ends == [["0:00:00.00", "0:00:02.00"], ["0:00:08.00", "0:00:09.00"]]
+
+
+def test_heading_hold_seconds_extends_but_stops_at_the_next_heading():
+    # s1 wants 0->3.0 and gets it; s2 wants 8->11.0 and gets it (nothing after).
+    starts_ends = [ln.split(",")[1:3] for ln in _heading_events(3)]
+    assert starts_ends == [["0:00:00.00", "0:00:03.00"], ["0:00:08.00", "0:00:11.00"]]
+
+    # s1 wants 0->20.0 but s2 starts at 8.0, so it is capped there rather than
+    # overlapping. s2 wants 8->28.0 and is capped by the end of the chapter.
+    starts_ends = [ln.split(",")[1:3] for ln in _heading_events(20)]
+    assert starts_ends == [["0:00:00.00", "0:00:08.00"], ["0:00:08.00", "0:00:28.00"]]
+
+
+def test_heading_hold_seconds_full_holds_to_the_next_heading():
+    starts_ends = [ln.split(",")[1:3] for ln in _heading_events("full")]
+    assert starts_ends == [["0:00:00.00", "0:00:08.00"], ["0:00:08.00", "0:00:40.00"]]
+
+
+def test_heading_hold_seconds_never_shortens_a_heading():
+    # 1s is less than s1's natural 2s read; the timing row wins.
+    starts_ends = [ln.split(",")[1:3] for ln in _heading_events(1)]
+    assert starts_ends[0] == ["0:00:00.00", "0:00:02.00"]
+

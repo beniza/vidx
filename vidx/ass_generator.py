@@ -161,6 +161,43 @@ class ASSGenerator:
 
         return (None, None)
 
+    def _heading_hold_ends(self):
+        """
+        Map {entry index: extended end time} for section headings.
+
+        A heading is normally timed only as long as the narrator reads it (~2s),
+        which flashes past. heading.hold_seconds keeps it up longer -- literal
+        seconds, or "full" for no time limit. The next heading's start always
+        wins, so two headings never overlap, and a hold shorter than the read
+        never shortens the heading. Empty dict when unset, i.e. no behaviour
+        change for configs that don't ask for it.
+        """
+        hold = self.heading_style.get("hold_seconds")
+        if hold is None or not self.timing.entries:
+            return {}
+        hold = (
+            float("inf") if str(hold).strip().lower() == "full" else float(hold)
+        )
+        if hold <= 0:
+            return {}
+
+        section_idx = [
+            i
+            for i, e in enumerate(self.timing.entries)
+            if self._parse_segment_id(e["segment"])[0] == "section"
+        ]
+        chapter_end = float(self.timing.entries[-1]["end"])
+
+        ends = {}
+        for n, i in enumerate(section_idx):
+            entry = self.timing.entries[i]
+            if n + 1 < len(section_idx):
+                cap = float(self.timing.entries[section_idx[n + 1]]["start"])
+            else:
+                cap = chapter_end
+            ends[i] = max(float(entry["end"]), min(float(entry["start"]) + hold, cap))
+        return ends
+
     def _get_script_info_header(self):
         """Generate [Script Info] section"""
         book_id = getattr(self.usfm, "book_id", "Scripture")
@@ -416,8 +453,10 @@ class ASSGenerator:
             if show_div and str(show_div).lower() not in ["false", "0", "none", "off"]:
                 lines.append(f"Dialogue: 0,{start_ts},{end_ts},OverlayDivider,,0,0,0,,────────────────────────────")
 
+        heading_ends = self._heading_hold_ends()
+
         # Second pass: generate ASS dialogue events
-        for entry in self.timing.entries:
+        for idx, entry in enumerate(self.timing.entries):
             verse_num, segment_letter = self._parse_segment_id(entry["segment"])
             text = ""
             style = "Verse"
@@ -457,7 +496,7 @@ class ASSGenerator:
 
             if text:
                 start_str = self._format_timestamp(entry["start"])
-                end_str = self._format_timestamp(entry["end"])
+                end_str = self._format_timestamp(heading_ends.get(idx, entry["end"]))
                 # Clean any stray newlines in text
                 text = text.replace("\r\n", "\\N").replace("\n", "\\N")
                 lines.append(

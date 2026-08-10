@@ -255,6 +255,7 @@ style:
     shadow: 1                   # Drop shadow offset; defaults to the verse value
     alignment: 8                # Top-Center positioning
     margin_vertical: 80         # Distance from top edge
+    hold_seconds: 20            # Keep the heading up this long (see 5.6); unset = read time only
     bold: true                  # Render headings in bold weight
     background_box: true        # Headings support the same readability box as verses
     background_color: "#000000"
@@ -297,6 +298,36 @@ When configuring positioning (`alignment`, `title_position`, `watermark_position
 *   **7**: Top-Left | **8**: Top-Center | **9**: Top-Right
 *   **4**: Middle-Left | **5**: Middle-Center | **6**: Middle-Right
 *   **1**: Bottom-Left | **2**: Bottom-Center | **3**: Bottom-Right
+
+> [!WARNING]
+> libass ignores `MarginV` for the middle alignments (**4**, **5**, **6**). Two elements
+> at alignment 5 render on top of each other and no margin key will separate them — give
+> one of them a top or bottom alignment instead.
+
+### 5.6 Holding Section Headings On Screen (`hold_seconds`)
+
+A `\s` heading is timed for as long as the narrator reads it, often only 1–2 seconds, so it
+flashes past while the section it introduces runs for minutes. `heading.hold_seconds` keeps
+it up longer:
+
+```yaml
+style:
+  heading:
+    alignment: 2                # bottom-centre, out of the verse block's way
+    margin_vertical: 330
+    hold_seconds: 20            # or "full" for no time limit
+```
+
+*   The **next heading's start always wins**, so two headings never overlap. A section shorter
+    than `hold_seconds` hands off early — set `hold_seconds: "full"` and there is always
+    exactly one heading on screen, changing at each section break.
+*   The last heading in a chapter is capped at the end of the final timing row.
+*   A hold **shorter** than the narrated read is ignored; the timing row wins.
+*   Unset (the default) means no change: heading start and end come straight from the timing row.
+
+Because the held heading now coexists with verses, give it an `alignment` and `margin_vertical`
+that clear the verse block — the default top-centre works, but so does sitting it just above
+the verses.
 
 ---
 
