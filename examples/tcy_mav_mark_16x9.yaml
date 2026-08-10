@@ -5,11 +5,36 @@
 #   vidx -c examples/tcy_mav_mark_16x9.yaml -t 15 -y                     # check styling
 #   vidx -c examples/tcy_mav_mark_16x9.yaml --gpu -y -w 4                # full run
 #
+# Layout, top to bottom (PlayRes is 1920x1080, so every number below is a
+# literal pixel):
+#
+#   y 81-139    മർക്കോച്ച് 1          chapter title, alignment 8, MarginV 60
+#   y 166-177   ▬▬▬▬▬▬▬▬▬             gold rule      \ one 2-line block,
+#   y 206-227   Mavilan Tulu Bible    wordmark       / alignment 8, MarginV 183
+#   y 609-686   Section heading       alignment 2, MarginV 330
+#   y ~803-1020 Mark 1:1 / verse      alignment 2, MarginV 60
+#   left        EGM Media text        alignment 4
+#
+# Those bands are measured, not estimated -- burn the .ass onto a blank frame
+# and read the pixel rows back if you move anything:
+#   ffmpeg -f lavfi -i color=black:s=1920x1080 -vf "ass=out.ass" -frames:v 1 f.png
+#
+# Only the EGM text sits at alignment 4/5/6, and that is deliberate: libass
+# ignores MarginV at those alignments, so anything placed there is stuck dead
+# centre with no way to nudge it. The title and the wordmark block are both at
+# 8 for exactly this reason -- it is what makes the 27px gap under the title
+# settable at all.
+#
 # Timings are VIDX's own (MRK-NN-timing.txt), phrase level, from --align.
 # Chosen over SAB's C01-01-MRK-NN-timing.txt because SAB timed no \s heading
 # segments: the narrator reads them, so SAB's contiguous verse rows absorb
 # ~2s of heading audio at ~7 points per chapter and the heading style never
 # fires. Verse starts agree with SAB to 0.16s median / 89% within 0.5s.
+#
+# The narrator reads each \s heading in about 2s, which is how long the timing
+# row lasts, so heading.hold_seconds below keeps it up for the opening verses
+# of its section instead. The next heading always cuts it off, so short
+# sections hand over early and two headings never overlap.
 #
 # Backgrounds and music are assigned per chapter by shuffled round-robin
 # (seed 20260804): random order, but balanced coverage — bgvideo 6/5/5 and
@@ -66,7 +91,7 @@ audio:
 style:
   verse:
     font: "Manjari"                 # must be installed on every rendering machine
-    size: 48
+    size: 80
     color: "#FFFFFF"
     outline_color: "#000000"
     outline_width: 3
@@ -80,10 +105,28 @@ style:
 
   heading:
     font: "Manjari"
-    size: 56
+    size: 64
     color: "#FFD400"
-    alignment: 8                    # top-centre
-    margin_vertical: 80
+
+    # Under the centred wordmark, not at the top — the chapter title has that
+    # slot now. MarginV is honoured at alignment 2, so a 1-line heading runs
+    # y609-686 and a 2-line one y532-686.
+    #
+    # 330 rather than 390 (where the wordmark used to sit) because headings
+    # grow *upward*: the longest \s in this book is ~66 characters, which wraps
+    # to two lines at size 64 inside the 1800px text width, and two lines at
+    # 390 would reach y~536 — inside the wordmark block (y475-605). At 330 the
+    # worst case tops out at y~606, and the bottom stays ~50px clear of the
+    # tallest verse block (277px, top at y~803).
+    alignment: 2
+    margin_vertical: 330
+
+    # Hold each heading over the opening verses of its section instead of the
+    # ~2s the narrator takes to read it. The next heading's start always wins,
+    # so a section shorter than 20s hands over early. "full" would keep one on
+    # screen permanently.
+    hold_seconds: 20
+
     bold: true
     background_box: false
     background_color: "#000000"
@@ -92,27 +135,28 @@ style:
   verse_number:
     show: true
     color: "#FFC080"
-    size: 36
+    size: 44
     on_every_segment: false         # reference on the 'a' fragment only
 
   # ---------------------------------------------------------------------------
-  # Persistent title, subtitle and text watermark.
+  # Persistent title, wordmark and text watermark.
   #
   # No background box is configured because none is possible: every Overlay*
   # style is emitted with ASS BorderStyle 1 (outline only) and a transparent
   # BackColour, hardcoded in ass_generator.py. Only `verse` and `heading` read
   # `background_box`. Contrast therefore comes from the outlines below.
   #
-  # Sizes are 50% above the generator's derived defaults (title 72 -> 108,
-  # subtitle 36 -> 54, watermark 31 -> 47). Those defaults come off the verse
-  # size, which is unchanged at 48.
+  # The generator derives overlay sizes from `verse.size` (80): title x1.5 =
+  # 120, subtitle x0.75 = 60, watermark x0.65 = 52. The explicit values below
+  # sit just under those — set by eye, not by formula.
   # ---------------------------------------------------------------------------
   overlay:
     enabled: true
     duration: "full"                # held to the last verse + 10s, i.e. whole chapter
 
     title: true                     # auto-derived from \h + chapter, e.g. "മർക്കോച്ച് 1"
-    title_position: 5               # middle-centre
+    title_position: 8               # top-centre; see the alignment-5 note in the header
+    title_margin_v: 60
     title_size: 108
     title_color: "#FFFFFF"
     title_outline_color: "#000000"
@@ -125,26 +169,27 @@ style:
     # Instead the rule is an ASS vector drawing carried in the subtitle text.
     # The subtitle is the one overlay field written into the .ass verbatim
     # (ass_generator.py:402) rather than through clean_subtitle_text, so
-    # override tags survive. PlayRes is 1920x1080, so the coordinates below are
-    # literal pixels: a 460x12 gold bar. \bord0 stops the style's 4px black
-    # outline from boxing it in; {\r} resets to the style for the wordmark line.
-    # Being a drawing rather than a glyph (─, ▬) it needs no font support.
-    subtitle: '{\c&H00D4FF&\bord0\shad0\p1}m 0 0 l 460 0 l 460 12 l 0 12{\p0}\N{\r}Mavilan Tulu Bible'
-    subtitle_alignment: 2           # bottom-centre, above the verse block
-    # MarginV is honoured for bottom alignments (unlike 4/5/6), so this is what
-    # keeps the subtitle clear of the verse block. Measured across all 1767
-    # segments in this book: 78% wrap to 1 line, 21% to 2, and 12 segments
-    # (0.7%) to 3 -- the longest being Mark 14:57-58 at 267 characters. Three
-    # lines plus the verse-number line and margin_bottom 60 comes to ~277px.
-    # Raised to 390 to close the title/subtitle gap. Calibrated by rendering:
-    # at margin_v 315 the rule landed at y~705, i.e. rule_y = (1080 - M) - 60,
-    # so 390 puts it at ~630 -- roughly 50px under the title. Still 113px clear
-    # of the tallest possible verse block (277px), so no collision risk.
-    subtitle_margin_v: 390
+    # override tags survive. A 460x12 gold bar in literal pixels. \bord0 stops
+    # the style's 4px black outline from boxing it in; {\r} resets to the style
+    # for the wordmark line. Being a drawing rather than a glyph (─, ▬) it
+    # needs no font support.
+    #
+    # The y coordinates are -17..-5 rather than 0..12 to lift the bar clear of
+    # the wordmark. subtitle_margin_v only moves the block as a whole; the space
+    # *between* the two lines is line spacing, which no key exposes. Raising the
+    # bar 17px inside its own drawing and adding 8 to margin_v to compensate
+    # buys a 29px gap below it while keeping 27px above. Measured, not derived.
+    subtitle: '{\c&H00D4FF&\bord0\shad0\p1}m 0 -17 l 460 -17 l 460 -5 l 0 -5{\p0}\N{\r}Mavilan Tulu Bible'
+
+    # Tucked under the title rather than centred. Alignment 8 (not 5) because
+    # libass honours MarginV at the top edge, so the gap under the title is
+    # actually settable -- at 5 it would be centred with no way to move it.
+    subtitle_alignment: 8
+    subtitle_margin_v: 183
     subtitle_size: 54
     subtitle_color: "#FFFFFF"
 
-    watermark_text: "EGM MEDIA"
+    watermark_text: "Mavilan Tulu Bible — EGM Media"
     watermark_position: 4           # middle-left
     watermark_size: 47
     watermark_opacity: 0.60
