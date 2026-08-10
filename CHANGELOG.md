@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.5] - 2026-08-07
+## [0.4.5] - 2026-08-10
 
 ### Added
 - **`heading.hold_seconds`:** keeps a `\s` section heading on screen past the moment the narrator finishes reading it. A heading is normally timed for the 1–2s it takes to say, so it flashes past while the section it introduces runs for minutes. Set it to a number of seconds, or `"full"` for no time limit. The next heading's start always wins, so two headings never overlap and a section shorter than the hold hands over early; the last heading in a chapter is capped at the end of the final timing row; and a hold shorter than the narrated read is ignored. Unset (the default) leaves every existing config rendering exactly as before, since heading start and end come straight from the timing row. Note that a held heading now coexists with verse text, so it needs an `alignment`/`margin_vertical` that clears the verse block.
