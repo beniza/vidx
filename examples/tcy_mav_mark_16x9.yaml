@@ -53,6 +53,11 @@ project:
   # "MRK Chapter 01 — Language Audio Bible" ends up in publish_manifest.json.
   language: "Mavilan Tulu"
 
+  # Feed {text_copyright} / {audio_copyright} in the description. REVIEW THESE
+  # before publishing -- they are the attribution the whole book carries.
+  text_copyright: "© New Life Computers India"
+  audio_copyright: "© EGM Media"
+
 video:
   resolution: "1920x1080"           # FHD 16:9
   fps: 24
@@ -197,6 +202,69 @@ style:
     # there is no watermark_outline_* key to widen it.
 
     divider_line: false             # defaults to true whenever a title or subtitle exists
+
+# =============================================================================
+# YouTube publishing
+# =============================================================================
+# enabled: false means a run writes publish_manifest.json and the offline
+# packages but uploads nothing. Review the manifest, then flip to true and run
+# `vidx -c ... --manifest` to upload from it.
+#
+# There is no videos().update() path in VIDX, so metadata cannot be patched
+# after upload -- it has to be right before the run, which is why this is
+# staged rather than one step.
+#
+# {h}  the book's own name from \h, i.e. മർക്കോച്ച്   ({book} is the \id code, MRK)
+# {ch} short alias for {chapter}                     ({chapter:02d} still zero-pads)
+# {chapters}  the timestamped chapter list, built from \s headings + their timings.
+#             Only substituted in description_template.
+# -----------------------------------------------------------------------------
+publishing:
+  platform: "youtube"
+  enabled: false                   # <-- flip to true only after reviewing the manifest
+  generate_offline_package: true
+
+  # The app credentials. This identifies the *application*, not the channel --
+  # which channel receives the videos is decided by token_file below.
+  client_secrets_file: "~/.vidx/client_secrets.json"
+
+  # Deliberately project-local rather than the shared ~/.vidx default: a stray
+  # ~/.vidx/ben-personal.json token exists, and pointing at the wrong file
+  # would upload 16 videos to a personal channel. First run opens a browser to
+  # authorise; pick the Mavilan Tulu channel there and it is cached here.
+  token_file: "output/tcy_mav_mrk/youtube_token.json"
+
+  privacy_status: "unlisted"       # unlisted until reviewed; public is a one-way door
+  category_id: "22"                # 22 = People & Blogs
+  playlist_name: "മർക്കോച്ച് — Mavilan Tulu Audio Bible (Gospel of Mark)"
+
+  title_template: "{h} {ch} - Mavilan Tulu Audio Bible"
+
+  # First ~150 characters are what shows in search results and above the
+  # "Show more" fold, so the searchable line comes first and the chapter list
+  # follows. YouTube needs the timestamps on their own lines, starting at 0:00.
+  description_template: |
+    {h} {ch} — the Gospel of Mark chapter {ch}, read aloud in {language} with
+    on-screen subtitles. Part of the complete {language} Audio Bible.
+
+    Chapters
+    {chapters}
+
+    ---
+    Scripture text: {text_copyright}
+    Audio recording: {audio_copyright}
+    Video produced by EGM Media.
+
+    #MavilanTulu #AudioBible #GospelOfMark
+
+  tags:
+    - "Mavilan Tulu"
+    - "Tulu"
+    - "Audio Bible"
+    - "Gospel of Mark"
+    - "Mark {ch}"
+    - "Scripture"
+    - "{language}"
 
 jobs:
   - usfm: "src/tcy-mav/42MRKTCYMAV.SFM"
