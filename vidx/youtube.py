@@ -92,7 +92,13 @@ class YouTubePublisher:
                         # Fallback for newer oauthlib versions where run_console is deprecated
                         creds = flow.run_local_server(port=0, open_browser=False)
                 else:
-                    creds = flow.run_local_server(port=0)
+                    # prompt="select_account": without it Google may silently
+                    # reuse whichever account the browser is already signed into,
+                    # and the wrong choice uploads a whole book to the wrong
+                    # channel. Forcing the chooser also surfaces the Brand
+                    # Account / channel picker, which is where a YouTube channel
+                    # that is not the account's own default channel appears.
+                    creds = flow.run_local_server(port=0, prompt="select_account")
 
             # Cache the token
             self.token_file.parent.mkdir(parents=True, exist_ok=True)
