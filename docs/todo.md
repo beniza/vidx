@@ -31,6 +31,8 @@
 
 ## 🎬 Multimedia Production Enhancements
 
+- [ ] Burn subtitles into an existing video — [#20](https://github.com/beniza/vidx/issues/20) *(needs-design)*
+
 - [x] **Title Cards & Video Thumbnail Support**
   - [x] Enable users to specify a still title image (`video.title_card: "assets/title.jpg"`, `video.title_duration: 4.0`) that displays at the beginning of the video before scripture dialogue starts.
   - [x] Ensure title cards are rendered at the exact target resolution (`1920x1080`, `1080x1920`, or `1080x1080`) so they can serve dual purpose as YouTube, Facebook, and Instagram video thumbnails.
