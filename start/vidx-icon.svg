@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 70 320 213">
+  <!-- back page -->
+  <path d="M60,230 L200,190 L200,90 L60,130 Z" fill="#ECE6D6" stroke="#1A1A2E" stroke-width="8"/>
+  <!-- front page -->
+  <path d="M340,230 L200,190 L200,90 L340,130 Z" fill="#F7F3E7" stroke="#1A1A2E" stroke-width="8"/>
+  <!-- page text lines -->
+  <g stroke="#A49B87" stroke-width="1.6" stroke-linecap="round">
+    <line x1="60" y1="153" x2="200" y2="122.2"/>
+    <line x1="60" y1="174" x2="200" y2="143.2"/>
+    <line x1="60" y1="194" x2="200" y2="163.2"/>
+    <line x1="60" y1="214" x2="200" y2="183.2"/>
+    <line x1="200" y1="122.2" x2="340" y2="153"/>
+    <line x1="200" y1="143.2" x2="340" y2="174"/>
+    <line x1="200" y1="163.2" x2="340" y2="194"/>
+    <line x1="200" y1="183.2" x2="340" y2="214"/>
+  </g>
+  <!-- spine -->
+  <line x1="200" y1="90" x2="200" y2="190" stroke="#1A1A2E" stroke-opacity="0.7" stroke-width="6"/>
+  <!-- play button glow -->
+  <circle cx="200" cy="150" r="48" fill="#F2B134" fill-opacity="0.18"/>
+  <!-- play button -->
+  <circle cx="200" cy="150" r="34" fill="#F2B134"/>
+  <!-- play triangle -->
+  <path d="M190,132 L190,168 L216,150 Z" fill="#0B1D3A"/>
+  <!-- soundwave bars -->
+  <rect x="118" y="245" width="9" height="18" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="137" y="233" width="9" height="30" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="156" y="218" width="9" height="45" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="175" y="238" width="9" height="25" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="194" y="226" width="9" height="37" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="213" y="236" width="9" height="27" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="232" y="220" width="9" height="43" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="251" y="238" width="9" height="25" rx="2" ry="2" fill="#F2B134"/>
+  <rect x="270" y="247" width="9" height="16" rx="2" ry="2" fill="#F2B134"/>
+</svg>

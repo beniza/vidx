@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIDX Scripture Video</title>
+<meta name="description" content="Unleash God's Word where people already search. VIDX turns your USFM text and audio into subtitled Scripture videos on YouTube in a week or two. Free and open source.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="VIDX: Unleash God's Word where people already search">
+<meta property="og:description" content="Subtitled Scripture videos on YouTube in a week or two, from your USFM text and audio. Free and open source.">
+<meta property="og:image" content="https://beniza.github.io/vidx/start/vidx-icon-512.png">
+<meta property="og:url" content="https://beniza.github.io/vidx/start/">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="vidx-icon.svg">
+<link rel="apple-touch-icon" href="vidx-icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FBF8F1;
+  --surface: #FFFFFF;
+  --surface-2: #F3EEE2;
+  --text: #14213D;
+  --muted: #4E5A72;
+  --line: #E4DCCB;
+  --line-strong: #D3C8B0;
+  --accent: #F2B134;
+  --accent-hover: #F6C35A;
+  --accent-ink: #0B1D3A;
+  --accent-soft: #FCEFD2;
+  --accent-text: #7A4A00;
+  --link: #1F4E9C;
+  --code-bg: #0F1E38;
+  --code-text: #E9E4D6;
+  --code-comment: #8F9BB3;
+  --code-border: transparent;
+  --hero-bg: #0B1D3A;
+  --hero-text: #F7F3E7;
+  --hero-muted: #C5CCDA;
+  --shadow: 0 1px 2px rgba(11,29,58,.05), 0 6px 18px rgba(11,29,58,.05);
+  --ok-bg: #E3F2E8;
+  --ok-text: #1C5B34;
+  --ok-line: #A9D4B8;
+  --ok-dot: #2E8B57;
+  --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 32px; --space-5: 48px; --space-6: 72px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0A1629;
+    --surface: #102039;
+    --surface-2: #162A48;
+    --text: #EDE8DC;
+    --muted: #AEB8CB;
+    --line: #22385B;
+    --line-strong: #2E4873;
+    --accent: #F2B134;
+    --accent-hover: #F6C35A;
+    --accent-ink: #0B1D3A;
+    --accent-soft: #2A2415;
+    --accent-text: #F6C766;
+    --link: #8DB6FF;
+    --code-bg: #060E1C;
+    --code-text: #E9E4D6;
+    --code-comment: #8591A9;
+    --code-border: #22385B;
+    --hero-bg: #07101F;
+    --hero-text: #F7F3E7;
+    --hero-muted: #AEB8CB;
+    --shadow: none;
+    --ok-bg: #143322;
+    --ok-text: #A6E0BC;
+    --ok-line: #2B5E40;
+    --ok-dot: #5CC489;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  font-size: 19px;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+img { max-width: 100%; height: auto; }
+a { color: var(--link); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+h1, h2, h3 { font-family: "Source Serif 4", Georgia, serif; line-height: 1.2; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(1.8rem, 1.35rem + 1.8vw, 2.4rem); font-weight: 600; letter-spacing: -.005em; margin-bottom: var(--space-2); }
+h3 { font-size: 1.25rem; font-weight: 600; margin: var(--space-5) 0 var(--space-1); }
+p { margin: 0 0 1em; text-wrap: pretty; }
+section .wrap > p, .lede { max-width: 68ch; }
+.lede { font-size: 1.17em; line-height: 1.55; color: var(--muted); }
+.eyebrow {
+  font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: var(--space-1);
+}
+
+/* ---------- hero ---------- */
+.hero {
+  background: var(--hero-bg);
+  color: var(--hero-text);
+  padding: 56px 0 64px;
+  text-align: center;
+  border-bottom: 1px solid rgba(247,243,231,.08);
+}
+.hero .logo { width: 136px; display: block; margin: 0 auto 12px; }
+.wordmark {
+  font-family: "Source Sans 3", "Segoe UI", sans-serif; font-weight: 700;
+  font-size: 1rem; color: var(--accent); margin: 0 0 var(--space-3);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.wordmark b { letter-spacing: .3em; padding-left: .3em; }
+.wordmark span { font-weight: 600; letter-spacing: .02em; color: var(--hero-muted); font-size: 1.02rem; }
+.hero h1 {
+  font-size: clamp(2.2rem, 1.3rem + 3.6vw, 3.5rem);
+  font-weight: 600; letter-spacing: -.01em;
+  max-width: 22ch; margin: 0 auto 16px;
+}
+.hero h1 span { display: block; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .sub { font-size: clamp(1.15rem, 1rem + .6vw, 1.4rem); color: var(--hero-muted); margin: 0 auto var(--space-4); max-width: 40ch; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px 16px; justify-content: center; align-items: center; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 28px; border-radius: 10px;
+  font-weight: 700; font-size: 1.15rem; text-decoration: none;
+  min-height: 56px;
+  transition: background-color .15s ease-out, border-color .15s ease-out, transform .1s ease-out;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 8px 24px rgba(242,177,52,.18); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-ghost { color: var(--hero-text); border: 1.5px solid rgba(247,243,231,.32); font-weight: 600; }
+.btn-ghost:hover { border-color: var(--hero-text); background: rgba(247,243,231,.06); }
+.btn svg { width: 22px; height: 22px; flex: none; }
+.hero .fine { margin: 20px auto 0; font-size: 1rem; color: var(--hero-muted); max-width: 48ch; }
+.hero .fine a { color: var(--hero-text); }
+
+/* ---------- nav ---------- */
+.toc {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.toc ul {
+  list-style: none; margin: 0 auto; padding: 8px 24px; max-width: 880px;
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+}
+.toc ul::-webkit-scrollbar { display: none; }
+.toc a {
+  display: flex; align-items: center; min-height: 40px; white-space: nowrap; padding: 0 12px; border-radius: 999px;
+  font-size: .95rem; font-weight: 600; color: var(--muted); text-decoration: none;
+  transition: background-color .15s ease-out, color .15s ease-out;
+}
+.toc a:hover { background: var(--surface-2); color: var(--text); }
+
+/* ---------- sections ---------- */
+section { padding: var(--space-6) 0; border-bottom: 1px solid var(--line); scroll-margin-top: 64px; }
+section:last-of-type { border-bottom: 0; }
+
+/* features: a quiet two-column list, not a card mosaic */
+.grid {
+  display: grid; gap: 0 var(--space-5); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: var(--space-4); border-top: 1px solid var(--line);
+}
+.grid .card {
+  background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
+  padding: var(--space-3) 0; box-shadow: none;
+}
+.card h3 { margin: 0 0 6px; font-size: 1.2rem; }
+.card p { margin: 0; color: var(--muted); font-size: 1rem; }
+.card .tag { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .86em; color: var(--text); }
+
+/* see it: click-to-play YouTube videos (thumbnail until clicked) */
+.videos { display: grid; gap: var(--space-3) var(--space-2); grid-template-columns: 1fr 1fr; margin-top: var(--space-4); }
+.video { margin: 0; }
+.video:first-child { grid-column: 1 / -1; }
+.frame {
+  position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: 12px; background: #000; box-shadow: var(--shadow);
+}
+.frame img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .15s ease-out; }
+.frame:hover img { opacity: .88; }
+.frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.play {
+  position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; transform: translate(-50%, -50%);
+  border-radius: 50%; background: var(--accent); box-shadow: 0 4px 18px rgba(0,0,0,.35);
+  transition: transform .15s ease-out;
+}
+.play::after {
+  content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-35%, -50%);
+  border-style: solid; border-width: 12px 0 12px 20px; border-color: transparent transparent transparent var(--accent-ink);
+}
+.frame:hover .play { transform: translate(-50%, -50%) scale(1.06); }
+.video:not(:first-child) .play { width: 52px; height: 52px; }
+.video:not(:first-child) .play::after { border-width: 9px 0 9px 15px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.video figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 10px; font-size: 1rem; }
+.video figcaption b { font-family: "Source Serif 4", Georgia, serif; font-size: 1.2rem; font-weight: 600; }
+
+/* before and after */
+.compare { display: grid; gap: var(--space-2); grid-template-columns: 1fr 1fr; margin-top: var(--space-4); }
+.side { border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; background: var(--surface); }
+.side p { font-size: 1.02rem; margin: 0 0 .8em; }
+.side p:last-child { margin: 0; }
+.side-label { font-size: .8rem !important; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.side.before { background: var(--surface-2); color: var(--muted); }
+.side.before strong { color: var(--text); }
+.side.after { border-color: color-mix(in srgb, var(--accent) 70%, transparent); box-shadow: var(--shadow); }
+.side.after .side-label { color: var(--accent-text); }
+
+.after-note { margin-top: var(--space-3); font-weight: 600; }
+
+/* get started */
+.needs { list-style: none; padding: 0; margin: var(--space-3) 0 var(--space-2); border-top: 1px solid var(--line); }
+.needs li { padding: 16px 0 16px 34px; border-bottom: 1px solid var(--line); position: relative; }
+.needs li::before {
+  content: ""; position: absolute; left: 4px; top: 24px; width: 10px; height: 6px;
+  border-left: 2.5px solid var(--ok-dot); border-bottom: 2.5px solid var(--ok-dot); transform: rotate(-45deg);
+}
+.needs strong { display: block; margin-bottom: 2px; }
+.cta-left { justify-content: flex-start; margin-top: var(--space-4); }
+.btn-quiet { color: var(--text); border: 1.5px solid var(--line-strong); font-weight: 600; background: var(--surface); }
+.btn-quiet:hover { border-color: var(--text); }
+
+/* languages in production */
+.lang {
+  display: grid; gap: var(--space-2); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: var(--space-4);
+}
+.lang .card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 20px 22px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.lang .name { font-family: "Source Serif 4", Georgia, serif; font-size: 1.45rem; font-weight: 600; line-height: 1.25; margin: 12px 0 4px; color: var(--text); }
+.lang p { color: var(--muted); margin: 0; font-size: 1rem; }
+.status {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1;
+  padding: 6px 11px 6px 9px; border-radius: 999px; border: 1px solid;
+}
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.s-done { background: var(--ok-bg); color: var(--ok-text); border-color: var(--ok-line); }
+.s-done::before { background: var(--ok-dot); }
+.s-busy { background: var(--accent-soft); color: var(--accent-text); border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+.s-busy::before { background: var(--accent); box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); }
+.s-wip  { background: transparent; color: var(--muted); border-color: var(--line-strong); }
+.s-wip::before { border: 1.5px solid currentColor; width: 7px; height: 7px; }
+@media (prefers-reduced-motion: no-preference) {
+  .s-busy::before { animation: pulse 2.4s ease-out infinite; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 6px transparent; }
+  }
+}
+
+.steps { counter-reset: step; list-style: none; padding: 0; margin: var(--space-4) 0 0; }
+.steps > li {
+  counter-increment: step; position: relative; padding: 0 0 var(--space-4) 56px;
+}
+.steps > li:not(:last-child)::after {
+  content: ""; position: absolute; left: 18px; top: 44px; bottom: 8px; width: 2px; background: var(--line);
+}
+.steps > li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 0;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink);
+  font-weight: 700; display: grid; place-items: center; font-size: 1rem;
+}
+.steps > li > h3 { margin: 5px 0 var(--space-1); }
+.steps > li > p:last-child { margin-bottom: 0; }
+
+.note {
+  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  padding: 14px 18px; border-radius: 10px; margin: var(--space-2) 0; font-size: 1rem;
+}
+.note p:last-child { margin: 0; }
+
+code {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  font-size: .84em; background: var(--surface-2); padding: .1em .36em; border-radius: 5px;
+}
+pre {
+  background: var(--code-bg); color: var(--code-text); border: 1px solid var(--code-border);
+  padding: 18px 20px; border-radius: 10px; overflow-x: auto;
+  font-size: .86rem; line-height: 1.6; margin: 12px 0 var(--space-3);
+  -webkit-overflow-scrolling: touch;
+}
+pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+pre .c { color: var(--code-comment); }
+.label { font-size: .9rem; font-weight: 700; color: var(--muted); margin: var(--space-3) 0 -4px; }
+
+/* copy button (added by script; page works without it) */
+.codeblock { position: relative; }
+.codeblock pre { padding-right: 76px; }
+.copy {
+  position: absolute; top: 8px; right: 8px;
+  font: 600 .78rem/1 "Source Sans 3", "Segoe UI", sans-serif; letter-spacing: .02em;
+  color: var(--code-text); background: rgba(233,228,214,.08); border: 1px solid rgba(233,228,214,.22);
+  border-radius: 6px; padding: 0 10px; min-height: 32px; cursor: pointer;
+  transition: background-color .15s ease-out, border-color .15s ease-out;
+}
+.copy:hover { background: rgba(233,228,214,.16); border-color: rgba(233,228,214,.4); }
+.copy.done { color: #9FDDB5; border-color: rgba(159,221,181,.5); }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; margin: 12px 0 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; line-height: 1.5; min-width: 520px; }
+th, td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+tbody tr:last-child td { border-bottom: 0; }
+th { background: var(--surface-2); font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+td:first-child { white-space: nowrap; }
+td:first-child code { font-weight: 600; background: none; padding: 0; color: var(--text); }
+td.def { color: var(--muted); min-width: 7.5em; max-width: 15em; }
+
+details { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 10px 0; }
+details > summary {
+  cursor: pointer; padding: 16px 52px 16px 20px; font-weight: 600; list-style: none;
+  display: block; position: relative; border-radius: 10px; min-height: 56px;
+  transition: background-color .15s ease-out;
+}
+details > summary:hover { background: var(--surface-2); }
+details[open] > summary { border-radius: 10px 10px 0 0; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::after {
+  content: "+"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  font-size: 1.4rem; line-height: 1; color: var(--muted); font-weight: 400;
+}
+details[open] > summary::after { content: "\2212"; }
+details > summary code { font-size: .9em; font-weight: 700; }
+details > .body { padding: 4px 20px 18px; }
+details > .body > p { font-size: 1rem; color: var(--muted); margin-top: 14px; }
+details > .body > p:first-child { margin-top: 0; }
+details .table-wrap { border-radius: 8px; }
+
+.limits { list-style: none; padding: 0; margin: var(--space-3) 0 0; border-top: 1px solid var(--line); }
+.limits li { padding: 18px 0 18px 32px; border-bottom: 1px solid var(--line); position: relative; }
+.limits li::before {
+  content: ""; position: absolute; left: 4px; top: 27px; width: 12px; height: 12px;
+  border-radius: 50%; border: 2px solid var(--accent);
+}
+.limits strong { display: block; margin-bottom: 2px; }
+
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-3); padding: 0; list-style: none; }
+.links a {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px;
+  border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface); text-decoration: none; font-weight: 600;
+  transition: border-color .15s ease-out, background-color .15s ease-out;
+}
+.links a::after { content: "\2192"; color: var(--muted); font-weight: 400; }
+.links a:hover { border-color: var(--link); }
+
+footer { padding: 40px 0 56px; color: var(--muted); font-size: .95rem; text-align: center; border-top: 1px solid var(--line); }
+footer p { margin: 0; }
+
+@media (min-width: 720px) {
+  .lang { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1000px) {
+  .toc ul { max-width: 1200px; justify-content: center; }
+}
+
+@media (max-width: 640px) {
+  /* config tables become stacked rows: key, default, description */
+  .table-wrap { overflow: visible; }
+  table { min-width: 0; font-size: .98rem; }
+  table, tbody, tr, td { display: block; }
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  tr { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  tbody tr:last-child { border-bottom: 0; }
+  td { padding: 0; border: 0; }
+  td:first-child { white-space: normal; margin-bottom: 4px; }
+  td.def { font-size: .92rem; margin-bottom: 4px; }
+  td.def::before { content: "Default: "; font-weight: 600; }
+  details > .body { padding: 0 12px 14px; }
+  details > summary { padding: 14px 48px 14px 16px; }
+  details > summary::after { right: 16px; }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 18px; }
+  .wrap { padding: 0 16px; }
+  .toc ul { padding: 6px 16px; }
+  .toc { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); }
+  .hero { padding: 32px 0 40px; }
+  .hero .logo { width: 104px; margin-bottom: 8px; }
+  .wordmark { margin-bottom: 18px; }
+  .hero h1 { margin-bottom: 12px; }
+  .hero .sub { margin-bottom: var(--space-3); }
+  .cta { gap: 10px; }
+  .btn { width: 100%; }
+  .btn-ghost { min-height: 50px; font-size: 1.05rem; }
+  section { padding: var(--space-5) 0; }
+  h3 { margin-top: var(--space-4); }
+  .grid { grid-template-columns: 1fr; margin-top: var(--space-3); }
+  .grid .card { padding: 18px 0; }
+  .lang { grid-template-columns: 1fr; margin-top: var(--space-3); gap: 12px; }
+  .compare { grid-template-columns: 1fr; margin-top: var(--space-3); gap: 12px; }
+  .side { padding: 18px 18px; }
+  .videos { gap: var(--space-2) 12px; margin-top: var(--space-3); }
+  .video figcaption { flex-direction: column; gap: 0; font-size: .95rem; }
+  .steps > li { padding-left: 50px; }
+  .steps > li:not(:last-child)::after { left: 18px; }
+  pre { margin-left: -16px; margin-right: -16px; border-radius: 0; border-left: 0; border-right: 0; padding: 16px; }
+  .codeblock pre { padding-right: 16px; padding-top: 44px; }
+  .codeblock { margin-left: -16px; margin-right: -16px; }
+  .codeblock pre { margin-left: 0; margin-right: 0; }
+  .steps pre, details pre { margin-left: 0; margin-right: 0; border-radius: 10px; border: 1px solid var(--code-border); }
+  .steps .codeblock, details .codeblock { margin-left: 0; margin-right: 0; }
+  .links a { flex: 1 1 auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="logo" src="vidx-icon.svg" alt="VIDX logo: an open book with a play button and sound bars" width="136" height="91">
+    <p class="wordmark"><b>VIDX</b> <span>Scripture video</span></p>
+    <h1><span>Unleash God's Word</span> <span>where people <em>already search</em>.</span></h1>
+    <p class="sub">Subtitled Scripture videos on YouTube in a week or two, from your USFM text and audio.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/beniza/vidx/releases/latest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Download for Windows
+      </a>
+      <a class="btn btn-ghost" href="#get-started">Get started</a>
+    </div>
+    <p class="fine">Free and open source. Or download
+      <a href="https://github.com/beniza/vidx/releases/latest/download/vidx.exe">vidx.exe</a> directly.</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <ul>
+    <li><a href="#see-it">See it</a></li>
+    <li><a href="#what">Before and after</a></li>
+    <li><a href="#in-use">In production</a></li>
+    <li><a href="#get-started">Get started</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#quick-start">Quick start</a></li>
+    <li><a href="#config">Configuration</a></li>
+    <li><a href="#limits">Limits</a></li>
+    <li><a href="#known-issues">Known issues</a></li>
+    <li><a href="#licence">Licence</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<section id="see-it">
+  <div class="wrap">
+    <p class="eyebrow">See it</p>
+    <h2>Sindhi Scripture, on YouTube today</h2>
+    <p class="lede">VIDX made these chapter videos from the Sindhi text and audio, and uploaded them to YouTube. Each playlist holds a whole book, one video per chapter.</p>
+
+    <div class="videos">
+      <figure class="video">
+        <a class="frame" href="https://www.youtube.com/watch?v=AxufR5w1a5k&amp;list=PLQZ6T1Mmi8S0" data-yt="AxufR5w1a5k" data-list="PLQZ6T1Mmi8S0" data-title="Matthew Chapter 1, Sindhi Audio Bible">
+          <img src="https://i.ytimg.com/vi/AxufR5w1a5k/hqdefault.jpg" alt="" width="480" height="360" loading="lazy">
+          <span class="play" aria-hidden="true"></span>
+          <span class="sr">Play Matthew chapter 1</span>
+        </a>
+        <figcaption><b>Matthew</b> <a href="https://www.youtube.com/playlist?list=PLQZ6T1Mmi8S0">Whole book on YouTube</a></figcaption>
+      </figure>
+      <figure class="video">
+        <a class="frame" href="https://www.youtube.com/watch?v=DIRF-csMWQU&amp;list=PLYv4c62jK4Gk" data-yt="DIRF-csMWQU" data-list="PLYv4c62jK4Gk" data-title="Luke Chapter 1, Sindhi Audio Bible">
+          <img src="https://i.ytimg.com/vi/DIRF-csMWQU/hqdefault.jpg" alt="" width="480" height="360" loading="lazy">
+          <span class="play" aria-hidden="true"></span>
+          <span class="sr">Play Luke chapter 1</span>
+        </a>
+        <figcaption><b>Luke</b> <a href="https://www.youtube.com/playlist?list=PLYv4c62jK4Gk">Whole book on YouTube</a></figcaption>
+      </figure>
+      <figure class="video">
+        <a class="frame" href="https://www.youtube.com/watch?v=jfFcYSEUpAI&amp;list=PLdCRcQYtCxOA" data-yt="jfFcYSEUpAI" data-list="PLdCRcQYtCxOA" data-title="Acts Chapter 1, Sindhi Audio Bible">
+          <img src="https://i.ytimg.com/vi/jfFcYSEUpAI/hqdefault.jpg" alt="" width="480" height="360" loading="lazy">
+          <span class="play" aria-hidden="true"></span>
+          <span class="sr">Play Acts chapter 1</span>
+        </a>
+        <figcaption><b>Acts</b> <a href="https://www.youtube.com/playlist?list=PLdCRcQYtCxOA">Whole book on YouTube</a></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="wrap">
+    <p class="eyebrow">Before and after</p>
+    <h2>Months by hand, or a week or two with VIDX</h2>
+
+    <div class="compare">
+      <div class="side before">
+        <p class="side-label">Without VIDX</p>
+        <p>Every verse goes into a video editor by hand: find the moment it's spoken, place the text, check it, then start on the next one.</p>
+        <p>Two teams worked this way on a New Testament plus Psalms and Proverbs, and on the Gospel of Mark. <strong>It took months.</strong></p>
+      </div>
+      <div class="side after">
+        <p class="side-label">With VIDX</p>
+        <p>Bring your USFM text and one audio file per chapter. VIDX works out when each verse and phrase is spoken, adds the subtitles, renders every chapter and uploads it to YouTube.</p>
+        <p><strong>A week or two, even for a whole Bible.</strong></p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Timings from your audio</h3>
+        <p>VIDX listens to the recording and finds where each verse or phrase is spoken. It runs on your own computer. Timing files from Scripture App Builder can be used instead if you already have them.</p>
+      </div>
+      <div class="card">
+        <h3>Section headings</h3>
+        <p>Section headings in your text are found, timed and shown in their own style.</p>
+      </div>
+      <div class="card">
+        <h3>Subtitled chapter videos</h3>
+        <p>Background video or image, music, your logo and a chapter title. Landscape, vertical or square. Complex scripts display correctly.</p>
+      </div>
+      <div class="card">
+        <h3>Fast rendering</h3>
+        <p>VIDX uses the computer's graphics card automatically when it has one, and can make several chapters at once.</p>
+      </div>
+      <div class="card">
+        <h3>Upload to YouTube</h3>
+        <p>Titles, descriptions, tags and playlists are filled in for you. If YouTube's daily limit is reached, VIDX carries on the next day from where it stopped.</p>
+      </div>
+      <div class="card">
+        <h3>Subtitle files too</h3>
+        <p>Need only captions? VIDX can make subtitle files (<span class="tag">.srt</span> and <span class="tag">.ass</span>) without making a video.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="in-use">
+  <div class="wrap">
+    <p class="eyebrow">In production</p>
+    <h2>Already in production</h2>
+    <div class="lang">
+      <div class="card">
+        <span class="status s-done">On YouTube</span>
+        <p class="name">Sindhi</p>
+        <p>Matthew, Luke and Acts are on YouTube. John is still to be uploaded.</p>
+      </div>
+      <div class="card">
+        <span class="status s-busy">Rendering now</span>
+        <p class="name">Malayalam</p>
+        <p>The Old Testament from the Binoy Chacko Audio Bible, apart from Psalms and Proverbs. Uploading starts soon.</p>
+      </div>
+      <div class="card">
+        <span class="status s-wip">In progress</span>
+        <p class="name">Kurumba Kannada</p>
+        <p>The Gospel of Mark.</p>
+      </div>
+      <div class="card">
+        <span class="status s-wip">In progress</span>
+        <p class="name">Mavilan Tulu</p>
+        <p>The Gospel of Mark.</p>
+      </div>
+    </div>
+    <p class="after-note">Both teams that once worked by hand, Sindhi and Malayalam, now use VIDX.</p>
+  </div>
+</section>
+
+<section id="get-started">
+  <div class="wrap">
+    <p class="eyebrow">Get started</p>
+    <h2>Unleash God's Word in your language</h2>
+    <p class="lede">VIDX is free and open source. Download it, then pass this page to the technical person on your team.</p>
+
+    <ul class="needs">
+      <li><strong>Your USFM text and one audio file per chapter.</strong> That is all the Scripture material VIDX needs.</li>
+      <li><strong>A Windows computer.</strong> There is no Mac or Linux version yet.</li>
+      <li><strong>Someone technical to set it up.</strong> VIDX runs from the command line, with no windows or buttons yet. Installing it is a one-time job. Setting up a new project takes a few hours to a day.</li>
+    </ul>
+    <div class="note"><p>A simpler interface is planned, so that people who aren't technical can use VIDX too. There is no release date yet.</p></div>
+
+    <div class="cta cta-left">
+      <a class="btn btn-primary" href="https://github.com/beniza/vidx/releases/latest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Download for Windows
+      </a>
+      <a class="btn btn-quiet" href="#install">Setup instructions</a>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <p class="eyebrow">For the technical person on your team</p>
+    <h2>Install</h2>
+    <p>VIDX is a command-line program. Installing it, FFmpeg and your fonts is a one-time job. Writing the configuration for a new project takes a few hours to a day, depending on the settings.</p>
+
+    <ol class="steps">
+      <li>
+        <h3>Download VIDX</h3>
+        <p>Get <code>vidx.exe</code> from the <a href="https://github.com/beniza/vidx/releases/latest">latest release</a>. It is a single file with nothing to unpack. Put it in your project folder, open PowerShell there, and check it runs:</p>
+        <pre><code>.\vidx.exe --version</code></pre>
+      </li>
+      <li>
+        <h3>Install FFmpeg separately</h3>
+        <div class="note"><p><strong>vidx.exe does not include FFmpeg.</strong> You need FFmpeg 4.3 or newer, built with <strong>libass</strong> and <strong>HarfBuzz</strong>, and the <code>ffmpeg</code> command must be on your PATH. VIDX draws the subtitles through libass, and HarfBuzz shapes complex scripts.</p></div>
+        <p>To check that your FFmpeg has both, run this. You should see <code>--enable-libass</code> and <code>--enable-libharfbuzz</code>:</p>
+        <pre><code>ffmpeg -hide_banner -buildconf | Select-String "libass|libharfbuzz"</code></pre>
+      </li>
+      <li>
+        <h3>Install the fonts for your script</h3>
+        <p>Every font you name in the configuration must be installed on the computer that renders the videos. If text shows up as empty boxes, the font is missing or its name is misspelled.</p>
+      </li>
+      <li>
+        <h3>Download the alignment model (automatic, once)</h3>
+        <p>The first time you use <code>--align</code>, VIDX downloads a speech model of about 340&nbsp;MB to <code>%USERPROFILE%\.vidx\mms-aligner\</code> (<code>~/.vidx/mms-aligner/</code>). After that, alignment works offline. Your audio never leaves your computer.</p>
+      </li>
+      <li>
+        <h3>Optional: YouTube upload</h3>
+        <p>Automatic upload needs a free Google Cloud OAuth key, saved as <code>%USERPROFILE%\.vidx\client_secrets.json</code>. The <a href="https://beniza.github.io/vidx/publishing_guide/">publishing guide</a> walks through it step by step. Without the key, VIDX still prepares a folder for each chapter with the video and a ready-to-paste <code>metadata.txt</code>, so you can upload by hand in YouTube Studio.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section id="quick-start">
+  <div class="wrap">
+    <p class="eyebrow">Quick start</p>
+    <h2>One book, start to finish</h2>
+    <p>This example makes videos for the Gospel of Mark. Lay the project out like this. The book's USFM can be a single file, and VIDX picks out each chapter itself.</p>
+<pre data-nocopy><code>my-project\
+  vidx.exe
+  mark.yaml            <span class="c"># the configuration, below</span>
+  mark\
+    42MRK.SFM          <span class="c"># USFM for the whole book</span>
+    audio\01.mp3 ... 16.mp3
+    bg.mp4             <span class="c"># background video loop (or a .jpg / .png)</span>
+    logo.png</code></pre>
+
+    <h3>1. Generate the timings</h3>
+    <p>One chapter at a time. Because the audio is in a folder called <code>audio</code>, VIDX writes <code>mark\timing\MRK-01-timing.txt</code> beside it. Pass your language's ISO 639-3 code with <code>--lang</code>, which improves accuracy.</p>
+<pre><code>.\vidx.exe --align --usfm mark\42MRK.SFM --audio mark\audio\01.mp3 --lang mal</code></pre>
+    <p class="label">All 16 chapters in one go (PowerShell):</p>
+<pre><code>1..16 | ForEach-Object {
+  $ch = "{0:d2}" -f $_
+  .\vidx.exe --align --usfm mark\42MRK.SFM --audio "mark\audio\$ch.mp3" --lang mal -y
+}</code></pre>
+    <div class="note">
+      <p>VIDX reads the chapter number from the first number in the audio filename. That works for <code>01.mp3</code>, but not for names like <code>B02___01_Mark.mp3</code>. For those, add <code>--chapter 1</code>. Add <code>--level phrase</code> to get phrase-level timings (<code>1a</code>, <code>1b</code> ...). If the narrator doesn't read the section headings aloud, add <code>--no-headings</code>. Already have SAB timing files? Skip this step and point the jobs at those files instead.</p>
+    </div>
+
+    <h3>2. Write the configuration</h3>
+    <p>Save this as <code>mark.yaml</code>. Paths are relative to the folder you run VIDX from. Add one job per chapter.</p>
+<pre><code>project:
+  name: "Gospel of Mark"
+  output_dir: "output/mark"
+  language: "Malayalam"              <span class="c"># fills {language} in YouTube titles</span>
+  text_copyright: "© Your Bible Society"
+  audio_copyright: "© Your Recording Studio"
+
+video:
+  resolution: "1920x1080"            <span class="c"># "1080x1920" vertical, "1080x1080" square</span>
+  background_media: "mark/bg.mp4"
+  scaling_mode: "crop"
+  loop_crossfade_sec: 1.0            <span class="c"># smooth the seam where the loop repeats</span>
+  watermark:
+    image: "mark/logo.png"
+    position: "top-right"
+    scale: 0.08                      <span class="c"># 8% of the video width</span>
+    opacity: 0.75
+
+style:
+  verse:
+    font: "Noto Sans Malayalam"      <span class="c"># must be installed</span>
+    size: 64
+  heading:
+    font: "Noto Sans Malayalam"
+    size: 56
+    hold_seconds: 20                 <span class="c"># keep each heading up into its section</span>
+
+publishing:
+  privacy_status: "unlisted"
+  playlist_name: "Gospel of Mark"
+  title_template: "{h} {ch} - {language} Audio Bible"
+
+jobs:
+  - usfm: "mark/42MRK.SFM"
+    timing: "mark/timing/MRK-01-timing.txt"
+    audio: "mark/audio/01.mp3"
+    output: "output/mark/Mark_01.mp4"
+  - usfm: "mark/42MRK.SFM"
+    timing: "mark/timing/MRK-02-timing.txt"
+    audio: "mark/audio/02.mp3"
+    output: "output/mark/Mark_02.mp4"
+  <span class="c"># ... and so on to chapter 16</span></code></pre>
+
+    <h3>3. Check, then render</h3>
+<pre><code><span class="c"># Check the text quickly: subtitles only, no video</span>
+.\vidx.exe -c mark.yaml --generate-only --format srt
+
+<span class="c"># Check the look: 15 seconds of each chapter (saved as Mark_01_15s.mp4 ...)</span>
+.\vidx.exe -c mark.yaml -t 15 -y
+
+<span class="c"># The full book: GPU encoding, 4 chapters at a time</span>
+.\vidx.exe -c mark.yaml --gpu -y -w 4</code></pre>
+    <p><code>-y</code> answers yes to the one-time question about scaling a large (e.g. 4K) background down to 1080p. The finished videos are written to <code>output\mark\</code>.</p>
+
+    <h3>4. Publish (optional)</h3>
+    <p>Each render writes <code>publish_manifest.json</code> and a <code>YouTube_Upload_Package</code> folder into the output folder. To upload automatically:</p>
+<pre><code>.\vidx.exe -c mark.yaml --manifest output\mark\publish_manifest.json</code></pre>
+    <p>A browser window asks you to sign in and choose the channel. If YouTube's daily limit stops the upload, run the same command the next day and it picks up where it stopped. Nothing is uploaded twice.</p>
+
+    <h3>Fine-tuning a timing</h3>
+    <p>A timing file is also an Audacity label track. Export it, drag the boundaries against the waveform, then merge the changes back:</p>
+<pre><code>.\vidx.exe --timing mark\timing\MRK-01-timing.txt --to-labels labels.txt
+<span class="c"># Audacity: File &gt; Import &gt; Labels ... adjust ... File &gt; Export &gt; Export Labels</span>
+.\vidx.exe --timing mark\timing\MRK-01-timing.txt --from-labels labels.txt</code></pre>
+  </div>
+</section>
+
+<section id="config">
+  <div class="wrap">
+    <p class="eyebrow">Reference</p>
+    <h2>Configuration</h2>
+    <p>These are the main settings in the YAML file. Anything you leave out uses the default shown. Colours are <code>#RRGGBB</code> or <code>#RRGGBBAA</code>. Positions use the keypad layout: 7&nbsp;8&nbsp;9 along the top, 4&nbsp;5&nbsp;6 across the middle, 1&nbsp;2&nbsp;3 along the bottom. The <a href="https://beniza.github.io/vidx/configuration_guide/">full configuration guide</a> covers everything else.</p>
+
+    <details open>
+      <summary><code>jobs</code>: one entry per chapter</summary>
+      <div class="body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>usfm</code></td><td><strong>Required.</strong> The book's USFM file. Many jobs can share one file.</td></tr>
+            <tr><td><code>timing</code></td><td><strong>Required.</strong> Timing file for this chapter, from <code>--align</code> or SAB.</td></tr>
+            <tr><td><code>audio</code></td><td><strong>Required.</strong> This chapter's audio. A job missing any of these three is skipped without warning.</td></tr>
+            <tr><td><code>output</code></td><td>Video path. Default: <code>&lt;output_dir&gt;/&lt;audio name&gt;.mp4</code>.</td></tr>
+            <tr><td><code>background</code></td><td>Background for this chapter only.</td></tr>
+            <tr><td><code>background_music</code></td><td>Music for this chapter only. <code>"none"</code> turns it off.</td></tr>
+            <tr><td><code>background_music_volume</code></td><td>Music volume for this chapter only.</td></tr>
+            <tr><td><code>title</code></td><td>Overrides the overlay title for this chapter.</td></tr>
+            <tr><td><code>watermark</code></td><td>An image path (burned in as a logo), or any other text (shown as overlay text).</td></tr>
+            <tr><td><code>book</code> / <code>chapter</code></td><td>Set these if VIDX can't detect them from the files.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><code>project</code></summary>
+      <div class="body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>output_dir</code></td><td class="def"><code>"output"</code></td><td>Where videos, subtitles and the publishing manifest go.</td></tr>
+            <tr><td><code>generate_only</code></td><td class="def"><code>false</code></td><td>Write subtitle files only, with no video.</td></tr>
+            <tr><td><code>subtitle_format</code></td><td class="def"><code>"ass"</code></td><td><code>"ass"</code>, <code>"srt"</code> or <code>"both"</code>.</td></tr>
+            <tr><td><code>language</code></td><td class="def"><code>"Language"</code></td><td>Fills <code>{language}</code> in YouTube templates.</td></tr>
+            <tr><td><code>text_copyright</code></td><td class="def"><code>""</code></td><td>Fills <code>{text_copyright}</code>.</td></tr>
+            <tr><td><code>audio_copyright</code></td><td class="def"><code>""</code></td><td>Fills <code>{audio_copyright}</code>.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><code>video</code>, including background and watermark</summary>
+      <div class="body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>resolution</code></td><td class="def"><code>"1920x1080"</code></td><td>e.g. <code>"1080x1920"</code> vertical, <code>"1080x1080"</code> square.</td></tr>
+            <tr><td><code>fps</code></td><td class="def"><code>24</code></td><td>Frames per second.</td></tr>
+            <tr><td><code>codec</code></td><td class="def"><code>"libx264"</code></td><td><code>"auto"</code> picks a GPU encoder if one is available (the same as <code>--gpu</code>).</td></tr>
+            <tr><td><code>preset</code> / <code>crf</code></td><td class="def"><code>"fast"</code> / <code>23</code></td><td>Speed and quality. A lower crf means higher quality.</td></tr>
+            <tr><td><code>background_media</code></td><td class="def"><code>""</code></td><td>Default background: a video loop or still image.</td></tr>
+            <tr><td><code>loop_background</code></td><td class="def"><code>true</code></td><td>Repeat a short video to fill the chapter.</td></tr>
+            <tr><td><code>loop_crossfade_sec</code></td><td class="def"><code>0</code></td><td>Crossfade at the loop seam, in seconds.</td></tr>
+            <tr><td><code>scaling_mode</code></td><td class="def"><code>"pad"</code></td><td><code>"pad"</code>, <code>"crop"</code> or <code>"stretch"</code>.</td></tr>
+            <tr><td><code>title_image</code></td><td class="def">none</td><td>Still image shown at the start.</td></tr>
+            <tr><td><code>title_duration</code></td><td class="def"><code>3.0</code></td><td>How long it shows, in seconds.</td></tr>
+            <tr><td><code>watermark.image</code></td><td class="def">none</td><td>Logo image (PNG with transparency), shown for the whole video.</td></tr>
+            <tr><td><code>watermark.position</code></td><td class="def"><code>"top-right"</code></td><td><code>top-left</code>, <code>top-right</code>, <code>bottom-left</code>, <code>bottom-right</code>, or an FFmpeg <code>x:y</code>.</td></tr>
+            <tr><td><code>watermark.margin</code></td><td class="def"><code>30</code></td><td>Distance from the edge, in pixels.</td></tr>
+            <tr><td><code>watermark.scale</code></td><td class="def">original size</td><td>A decimal from 0 to 1 is a fraction of the video width. A whole number is a width in pixels.</td></tr>
+            <tr><td><code>watermark.opacity</code></td><td class="def"><code>1.0</code></td><td>0.0 to 1.0.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><code>audio</code> and <code>bumpers</code></summary>
+      <div class="body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>audio.background_music</code></td><td class="def">none</td><td>Music looped quietly under the narration.</td></tr>
+            <tr><td><code>audio.background_music_volume</code></td><td class="def"><code>0.15</code></td><td>0.0 to 1.0.</td></tr>
+            <tr><td><code>audio.fade_in_sec</code> / <code>fade_out_sec</code></td><td class="def"><code>0</code></td><td>Fades at the start and end.</td></tr>
+            <tr><td><code>audio.codec</code> / <code>bitrate</code> / <code>sample_rate</code></td><td class="def"><code>"aac"</code> / <code>"192k"</code> / <code>48000</code></td><td>Audio encoding.</td></tr>
+            <tr><td><code>bumpers.intro_audio</code></td><td class="def">none</td><td>Plays before the narration. Subtitles shift to match. This is a top-level block, not part of <code>audio</code>.</td></tr>
+            <tr><td><code>bumpers.outro_audio</code></td><td class="def">none</td><td>Plays after the narration.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><code>style</code>: verse, heading, verse_number</summary>
+      <div class="body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>verse.font</code></td><td class="def"><code>"Nirmala UI"</code></td><td>Font family. It must be installed.</td></tr>
+            <tr><td><code>verse.size</code></td><td class="def"><code>48</code></td><td>Text size.</td></tr>
+            <tr><td><code>verse.color</code></td><td class="def"><code>"#FFFFFF"</code></td><td>Text colour.</td></tr>
+            <tr><td><code>verse.outline_color</code> / <code>outline_width</code></td><td class="def"><code>"#000000"</code> / <code>3</code></td><td>Outline around each letter.</td></tr>
+            <tr><td><code>verse.shadow</code></td><td class="def"><code>1</code></td><td>Drop shadow offset.</td></tr>
+            <tr><td><code>verse.alignment</code></td><td class="def"><code>2</code></td><td>Keypad position (2 is bottom centre).</td></tr>
+            <tr><td><code>verse.margin_bottom</code> / <code>margin_lr</code></td><td class="def"><code>60</code> / <code>60</code></td><td>Margins. Use 140 or more at the bottom for vertical video.</td></tr>
+            <tr><td><code>verse.background_box</code></td><td class="def"><code>true</code></td><td>Box behind the text for readability.</td></tr>
+            <tr><td><code>verse.background_color</code></td><td class="def"><code>"#00000080"</code></td><td>Box colour.</td></tr>
+            <tr><td><code>verse.background_opacity</code></td><td class="def">none</td><td>0.0 to 1.0 (or 0 to 100). <code>background_transparency</code> is the opposite.</td></tr>
+            <tr><td><code>heading.font</code> / <code>size</code> / <code>color</code></td><td class="def"><code>"Nirmala UI"</code> / <code>56</code> / <code>"#FFD400"</code></td><td>Section heading text. Set the font here as well as for verses.</td></tr>
+            <tr><td><code>heading.alignment</code> / <code>margin_vertical</code></td><td class="def"><code>8</code> / <code>80</code></td><td>Top centre, 80 pixels down.</td></tr>
+            <tr><td><code>heading.bold</code></td><td class="def"><code>true</code></td><td>Bold headings.</td></tr>
+            <tr><td><code>heading.hold_seconds</code></td><td class="def">none</td><td>Keep a heading on screen longer than it takes to read, or <code>"full"</code> until the next heading.</td></tr>
+            <tr><td><code>heading.background_box</code></td><td class="def"><code>true</code></td><td>The same box options as for verses.</td></tr>
+            <tr><td><code>verse_number.show</code></td><td class="def"><code>true</code></td><td>Show the reference (e.g. <code>1:1</code>) before each verse.</td></tr>
+            <tr><td><code>verse_number.color</code> / <code>size</code></td><td class="def"><code>"#FFC080"</code> / <code>36</code></td><td>Reference styling.</td></tr>
+            <tr><td><code>verse_number.on_every_segment</code></td><td class="def"><code>false</code></td><td>With phrase timings, show the reference on every phrase, not just the first.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><code>overlay</code>: title, subtitle, text watermark</summary>
+      <div class="body">
+        <p>Text shown over the whole chapter, such as the book name and chapter number, or your ministry's name. It goes under <code>style</code>, or can be its own top-level block.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>enabled</code></td><td class="def"><code>false</code></td><td>Turn the overlay on. Setting any text below also turns it on.</td></tr>
+            <tr><td><code>title</code></td><td class="def">automatic</td><td>With the overlay on, the title is the book name and chapter (e.g. "Mark 1"). Give your own text, or <code>false</code> for none.</td></tr>
+            <tr><td><code>title_position</code></td><td class="def"><code>8</code></td><td>Keypad position (8 is top centre).</td></tr>
+            <tr><td><code>subtitle</code></td><td class="def">none</td><td>A second line, e.g. <code>"AUDIO BIBLE"</code>.</td></tr>
+            <tr><td><code>branding_text</code></td><td class="def">none</td><td>A third line, e.g. your ministry name.</td></tr>
+            <tr><td><code>watermark_text</code></td><td class="def">none</td><td>Text watermark. Use <code>video.watermark</code> for a logo image.</td></tr>
+            <tr><td><code>divider_line</code></td><td class="def">on with a title</td><td>A rule between the title and subtitle.</td></tr>
+            <tr><td><code>duration</code></td><td class="def"><code>"full"</code></td><td>Seconds, or <code>"full"</code>. All overlay text shares this one duration.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Each element (<code>title</code>, <code>subtitle</code>, <code>branding</code>, <code>watermark</code>) also accepts <code>_font</code>, <code>_size</code>, <code>_color</code>, <code>_opacity</code>, <code>_alignment</code> and <code>_margin_v</code>, for example <code>subtitle_size</code>. Two elements both at a middle position (4, 5 or 6) will sit on top of each other, because margins are ignored there. Use a top or bottom position with a margin instead.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><code>publishing</code>: YouTube</summary>
+      <div class="body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>privacy_status</code></td><td class="def"><code>"unlisted"</code></td><td><code>private</code>, <code>unlisted</code> or <code>public</code>. It isn't checked, so a typo falls back to YouTube's own default.</td></tr>
+            <tr><td><code>playlist_name</code></td><td class="def"><code>""</code></td><td>Playlist to add each video to. It is created if it doesn't exist.</td></tr>
+            <tr><td><code>title_template</code></td><td class="def"><code>"{book} Chapter {chapter:02d} — {language} Audio Bible"</code></td><td>Video title.</td></tr>
+            <tr><td><code>description_template</code></td><td class="def">copyright lines</td><td>Description. <code>{chapters}</code> adds YouTube chapter markers built from the section headings.</td></tr>
+            <tr><td><code>tags</code></td><td class="def"><code>["AudioBible", "Scripture", "{language}", "{book}"]</code></td><td>Tags. Placeholders work here too.</td></tr>
+            <tr><td><code>category_id</code></td><td class="def"><code>"22"</code></td><td>22 is People &amp; Blogs, 27 is Education.</td></tr>
+            <tr><td><code>client_secrets_file</code></td><td class="def"><code>"~/.vidx/client_secrets.json"</code></td><td>Your Google OAuth key. This identifies the app.</td></tr>
+            <tr><td><code>token_file</code></td><td class="def">beside the manifest</td><td>The saved sign-in. This decides which channel receives the videos.</td></tr>
+            <tr><td><code>generate_offline_package</code></td><td class="def"><code>true</code></td><td>Make a folder per chapter for manual upload.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Placeholders: <code>{book}</code> (the USFM code, e.g. MRK), <code>{h}</code> (the book's own name from <code>\h</code>), <code>{chapter}</code> or <code>{ch}</code>, <code>{language}</code>, <code>{text_copyright}</code> and <code>{audio_copyright}</code>. Unknown placeholders are left as they are, so check your first title.</p>
+      </div>
+    </details>
+
+    <ul class="links">
+      <li><a href="https://beniza.github.io/vidx/configuration_guide/">Full configuration guide</a></li>
+      <li><a href="https://beniza.github.io/vidx/alignment_guide/">Timing and alignment guide</a></li>
+      <li><a href="https://beniza.github.io/vidx/publishing_guide/">YouTube publishing guide</a></li>
+      <li><a href="https://github.com/beniza/vidx/tree/main/examples">Example configurations</a></li>
+    </ul>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap">
+    <p class="eyebrow">Honest limits</p>
+    <h2>What to know before you start</h2>
+    <ul class="limits">
+      <li><strong>Windows only, for now.</strong> VIDX is a Windows program. There is no Mac or Linux version yet.</li>
+      <li><strong>Command line, and someone technical to set it up.</strong> There are no windows or buttons yet. Someone comfortable with PowerShell needs to write the configuration file for each project. After that, a run is a single command. A simpler interface is planned, but there is no date yet.</li>
+      <li><strong>YouTube's daily limit.</strong> Google's standard quota allows only a handful of automatic uploads a day. A whole book takes several days to upload. VIDX resumes each day, but it can't go faster than the quota allows.</li>
+      <li><strong>Full-chapter videos only.</strong> Each video is one whole chapter. Short clips of single passages aren't supported yet.</li>
+      <li><strong>Timings may need a nudge.</strong> If a recording opens with a spoken chapter announcement, verse 1 may start late. You can fix it in Audacity in a minute.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="known-issues">
+  <div class="wrap">
+    <p class="eyebrow">Known issues</p>
+    <h2>Where the guides are wrong</h2>
+    <p>Some of the longer guides don't match how VIDX actually behaves. The settings on this page are correct. Until the guides are fixed, trust this page over them.</p>
+    <ul class="limits">
+      <li><strong>The sample settings in the Getting Started guide are partly wrong.</strong> Use <code>alignment</code>, not <code>position</code>, for headings. Use a word such as <code>"top-right"</code> for the watermark position, not a number. Give opacity as a value from 0 to 1, such as <code>0.5</code>, not <code>50</code>. <a href="https://github.com/beniza/vidx/issues/23">#23</a></li>
+      <li><strong>The configuration guide's <code>title_card</code> setting does nothing.</strong> Use <code>title_image</code> instead. The guide also says <code>publishing.enabled</code> turns on uploading, but it doesn't. Uploads happen only when you run <code>--publish</code> or <code>--manifest</code>, and <code>--manifest</code> needs the path to <code>publish_manifest.json</code>. <a href="https://github.com/beniza/vidx/issues/24">#24</a></li>
+      <li><strong>The README says the .exe can't make timings.</strong> It can. <code>--align</code> works in <code>vidx.exe</code>. <a href="https://github.com/beniza/vidx/issues/22">#22</a></li>
+      <li><strong>Some guides and messages say to run <code>pip install vidx[...]</code>.</strong> You can ignore these. <code>vidx.exe</code> already includes everything it needs. <a href="https://github.com/beniza/vidx/issues/21">#21</a></li>
+    </ul>
+  </div>
+</section>
+
+<section id="licence">
+  <div class="wrap">
+    <p class="eyebrow">Licence</p>
+    <h2>Free and open source</h2>
+    <p>VIDX is released under the <a href="https://github.com/beniza/vidx/blob/main/LICENSE">MIT licence</a>. You may use it, share it and adapt it freely.</p>
+    <p>The speech model used for alignment is Meta's MMS (MMS-300M-1130), which is licensed <strong>CC-BY-NC 4.0</strong> (non-commercial). It is not bundled with VIDX. It is downloaded separately the first time you use <code>--align</code>. Ministry and translation use is fine. If you intend commercial use, check the model's licence first.</p>
+    <ul class="links">
+      <li><a href="https://github.com/beniza/vidx">Source code on GitHub</a></li>
+      <li><a href="https://github.com/beniza/vidx/releases/latest">Releases</a></li>
+      <li><a href="https://github.com/beniza/vidx/issues">Report a problem or ask a question</a></li>
+      <li><a href="https://beniza.github.io/vidx/">Documentation</a></li>
+      <li><a href="https://github.com/beniza/vidx/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>VIDX: subtitled Scripture videos from USFM text and audio.</p>
+  </div>
+</footer>
+
+<script>
+/* Optional: adds a Copy button to code blocks. The page works without it. */
+(function () {
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('pre:not([data-nocopy])').forEach(function (pre) {
+    var box = document.createElement('div');
+    box.className = 'codeblock';
+    pre.parentNode.insertBefore(box, pre);
+    box.appendChild(pre);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(pre.innerText.replace(/\n$/, '')).then(function () {
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+      });
+    });
+    box.appendChild(btn);
+  });
+})();
+
+/* Optional: plays a video in place instead of opening YouTube. Without script, the links open YouTube. */
+(function () {
+  document.querySelectorAll('a.frame[data-yt]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + a.dataset.yt +
+        '?list=' + a.dataset.list + '&autoplay=1&rel=0';
+      f.title = a.dataset.title;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      var box = document.createElement('div');
+      box.className = 'frame';
+      box.appendChild(f);
+      a.replaceWith(box);
+      f.focus();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
