@@ -13,6 +13,10 @@ from .config import Config
 from .batch_runner import BatchRunner
 from .progress import TerminalProgressObserver
 from .manifest import ManifestManager
+from .biblebrain import (
+    BibleBrainClient, BibleBrainError, CachedClient, parse_chapters,
+    run_biblebrain, run_biblebrain_batch,
+)
 from .youtube import YouTubePublisher, QuotaExceededError, YOUTUBE_AVAILABLE, _YOUTUBE_IMPORT_ERROR
 from . import __version__
 
@@ -192,6 +196,42 @@ def run_align(args):
     print(f"    Fine-tune: vidx --align --timing {out} --to-labels labels.txt")
 
 
+def run_biblebrain_cli(args):
+    """Import text, audio and timing from Bible Brain: interactive, or scripted with --bb-bible."""
+    import getpass
+    import os
+    scripted = bool(args.bb_bible)
+    key = os.environ.get("BIBLE_BRAIN_KEY")
+    if not key:
+        if scripted or not sys.stdin.isatty():
+            print("[-] Set the BIBLE_BRAIN_KEY environment variable (scripted runs never prompt).")
+            sys.exit(1)
+        key = getpass.getpass("Bible Brain API key (hidden): ").strip()
+    try:
+        client = CachedClient(BibleBrainClient(key), refresh=args.bb_refresh)
+        if not scripted:
+            run_biblebrain(client, args.bb_out, timing_choice=args.bb_timing)
+            return
+        if not args.bb_book:
+            print("[-] --bb-bible needs --bb-book (e.g. --bb-book MRK).")
+            sys.exit(1)
+        try:
+            chapters = parse_chapters(args.bb_chapters)
+        except ValueError as e:
+            print(f"[-] {e}")
+            sys.exit(1)
+        _jobs, failures = run_biblebrain_batch(
+            client, args.bb_out, args.bb_bible, args.bb_language, args.bb_book,
+            chapters, timing=args.bb_timing or "auto",
+        )
+        if failures:
+            print(f"[-] {len(failures)} chapter(s) were not imported.")
+            sys.exit(1)
+    except BibleBrainError as e:
+        print(f"[-] {e}")
+        sys.exit(1)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="VIDX: Scripture Video Generator (combines USFM text, audio, and timing into video)."
@@ -318,7 +358,42 @@ def main():
         help="Merge an edited Audacity label track back into --timing.",
     )
 
+    bb_grp = parser.add_argument_group("Bible Brain import")
+    bb_grp.add_argument(
+        "--biblebrain",
+        action="store_true",
+        help="Pick a country, language and Bible, then import text, audio and timing from Bible Brain.",
+    )
+    bb_grp.add_argument(
+        "--bb-out", type=str, default="bb_import", help="Folder for imported files and bb_jobs.yaml."
+    )
+    bb_grp.add_argument(
+        "--bb-timing",
+        choices=["biblebrain", "vidx", "auto"],
+        default=None,
+        help="Timing source: Bible Brain verse timing, VIDX (SAB file / --align), or auto (Bible Brain "
+        "when available). Asked when omitted in the wizard; auto when scripted.",
+    )
+    bb_grp.add_argument(
+        "--bb-bible", type=str, metavar="ID",
+        help="Scripted mode (no prompts): Bible id to import, e.g. MALMAL. Needs --bb-book.",
+    )
+    bb_grp.add_argument("--bb-language", type=str, metavar="ISO", help="Language code to look the Bible up in (optional).")
+    bb_grp.add_argument("--bb-book", type=str, metavar="BOOK", help="Book code for scripted mode, e.g. MRK or 1CO.")
+    bb_grp.add_argument(
+        "--bb-chapters", type=str, default="all", metavar="SPEC",
+        help="Chapters for scripted mode: all (default), 5, 1-5 or 1,3,5-7.",
+    )
+    bb_grp.add_argument(
+        "--bb-refresh", action="store_true",
+        help="Ignore cached country, language and Bible lists and fetch them again.",
+    )
+
     args = parser.parse_args()
+
+    if args.biblebrain:
+        run_biblebrain_cli(args)
+        sys.exit(0)
 
     if args.align or args.to_labels or args.from_labels:
         run_align(args)
